@@ -19,7 +19,8 @@ function ContractComponent() {
     // ✅ New States for Reminder Modal
     const [showReminderModal, setShowReminderModal] = useState(false);
     const [contractToRemind, setContractToRemind] = useState(null);
-    const [reminderLoading, setReminderLoading] = useState(false);
+    const [emailLoading, setEmailLoading] = useState(false);
+    const [whatsappLoading, setWhatsappLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -101,13 +102,17 @@ function ContractComponent() {
     };
 
     const handleCloseReminderModal = () => {
+        // close modal and reset selected contract
         setShowReminderModal(false);
         setContractToRemind(null);
+        // optionally also reset loading flags (safe guard)
+        setEmailLoading(false);
+        setWhatsappLoading(false);
     };
 
     const handleConfirmReminder = async () => {
         if (!contractToRemind) return;
-        setReminderLoading(true);
+        setEmailLoading(true);
 
         try {
             const res = await apiRequest(
@@ -126,10 +131,46 @@ function ContractComponent() {
             console.error("Error sending reminder email:", error);
             toast.error("Error sending reminder email");
         } finally {
-            setReminderLoading(false);
+            setEmailLoading(false);
             handleCloseReminderModal();
         }
     };
+
+    // const handleSendWhatsappReminder = async (contract) => {
+    //     if (!contract) return;
+    //     setWhatsappLoading(true);
+
+    //     try {
+    //         const res = await apiRequest(
+    //             `/sendContractWhatsappReminder/${contract._id}`,
+    //             "POST",
+    //             null,
+    //             true
+    //         );
+
+    //         if (res.success) {
+    //             toast.success("WhatsApp Reminder sent successfully!");
+    //         } else {
+    //             toast.error(res.message || "Failed to send WhatsApp reminder");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error sending WhatsApp reminder:", error);
+    //         toast.error("Error sending WhatsApp reminder");
+    //     } finally {
+    //         setWhatsappLoading(false);
+    //         handleCloseReminderModal();
+    //     }
+    // };
+
+
+    const handleSendWhatsappReminder = () => {
+        // Just open WhatsApp Web in a new tab
+        window.open("https://web.whatsapp.com/", "_blank");
+
+        // Close modal
+        handleCloseReminderModal();
+    };
+
 
     return (
         <section className="rdc-rightbar" id="right-sidebar">
@@ -140,7 +181,7 @@ function ContractComponent() {
 
                 <div className="dashTabs mainDashboarTabs">
                     {/* ✅ SEARCH BAR + ADD BUTTON */}
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div className="d-flex justify-content-between align-items-center flex-wrap">
                         <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
                             <i className="fa-solid fa-magnifying-glass" />
                             <input
@@ -202,7 +243,7 @@ function ContractComponent() {
                                                 </td>
                                                 <td>
                                                     <button
-                                                        className="border-less border-purple color-purple table-button me-1"
+                                                        className="border-less border-green color-green table-button me-1"
                                                         onClick={() =>
                                                             navigate(`/superadmin/contract-from/${contract._id}`)
                                                         }
@@ -211,7 +252,7 @@ function ContractComponent() {
                                                     </button>
 
                                                     <button
-                                                        className="border-less border-red color-red table-button me-1"
+                                                        className="border-less border-red dark-red table-button me-1"
                                                         onClick={() => handleDeleteClick(contract)}
                                                     >
                                                         Delete <i className="fa-solid fa-trash" />
@@ -227,7 +268,7 @@ function ContractComponent() {
                                                     </button>
 
                                                     <button
-                                                        className="border-less border-red color-red table-button"
+                                                        className="border-less border-yellow color-yellow table-button"
                                                         onClick={() => handleReminderClick(contract)}
                                                     >
                                                         Send Reminder <i className="fa-solid fa-envelope"></i>
@@ -317,7 +358,7 @@ function ContractComponent() {
 
             {/* ✅ REMINDER MODAL */}
             {showReminderModal && (
-                <div className="modal-backdrop show">
+                <div className="modal-backdrop  show" id="modal-view">
                     <div className="modal d-block" tabIndex="-1">
                         <div className="modal-dialog modal-dialog-centered">
                             <div className="modal-content">
@@ -327,7 +368,7 @@ function ContractComponent() {
                                         type="button"
                                         className="btn-close"
                                         onClick={handleCloseReminderModal}
-                                        disabled={reminderLoading}
+                                        disabled={emailLoading || whatsappLoading}
                                     >
                                         <i className="fa-solid fa-xmark"></i>
                                     </button>
@@ -346,23 +387,44 @@ function ContractComponent() {
                                         type="button"
                                         className="btn green-cl white-cl"
                                         onClick={handleCloseReminderModal}
-                                        disabled={reminderLoading}
+                                        disabled={emailLoading || whatsappLoading}
                                     >
                                         Cancel
                                     </button>
+
+                                    {/* WhatsApp Reminder Button */}
                                     <button
                                         type="button"
-                                        className="btn btn-primary"
-                                        onClick={handleConfirmReminder}
-                                        disabled={reminderLoading}
+                                        className="btn btn-success"
+                                        onClick={() => handleSendWhatsappReminder(contractToRemind)}
+                                        disabled={whatsappLoading || emailLoading}
                                     >
-                                        {reminderLoading ? (
+                                        {whatsappLoading ? (
                                             <>
                                                 <span className="spinner-border spinner-border-sm me-2" />
                                                 Sending...
                                             </>
                                         ) : (
-                                            "Send Reminder"
+                                            <>
+                                                Send WhatsApp
+                                            </>
+                                        )}
+                                    </button>
+
+                                    {/* Email Reminder Button */}
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={handleConfirmReminder}
+                                        disabled={emailLoading || whatsappLoading}
+                                    >
+                                        {emailLoading ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-2" />
+                                                Sending...
+                                            </>
+                                        ) : (
+                                            "Send Email"
                                         )}
                                     </button>
                                 </div>

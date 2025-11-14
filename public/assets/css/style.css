@@ -1705,6 +1705,11 @@ span.notifiction-icon {
     width: 35%;
 }
 
+#modal-view .modal-dialog {
+    max-width: 700px;
+    margin-right: auto;
+    margin-left: auto;
+}
 
 
 
@@ -2238,6 +2243,10 @@ span.notifiction-icon {
         flex-direction: row !important;
         width: 100%;
         justify-content: space-between !important;
+    }
+
+    .mian-sec-heading1 {
+        flex-direction: row;
     }
 }
 

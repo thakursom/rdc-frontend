@@ -12,8 +12,6 @@ function ArtistComponent() {
     const [labelFilter, setLabelFilter] = useState("");
     const navigate = useNavigate();
 
-    console.log("labelFilter", labelFilter);
-
 
     const loadOptions = async (inputValue) => {
         try {

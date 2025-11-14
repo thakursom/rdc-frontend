@@ -70,7 +70,7 @@ function ContractLogComponent() {
         <section className="rdc-rightbar" id="right-sidebar">
             <div className="main-content-dashboard">
                 {/* Header with Back button + Search */}
-                <div className="mian-sec-heading d-flex justify-content-between align-items-center">
+                <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
                     <h6>Contract Logs</h6>
                     <button
                         className="theme-btn green-cl white-cl"

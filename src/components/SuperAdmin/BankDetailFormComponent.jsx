@@ -171,7 +171,7 @@ function BankDetailFormComponent() {
     return (
         <section className="rdc-rightbar" id="right-sidebar">
             <div className="main-content-dashboard">
-                <div className="mian-sec-heading d-flex justify-content-between align-items-center">
+                <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
                     <h6>{id ? "Edit" : "Add"} Bank Details</h6>
                     <button
                         className="theme-btn green-cl white-cl"

@@ -341,7 +341,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                 onClick={() => setSettingOpen(!settingOpen)}
                 style={{ cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}
               >
-                <span style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <span style={{ display: "flex", alignItems: "center", gap: "15px" }}>
                   <svg
                     width={24}
                     height={24}

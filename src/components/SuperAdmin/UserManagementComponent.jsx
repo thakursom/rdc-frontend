@@ -79,7 +79,7 @@ function UserManagementComponent() {
 
             {/*Table */}
 
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex justify-content-between align-items-center flex-wrap">
               <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
                 <i className="fa-solid fa-magnifying-glass" />
                 <input

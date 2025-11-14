@@ -95,7 +95,7 @@ function BankDetailComponent() {
                 <div className="dashTabs mainDashboarTabs">
 
                     {/* ✅ SEARCH */}
-                    <div className="d-flex justify-content-between align-items-center">
+                    <div className="d-flex justify-content-between align-items-center flex-wrap">
                         <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
                             <i className="fa-solid fa-magnifying-glass" />
                             <input
@@ -130,7 +130,7 @@ function BankDetailComponent() {
                                         <th>Client</th>
                                         <th>Payment Method</th>
                                         <th>Details</th>
-                                        <th />
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
 
@@ -144,19 +144,19 @@ function BankDetailComponent() {
                                                 <td>
                                                     {b.paymentMethod === "bank" && `Bank: ${b.bankName}, Account: ${b.accountNumber}`}
                                                     {b.paymentMethod === "paypal" && `Email: ${b.paypalEmail}`}
-                                                    {b.paymentMethod === "upi" && `UPI ID: ${b.upiId}`}
+                                                    {b.paymentMethod === "upi" && `UPI ID: ${b.upiId}`} 
                                                 </td>
 
                                                 <td>
                                                     <button
-                                                        className="border-less border-purple color-purple table-button me-1"
+                                                        className="border-less border-green color-green table-button me-1"
                                                         onClick={() => navigate(`/superadmin/bank-details-form/${b._id}`)}
                                                     >
                                                         Edit <i className="fa-solid fa-chevron-right" />
                                                     </button>
 
                                                     <button
-                                                        className="border-less border-red color-red table-button"
+                                                        className="border-less border-red dark-red table-button"
                                                         onClick={() => handleDeleteClick(b)}
                                                     >
                                                         Delete <i className="fa-solid fa-trash" />

@@ -537,9 +537,9 @@ section#right-sidebar {
     bottom: 31px;
 }
 
-.form-main-sec {
+/* .form-main-sec {
     margin-bottom: 25px;
-}
+} */
 
 form.rdc-form button {
     width: 100%;
@@ -573,7 +573,7 @@ form.rdc-form {
 .main-chartbox canvas#barChartDashboard {
     display: block !important;
     width: 100% !important;
-    height: 400px !important;
+    height: 460px !important;
 }
 
 .main-chartbox canvas#myChart {
@@ -830,7 +830,7 @@ table.rdc-shadow thead {
 
 table.rdc-table td {
     text-align: start;
-    padding: 0 0 0 10px;
+    padding: 0 10px 0 10px;
     vertical-align: middle;
     height: 50px;
     background: #fff;

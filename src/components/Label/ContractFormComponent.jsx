@@ -91,7 +91,7 @@ function ContractFormComponent() {
     // ✅ Fetch dropdown labels dynamically
     const loadOptions = async (inputValue) => {
         try {
-            const res = await apiRequest(`/fetchAllLabel?search=${inputValue}`, "GET", null, true);
+            const res = await apiRequest(`/fetchAllSubLabel?search=${inputValue}`, "GET", null, true);
             if (res.success) {
                 return res.data?.labels.map((item) => ({
                     value: item.id,

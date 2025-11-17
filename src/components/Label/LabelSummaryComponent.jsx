@@ -178,7 +178,7 @@ function LabelSummaryComponent() {
         <section className="rdc-rightbar" id="right-sidebar">
             <div className="main-content-dashboard">
                 <div className="mian-sec-heading">
-                    <h6>Label Summary</h6>
+                    <h6>Sub Label Summary</h6>
                 </div>
 
                 <div className="dashTabs mainDashboarTabs">
@@ -200,7 +200,7 @@ function LabelSummaryComponent() {
 
                         <button
                             className="theme-btn green-cl white-cl me-1"
-                            onClick={() => navigate(`/superadmin/contract-from`)}
+                            onClick={() => navigate(`/label/contract-from`)}
                         >
                             <i className="fa-solid fa-file-signature me-1" />
                             Add New Contract
@@ -248,7 +248,7 @@ function LabelSummaryComponent() {
                                                 <td>
                                                     <button className="border-less border-green color-green table-button me-1"
                                                         onClick={() =>
-                                                            navigate(`/superadmin/sub-label-summary/${contract.user_id}`)
+                                                            navigate(`/label/sub-label-summary/${contract.user_id}`)
                                                         }
                                                     >
                                                         Sub Label
@@ -259,7 +259,7 @@ function LabelSummaryComponent() {
                                                     <button
                                                         className="border-less border-green color-green table-button me-1"
                                                         onClick={() =>
-                                                            navigate(`/superadmin/contract-from/${contract._id}`)
+                                                            navigate(`/label/contract-from/${contract._id}`)
                                                         }
                                                     >
                                                         Edit <i className="fa-solid fa-chevron-right" />
@@ -275,7 +275,7 @@ function LabelSummaryComponent() {
                                                     <button
                                                         className="border-less border-purple color-purple table-button me-1"
                                                         onClick={() =>
-                                                            navigate(`/superadmin/contract-logs/${contract._id}`)
+                                                            navigate(`/label/contract-logs/${contract._id}`)
                                                         }
                                                     >
                                                         View Logs <i className="fa-solid fa-right-to-bracket"></i>

@@ -34,6 +34,23 @@ import BankDetailForm from "../pages/SuperAdmin/BankDetailForm";
 import Contract from "../pages/SuperAdmin/Contract";
 import ContractForm from "../pages/SuperAdmin/ContractForm";
 import ContractLog from "../pages/SuperAdmin/ContractLog";
+import SubLabelSummary from "../pages/SuperAdmin/SubLabelSummary";
+import LabelSummaryLabel from "../pages/Label/LabelSummary";
+import ContractFormLabel from "../pages/Label/ContractForm";
+import ContractLogLabel from "../pages/Label/ContractLog";
+import SubLabelSummaryLabel from "../pages/Label/SubLabelSummary";
+import ArtistLabel from "../pages/Label/Artist";
+import UserManagementLabel from "../pages/Label/UserManagement";
+import ReleasesLabel from "../pages/Label/Releases";
+import RevenueReportsLabel from "../pages/Label/RevenueReports";
+import SalesAndTrendsLabel from "../pages/Label/SalesAndTrends";
+import PayoutsLabel from "../pages/Label/Payouts";
+import StatementLabel from "../pages/Label/Statements";
+import RevenueUploadLabel from "../pages/Label/RevenueUpload";
+import GeneralSetting from "../pages/Label/GeneralSetting";
+import LabelUploadLabel from "../pages/Label/LabelUpload";
+import ConversionLabel from "../pages/Label/Conversion";
+import LogsLabel from "../pages/Label/Logs";
 
 function AppRouter() {
   return (
@@ -72,6 +89,7 @@ function AppRouter() {
           <Route path="/superadmin/revenue-upload" element={<RevenueUpload />} />
           <Route path="/superadmin/setting" element={<Setting />} />
           <Route path="/superadmin/label-summary" element={<LabelSummary />} />
+          <Route path="/superadmin/sub-label-summary/:userId" element={<SubLabelSummary />} />
           <Route path="/superadmin/label-upload" element={<LabelUpload />} />
           <Route path="/superadmin/conversion" element={<Conversion />} />
           <Route path="/superadmin/logs" element={<Logs />} />
@@ -119,6 +137,23 @@ function AppRouter() {
           }
         >
           <Route path="/label" element={<LabelDashboard />} />
+          <Route path="/label/label-summary" element={<LabelSummaryLabel />} />
+          <Route path="/label/contract-from" element={<ContractFormLabel />} />
+          <Route path="/label/contract-from/:id" element={<ContractFormLabel />} />
+          <Route path="/label/contract-logs/:id" element={<ContractLogLabel />} />
+          <Route path="/label/sub-label-summary/:userId" element={<SubLabelSummaryLabel />} />
+          <Route path="/label/artist" element={<ArtistLabel />} />
+          <Route path="/label/user-management" element={<UserManagementLabel />} />
+          <Route path="/label/releases" element={<ReleasesLabel />} />
+          <Route path="/label/revenue-reports" element={<RevenueReportsLabel />} />
+          <Route path="/label/salesAndTrends" element={<SalesAndTrendsLabel />} />
+          <Route path="/label/payouts" element={<PayoutsLabel />} />
+          <Route path="/label/statements" element={<StatementLabel />} />
+          <Route path="/label/revenue-upload" element={<RevenueUploadLabel />} />
+          <Route path="/label/setting" element={<GeneralSetting />} />
+          <Route path="/label/label-upload" element={<LabelUploadLabel />} />
+          <Route path="/label/conversion" element={<ConversionLabel />} />
+          <Route path="/label/logs" element={<LogsLabel />} />
         </Route>
 
 

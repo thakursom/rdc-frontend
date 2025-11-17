@@ -59,11 +59,26 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </NavLink>
           </li>
 
-          {role === "Super Admin" && (
+          {(role === "Super Admin" || role === "Label") && (
             <li className="sidebar-item">
-              <NavLink className={({ isActive }) =>
-                `sidebar-links ${isActive ? "active" : ""}`
-              } to="/superadmin/artist">
+              <NavLink
+                to={
+                  role === "Super Admin"
+                    ? "/superadmin/artist"
+                    : role === "Admin"
+                      ? "/admin/artist"
+                      : role === "Manager"
+                        ? "/manager/artist"
+                        : role === "Label"
+                          ? "/label/artist"
+                          : role === "Sub Label"
+                            ? "/sub-label/artist"
+                            : "/user/artist"
+                }
+                className={({ isActive }) =>
+                  `sidebar-links ${isActive ? "active" : ""}`
+                }
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width={24}
@@ -75,9 +90,6 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   className="lucide lucide-users w-5 h-5"
-                  aria-hidden="true"
-                  data-source-pos="1067:37-1067:66"
-                  data-source-name="Users"
                 >
                   <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                   <path d="M16 3.128a4 4 0 0 1 0 7.744" />
@@ -87,11 +99,24 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                 Artist
               </NavLink>
             </li>
+
           )}
 
-          {role === "Super Admin" && (
+          {(role === "Super Admin" || role === "Label") && (
             <li className="sidebar-item">
-              <NavLink className="sidebar-links" to="/superadmin/user-management">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/user-management"
+                  : role === "Admin"
+                    ? "/admin/user-management"
+                    : role === "Manager"
+                      ? "/manager/user-management"
+                      : role === "Label"
+                        ? "/label/user-management"
+                        : role === "Sub Label"
+                          ? "/sub-label/user-management"
+                          : "/user/user-management"
+              }>
                 <svg
                   width={26}
                   height={24}
@@ -112,9 +137,21 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {role === "Super Admin" && (
+          {(role === "Super Admin" || role === "Label") && (
             <li className="sidebar-item">
-              <NavLink className="sidebar-links" to="/superadmin/releases">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/releases"
+                  : role === "Admin"
+                    ? "/admin/releases"
+                    : role === "Manager"
+                      ? "/manager/releases"
+                      : role === "Label"
+                        ? "/label/releases"
+                        : role === "Sub Label"
+                          ? "/sub-label/releases"
+                          : "/user/releases"
+              }>
                 <svg
                   width={24}
                   height={24}
@@ -156,9 +193,21 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {role === "Super Admin" && (
+          {(role === "Super Admin" || role === "Label") && (
             <li className="sidebar-item">
-              <NavLink className="sidebar-links" to="/superadmin/revenue-reports">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/revenue-reports"
+                  : role === "Admin"
+                    ? "/admin/revenue-reports"
+                    : role === "Manager"
+                      ? "/manager/revenue-reports"
+                      : role === "Label"
+                        ? "/label/revenue-reports"
+                        : role === "Sub Label"
+                          ? "/sub-label/revenue-reports"
+                          : "/user/revenue-reports"
+              }>
                 <svg
                   width={22}
                   height={20}
@@ -184,9 +233,21 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {role === "Super Admin" && (
+          {(role === "Super Admin" || role === "Label") && (
             <li className="sidebar-item">
-              <NavLink className="sidebar-links" to="/superadmin/salesAndTrends">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/salesAndTrends"
+                  : role === "Admin"
+                    ? "/admin/salesAndTrends"
+                    : role === "Manager"
+                      ? "/manager/salesAndTrends"
+                      : role === "Label"
+                        ? "/label/salesAndTrends"
+                        : role === "Sub Label"
+                          ? "/sub-label/salesAndTrends"
+                          : "/user/salesAndTrends"
+              }>
                 <svg
                   width={24}
                   height={24}
@@ -214,9 +275,21 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {role === "Super Admin" && (
+          {(role === "Super Admin" || role === "Label") && (
             <li className="sidebar-item">
-              <NavLink className="sidebar-links" to="/superadmin/payouts">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/payouts"
+                  : role === "Admin"
+                    ? "/admin/payouts"
+                    : role === "Manager"
+                      ? "/manager/payouts"
+                      : role === "Label"
+                        ? "/label/payouts"
+                        : role === "Sub Label"
+                          ? "/sub-label/payouts"
+                          : "/user/payouts"
+              }>
                 <svg
                   width={24}
                   height={24}
@@ -244,9 +317,21 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {role === "Super Admin" && (
+          {(role === "Super Admin" || role === "Label") && (
             <li className="sidebar-item">
-              <NavLink className="sidebar-links" to="/superadmin/statements">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/statements"
+                  : role === "Admin"
+                    ? "/admin/statements"
+                    : role === "Manager"
+                      ? "/manager/statements"
+                      : role === "Label"
+                        ? "/label/statements"
+                        : role === "Sub Label"
+                          ? "/sub-label/statements"
+                          : "/user/statements"
+              }>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width={24}
@@ -273,9 +358,21 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {role === "Super Admin" && (
+          {(role === "Super Admin" || role === "Label") && (
             <li className="sidebar-item">
-              <NavLink className="sidebar-links" to="/superadmin/revenue-upload">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/revenue-upload"
+                  : role === "Admin"
+                    ? "/admin/revenue-upload"
+                    : role === "Manager"
+                      ? "/manager/revenue-upload"
+                      : role === "Label"
+                        ? "/label/revenue-upload"
+                        : role === "Sub Label"
+                          ? "/sub-label/revenue-upload"
+                          : "/user/revenue-upload"
+              }>
                 <svg
                   width={26}
                   height={26}
@@ -303,7 +400,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {/* {role === "Super Admin" && (
+          {/* {(role === "Super Admin" || role === "Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to="/superadmin/setting">
                 <svg
@@ -333,7 +430,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )} */}
 
-          {role === "Super Admin" && (
+          {(role === "Super Admin" || role === "Label") && (
             <li className="sidebar-item">
               {/* ✅ Replace NavLink with clickable div but same CSS */}
               <a
@@ -364,167 +461,252 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                       strokeLinejoin="round"
                     />
                   </svg>
-                Setting
-              </span>
+                  Setting
+                </span>
 
-              <span className="arrow">{settingOpen ? "▲" : "▼"}</span>
-            </a>
+                <span className="arrow">{settingOpen ? "▲" : "▼"}</span>
+              </a>
 
               {/* ✅ Dropdown submenu */}
-          {settingOpen && (
-            <ul className="submenu">
-              <li>
-                <NavLink className="sidebar-links" to="/superadmin/setting">
-                  General Settings
-                </NavLink>
-              </li>
-              <li>
-                <NavLink className="sidebar-links" to="/superadmin/bank-details">
-                  Bank Details
-                </NavLink>
-              </li>
-              <li>
+              {settingOpen && (
+                <ul className="submenu">
+                  <li>
+                    <NavLink className="sidebar-links" to={
+                      role === "Super Admin"
+                        ? "/superadmin/setting"
+                        : role === "Admin"
+                          ? "/admin/setting"
+                          : role === "Manager"
+                            ? "/manager/setting"
+                            : role === "Label"
+                              ? "/label/setting"
+                              : role === "Sub Label"
+                                ? "/sub-label/setting"
+                                : "/user/setting"
+                    }>
+                      General Settings
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="sidebar-links" to={
+                      role === "Super Admin"
+                        ? "/superadmin/bank-details"
+                        : role === "Admin"
+                          ? "/admin/bank-details"
+                          : role === "Manager"
+                            ? "/manager/bank-details"
+                            : role === "Label"
+                              ? "/label/bank-details"
+                              : role === "Sub Label"
+                                ? "/sub-label/bank-details"
+                                : "/user/bank-details"
+                    }>
+                      Bank Details
+                    </NavLink>
+                  </li>
+                  {/* <li>
                 <NavLink className="sidebar-links" to="/superadmin/contract">
                   Contract
                 </NavLink>
-              </li>
-            </ul>
+              </li> */}
+                </ul>
+              )}
+            </li>
           )}
-        </li>
+
+          {(role === "Super Admin" || role === "Label") && (
+            <li className="sidebar-item">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/label-summary"
+                  : role === "Admin"
+                    ? "/admin/label-summary"
+                    : role === "Manager"
+                      ? "/manager/label-summary"
+                      : role === "Label"
+                        ? "/label/label-summary"
+                        : role === "Sub Label"
+                          ? "/sub-label/label-summary"
+                          : "/user/label-summary"
+              }>
+                <svg
+                  width={26}
+                  height={26}
+                  viewBox="0 0 26 26"
+                  fill="#fff"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke="#14CDBB"
+                    d="M22.8575 4.96826L20.7148 7.03723V22.5172H25.0001V7.03723L22.8575 4.96826ZM24.1431 21.6896H21.5719V19.6207H24.1431V21.6896ZM21.5719 18.7931V7.37654L22.8575 6.13516L24.1431 7.37654V18.7931H21.5719Z"
+                    fill="#fff"
+                    strokeWidth="0.64"
+                  />
+                  <path
+                    stroke="#14CDBB"
+                    d="M17.9591 3.48276H17.7148V1.82759C17.7148 1.6081 17.6245 1.3976 17.4638 1.24239C17.3031 1.08719 17.0851 1 16.8578 1H16.0007C15.7734 1 15.5554 1.08719 15.3947 1.24239C15.234 1.3976 15.1437 1.6081 15.1437 1.82759V3.48276H5.28755V1.82759C5.28755 1.6081 5.19725 1.3976 5.03652 1.24239C4.87579 1.08719 4.6578 1 4.4305 1H3.57344C3.34614 1 3.12814 1.08719 2.96741 1.24239C2.80669 1.3976 2.71639 1.6081 2.71639 1.82759V3.48276H2.0436C1.74755 3.50398 1.47213 3.63713 1.27716 3.85329C1.08218 4.06945 0.983408 4.35117 1.00228 4.63724V23.8455C0.983408 24.1316 1.08218 24.4133 1.27716 24.6295C1.47213 24.8456 1.74755 24.9788 2.0436 25H17.9591C18.2551 24.9788 18.5306 24.8456 18.7255 24.6295C18.9205 24.4133 19.0193 24.1316 19.0004 23.8455V4.63724C19.0193 4.35117 18.9205 4.06945 18.7255 3.85329C18.5306 3.63713 18.2551 3.50398 17.9591 3.48276ZM16.0007 1.82759H16.8578V4.31034H16.0007V1.82759ZM3.57344 1.82759H4.4305V4.31034H3.57344V1.82759ZM18.1433 23.8455C18.1433 24.04 18.0319 24.1724 17.9591 24.1724H2.0436C1.97075 24.1724 1.85934 24.04 1.85934 23.8455V4.63724C1.85934 4.44276 1.97075 4.31034 2.0436 4.31034H2.71639C2.71639 4.52983 2.80669 4.74033 2.96741 4.89554C3.12814 5.05074 3.34614 5.13793 3.57344 5.13793H4.4305C4.6578 5.13793 4.87579 5.05074 5.03652 4.89554C5.19725 4.74033 5.28755 4.52983 5.28755 4.31034H15.1437C15.1437 4.52983 15.234 4.74033 15.3947 4.89554C15.5554 5.05074 15.7734 5.13793 16.0007 5.13793H16.8578C17.0851 5.13793 17.3031 5.05074 17.4638 4.89554C17.6245 4.74033 17.7148 4.52983 17.7148 4.31034H17.9591C18.0319 4.31034 18.1433 4.44276 18.1433 4.63724V23.8455Z"
+                    fill="#fff"
+                    strokeWidth="0.64"
+                  />
+                  <path
+                    stroke="#14CDBB"
+                    d="M16.43 8.86206H3.57422V9.68965H16.43V8.86206Z"
+                    fill="#fff"
+                    strokeWidth="0.64"
+                  />
+                  <path
+                    stroke="#14CDBB"
+                    d="M16.43 11.3447H3.57422V12.1723H16.43V11.3447Z"
+                    fill="#fff"
+                    strokeWidth="0.64"
+                  />
+                  <path
+                    stroke="#14CDBB"
+                    d="M16.43 13.8276H3.57422V14.6552H16.43V13.8276Z"
+                    fill="#fff"
+                    strokeWidth="0.64"
+                  />
+                  <path
+                    stroke="#14CDBB"
+                    d="M16.43 16.3103H3.57422V17.1379H16.43V16.3103Z"
+                    fill="#fff"
+                    strokeWidth="0.64"
+                  />
+                </svg>
+                {
+                  role === "Super Admin"
+                    ? "Label Summary"
+                    : role === "Admin"
+                      ? "Label Summary"
+                      : role === "Manager"
+                        ? "Label Summary"
+                        : role === "Label"
+                          ? "Sub Label Summary"
+                          : role === "Sub Label"
+                            ? "Label Summary"
+                            : "Label Summary"
+                }
+
+              </NavLink>
+            </li>
           )}
 
-        {role === "Super Admin" && (
-          <li className="sidebar-item">
-            <NavLink className="sidebar-links" to="/superadmin/label-summary">
-              <svg
-                width={26}
-                height={26}
-                viewBox="0 0 26 26"
-                fill="#fff"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke="#14CDBB"
-                  d="M22.8575 4.96826L20.7148 7.03723V22.5172H25.0001V7.03723L22.8575 4.96826ZM24.1431 21.6896H21.5719V19.6207H24.1431V21.6896ZM21.5719 18.7931V7.37654L22.8575 6.13516L24.1431 7.37654V18.7931H21.5719Z"
-                  fill="#fff"
-                  strokeWidth="0.64"
-                />
-                <path
-                  stroke="#14CDBB"
-                  d="M17.9591 3.48276H17.7148V1.82759C17.7148 1.6081 17.6245 1.3976 17.4638 1.24239C17.3031 1.08719 17.0851 1 16.8578 1H16.0007C15.7734 1 15.5554 1.08719 15.3947 1.24239C15.234 1.3976 15.1437 1.6081 15.1437 1.82759V3.48276H5.28755V1.82759C5.28755 1.6081 5.19725 1.3976 5.03652 1.24239C4.87579 1.08719 4.6578 1 4.4305 1H3.57344C3.34614 1 3.12814 1.08719 2.96741 1.24239C2.80669 1.3976 2.71639 1.6081 2.71639 1.82759V3.48276H2.0436C1.74755 3.50398 1.47213 3.63713 1.27716 3.85329C1.08218 4.06945 0.983408 4.35117 1.00228 4.63724V23.8455C0.983408 24.1316 1.08218 24.4133 1.27716 24.6295C1.47213 24.8456 1.74755 24.9788 2.0436 25H17.9591C18.2551 24.9788 18.5306 24.8456 18.7255 24.6295C18.9205 24.4133 19.0193 24.1316 19.0004 23.8455V4.63724C19.0193 4.35117 18.9205 4.06945 18.7255 3.85329C18.5306 3.63713 18.2551 3.50398 17.9591 3.48276ZM16.0007 1.82759H16.8578V4.31034H16.0007V1.82759ZM3.57344 1.82759H4.4305V4.31034H3.57344V1.82759ZM18.1433 23.8455C18.1433 24.04 18.0319 24.1724 17.9591 24.1724H2.0436C1.97075 24.1724 1.85934 24.04 1.85934 23.8455V4.63724C1.85934 4.44276 1.97075 4.31034 2.0436 4.31034H2.71639C2.71639 4.52983 2.80669 4.74033 2.96741 4.89554C3.12814 5.05074 3.34614 5.13793 3.57344 5.13793H4.4305C4.6578 5.13793 4.87579 5.05074 5.03652 4.89554C5.19725 4.74033 5.28755 4.52983 5.28755 4.31034H15.1437C15.1437 4.52983 15.234 4.74033 15.3947 4.89554C15.5554 5.05074 15.7734 5.13793 16.0007 5.13793H16.8578C17.0851 5.13793 17.3031 5.05074 17.4638 4.89554C17.6245 4.74033 17.7148 4.52983 17.7148 4.31034H17.9591C18.0319 4.31034 18.1433 4.44276 18.1433 4.63724V23.8455Z"
-                  fill="#fff"
-                  strokeWidth="0.64"
-                />
-                <path
-                  stroke="#14CDBB"
-                  d="M16.43 8.86206H3.57422V9.68965H16.43V8.86206Z"
-                  fill="#fff"
-                  strokeWidth="0.64"
-                />
-                <path
-                  stroke="#14CDBB"
-                  d="M16.43 11.3447H3.57422V12.1723H16.43V11.3447Z"
-                  fill="#fff"
-                  strokeWidth="0.64"
-                />
-                <path
-                  stroke="#14CDBB"
-                  d="M16.43 13.8276H3.57422V14.6552H16.43V13.8276Z"
-                  fill="#fff"
-                  strokeWidth="0.64"
-                />
-                <path
-                  stroke="#14CDBB"
-                  d="M16.43 16.3103H3.57422V17.1379H16.43V16.3103Z"
-                  fill="#fff"
-                  strokeWidth="0.64"
-                />
-              </svg>
-              Label Summary
-            </NavLink>
-          </li>
-        )}
+          {(role === "Super Admin" || role === "Label") && (
+            <li className="sidebar-item">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/label-upload"
+                  : role === "Admin"
+                    ? "/admin/label-upload"
+                    : role === "Manager"
+                      ? "/manager/label-upload"
+                      : role === "Label"
+                        ? "/label/label-upload"
+                        : role === "Sub Label"
+                          ? "/sub-label/label-upload"
+                          : "/user/label-upload"
+              }>
+                <svg
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 13V21"
+                    stroke="#9550DF"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M3.99997 14.899C3.25701 14.1399 2.69654 13.2217 2.36101 12.214C2.02547 11.2062 1.92368 10.1353 2.06333 9.08232C2.20299 8.02938 2.58043 7.02202 3.16707 6.13655C3.75371 5.25109 4.53416 4.51074 5.44931 3.97157C6.36445 3.43241 7.3903 3.10857 8.44914 3.0246C9.50798 2.94062 10.572 3.09871 11.5607 3.48688C12.5494 3.87505 13.4368 4.48313 14.1557 5.26506C14.8746 6.04698 15.4061 6.98225 15.71 8.00002H17.5C18.4655 7.99991 19.4054 8.31034 20.181 8.88546C20.9565 9.46058 21.5265 10.2699 21.8067 11.1938C22.087 12.1178 22.0627 13.1074 21.7373 14.0164C21.412 14.9254 20.8028 15.7057 20 16.242"
+                    stroke="#9550DF"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M8 17L12 13L16 17"
+                    stroke="#9550DF"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                Label Upload
+              </NavLink>
+            </li>
+          )}
 
-        {role === "Super Admin" && (
-          <li className="sidebar-item">
-            <NavLink className="sidebar-links" to="/superadmin/label-upload">
-              <svg
-                width={24}
-                height={24}
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12 13V21"
-                  stroke="#9550DF"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M3.99997 14.899C3.25701 14.1399 2.69654 13.2217 2.36101 12.214C2.02547 11.2062 1.92368 10.1353 2.06333 9.08232C2.20299 8.02938 2.58043 7.02202 3.16707 6.13655C3.75371 5.25109 4.53416 4.51074 5.44931 3.97157C6.36445 3.43241 7.3903 3.10857 8.44914 3.0246C9.50798 2.94062 10.572 3.09871 11.5607 3.48688C12.5494 3.87505 13.4368 4.48313 14.1557 5.26506C14.8746 6.04698 15.4061 6.98225 15.71 8.00002H17.5C18.4655 7.99991 19.4054 8.31034 20.181 8.88546C20.9565 9.46058 21.5265 10.2699 21.8067 11.1938C22.087 12.1178 22.0627 13.1074 21.7373 14.0164C21.412 14.9254 20.8028 15.7057 20 16.242"
-                  stroke="#9550DF"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M8 17L12 13L16 17"
-                  stroke="#9550DF"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              Label Upload
-            </NavLink>
-          </li>
-        )}
+          {(role === "Super Admin" || role === "Label") && (
+            <li className="sidebar-item">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/conversion"
+                  : role === "Admin"
+                    ? "/admin/conversion"
+                    : role === "Manager"
+                      ? "/manager/conversion"
+                      : role === "Label"
+                        ? "/label/conversion"
+                        : role === "Sub Label"
+                          ? "/sub-label/conversion"
+                          : "/user/conversion"
+              } id="conversion">
+                <svg
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeWidth="0.1"
+                    d="M20.8421 24C20.0859 24 19.4177 23.7351 18.8375 23.2052C18.2581 22.6762 17.8989 22 17.76 21.1765H10.7368C9.50905 21.1765 8.46526 20.696 7.60547 19.7351C6.74568 18.7741 6.31579 17.6075 6.31579 16.2353C6.31579 14.8631 6.74568 13.6965 7.60547 12.7355C8.46526 11.7746 9.50905 11.2941 10.7368 11.2941H13.2632C14.1314 11.2941 14.8749 10.9482 15.4939 10.2565C16.1128 9.56471 16.4219 8.73224 16.4211 7.75906C16.4211 6.78682 16.112 5.95671 15.4939 5.26871C14.8741 4.57976 14.1305 4.23529 13.2632 4.23529H6.24C6.09684 5.05882 5.73642 5.73553 5.15874 6.26541C4.58105 6.79529 3.91411 7.05976 3.15789 7.05882C2.28042 7.05882 1.53516 6.71576 0.922105 6.02965C0.307368 5.34447 0 4.512 0 3.53224C0 2.55341 0.307368 1.72 0.922105 1.032C1.53432 0.344 2.27958 0 3.15789 0C3.91411 0 4.58105 0.264941 5.15874 0.794824C5.73558 1.32377 6.096 2 6.24 2.82353H13.2632C14.4909 2.82353 15.5347 3.304 16.3945 4.26494C17.2543 5.22588 17.6842 6.39247 17.6842 7.76471C17.6842 9.13694 17.2543 10.3035 16.3945 11.2645C15.5347 12.2254 14.4909 12.7059 13.2632 12.7059H10.7368C9.86863 12.7059 9.12505 13.0518 8.50611 13.7435C7.88716 14.4353 7.5781 15.2678 7.57895 16.2409C7.57895 17.2132 7.888 18.0433 8.50611 18.7313C9.12505 19.4202 9.86863 19.7647 10.7368 19.7647H17.76C17.9032 18.9412 18.2636 18.2645 18.8413 17.7346C19.4189 17.2047 20.0859 16.9402 20.8421 16.9412C21.7196 16.9412 22.4648 17.2842 23.0779 17.9704C23.6926 18.6555 24 19.488 24 20.4678C24 21.4466 23.6926 22.28 23.0779 22.968C22.4648 23.656 21.7196 24 20.8421 24ZM3.15789 5.64706C3.67747 5.64706 4.12337 5.43953 4.49558 5.02447C4.86695 4.60847 5.05263 4.11012 5.05263 3.52941C5.05263 2.94871 4.86695 2.45035 4.49558 2.03435C4.12337 1.61929 3.67747 1.41176 3.15789 1.41176C2.63832 1.41176 2.19242 1.61929 1.82021 2.03435C1.44884 2.45035 1.26316 2.94871 1.26316 3.52941C1.26316 4.11012 1.44884 4.60847 1.82021 5.02447C2.19242 5.43953 2.63832 5.64706 3.15789 5.64706Z"
+                    fill="#F88C65"
+                  />
+                </svg>
+                XSLS XML Conversion
+              </NavLink>
+            </li>
+          )}
 
-        {role === "Super Admin" && (
-          <li className="sidebar-item">
-            <NavLink className="sidebar-links" to="/superadmin/conversion" id="conversion">
-              <svg
-                width={24}
-                height={24}
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeWidth="0.1"
-                  d="M20.8421 24C20.0859 24 19.4177 23.7351 18.8375 23.2052C18.2581 22.6762 17.8989 22 17.76 21.1765H10.7368C9.50905 21.1765 8.46526 20.696 7.60547 19.7351C6.74568 18.7741 6.31579 17.6075 6.31579 16.2353C6.31579 14.8631 6.74568 13.6965 7.60547 12.7355C8.46526 11.7746 9.50905 11.2941 10.7368 11.2941H13.2632C14.1314 11.2941 14.8749 10.9482 15.4939 10.2565C16.1128 9.56471 16.4219 8.73224 16.4211 7.75906C16.4211 6.78682 16.112 5.95671 15.4939 5.26871C14.8741 4.57976 14.1305 4.23529 13.2632 4.23529H6.24C6.09684 5.05882 5.73642 5.73553 5.15874 6.26541C4.58105 6.79529 3.91411 7.05976 3.15789 7.05882C2.28042 7.05882 1.53516 6.71576 0.922105 6.02965C0.307368 5.34447 0 4.512 0 3.53224C0 2.55341 0.307368 1.72 0.922105 1.032C1.53432 0.344 2.27958 0 3.15789 0C3.91411 0 4.58105 0.264941 5.15874 0.794824C5.73558 1.32377 6.096 2 6.24 2.82353H13.2632C14.4909 2.82353 15.5347 3.304 16.3945 4.26494C17.2543 5.22588 17.6842 6.39247 17.6842 7.76471C17.6842 9.13694 17.2543 10.3035 16.3945 11.2645C15.5347 12.2254 14.4909 12.7059 13.2632 12.7059H10.7368C9.86863 12.7059 9.12505 13.0518 8.50611 13.7435C7.88716 14.4353 7.5781 15.2678 7.57895 16.2409C7.57895 17.2132 7.888 18.0433 8.50611 18.7313C9.12505 19.4202 9.86863 19.7647 10.7368 19.7647H17.76C17.9032 18.9412 18.2636 18.2645 18.8413 17.7346C19.4189 17.2047 20.0859 16.9402 20.8421 16.9412C21.7196 16.9412 22.4648 17.2842 23.0779 17.9704C23.6926 18.6555 24 19.488 24 20.4678C24 21.4466 23.6926 22.28 23.0779 22.968C22.4648 23.656 21.7196 24 20.8421 24ZM3.15789 5.64706C3.67747 5.64706 4.12337 5.43953 4.49558 5.02447C4.86695 4.60847 5.05263 4.11012 5.05263 3.52941C5.05263 2.94871 4.86695 2.45035 4.49558 2.03435C4.12337 1.61929 3.67747 1.41176 3.15789 1.41176C2.63832 1.41176 2.19242 1.61929 1.82021 2.03435C1.44884 2.45035 1.26316 2.94871 1.26316 3.52941C1.26316 4.11012 1.44884 4.60847 1.82021 5.02447C2.19242 5.43953 2.63832 5.64706 3.15789 5.64706Z"
-                  fill="#F88C65"
-                />
-              </svg>
-              XSLS XML Conversion
-            </NavLink>
-          </li>
-        )}
+          {(role === "Super Admin" || role === "Label") && (
+            <li className="sidebar-item">
+              <NavLink className="sidebar-links" to={
+                role === "Super Admin"
+                  ? "/superadmin/logs"
+                  : role === "Admin"
+                    ? "/admin/logs"
+                    : role === "Manager"
+                      ? "/manager/logs"
+                      : role === "Label"
+                        ? "/label/logs"
+                        : role === "Sub Label"
+                          ? "/sub-label/logs"
+                          : "/user/logs"
+              } id="logs-fx">
+                <svg
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill="#2F80ED"
+                    d="M3.823 22.9258H7.38953V19.3644H3.823V22.9258ZM0.842029 16.3837V19.3644H3.823V16.3837H0.842029ZM23.4026 8.17215C22.2896 4.58173 19.415 1.72197 15.8243 0.59452C7.59277 -1.97491 0 4.14623 0 11.9948H4.636C4.636 7.06889 9.52363 3.26072 14.7065 5.13819C16.6276 5.83015 18.1665 7.3689 18.8585 9.28508C20.7507 14.4626 16.9374 19.3402 12.0158 19.3499V19.3644H12.0013V24C19.8699 24 25.9771 16.4127 23.4026 8.17215ZM12.0158 19.3499V14.7385H7.38953V19.3644H12.0013V19.3499H12.0158Z"
+                  />
+                </svg>
+                Logs
+              </NavLink>
+            </li>
+          )}
 
-        {role === "Super Admin" && (
-          <li className="sidebar-item">
-            <NavLink className="sidebar-links" to="/superadmin/logs" id="logs-fx">
-              <svg
-                width={24}
-                height={24}
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill="#2F80ED"
-                  d="M3.823 22.9258H7.38953V19.3644H3.823V22.9258ZM0.842029 16.3837V19.3644H3.823V16.3837H0.842029ZM23.4026 8.17215C22.2896 4.58173 19.415 1.72197 15.8243 0.59452C7.59277 -1.97491 0 4.14623 0 11.9948H4.636C4.636 7.06889 9.52363 3.26072 14.7065 5.13819C16.6276 5.83015 18.1665 7.3689 18.8585 9.28508C20.7507 14.4626 16.9374 19.3402 12.0158 19.3499V19.3644H12.0013V24C19.8699 24 25.9771 16.4127 23.4026 8.17215ZM12.0158 19.3499V14.7385H7.38953V19.3644H12.0013V19.3499H12.0158Z"
-                />
-              </svg>
-              Logs
-            </NavLink>
-          </li>
-        )}
-
-      </ul>
-    </div>
+        </ul>
+      </div>
     </section >
 
   );

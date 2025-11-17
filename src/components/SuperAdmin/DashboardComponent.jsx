@@ -1,4 +1,10 @@
 import DashboardChart from "../Chart/DashboardChart";
+import PlateformShareChart from "../Chart/PlateformShareChart";
+import RevenueByMonthChart from "../Chart/RevenueByMonthChart";
+import MusicStreamsChart from "../Chart/MusicStreamsChart";
+import WeeklyStreamChart from "../Chart/WeeklyStreamChart";
+import MusicStreamComparisonChart from "../Chart/MusicStreamComparisonChart";
+import StreamingTrendsOverTimeChart from "../Chart/StreamingTrendsOverTimeChart";
 
 
 function DashboardComponent() {
@@ -41,7 +47,62 @@ function DashboardComponent() {
                             role="tabpanel"
                             aria-labelledby="home-tab"
                         >
-                            <div className="row py-5 g-4">
+
+                            <div className="form-main-sec row pb-5 pt-4 g-4">
+                                <form className="rdc-form">
+                                    <div className="form-group">
+                                        <div className="form-sec">
+                                            <i className="fa-solid fa-magnifying-glass" />
+                                            <input
+                                                className="form-control"
+                                                type="search"
+                                                placeholder="search here"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <div className="form-sec">
+                                            <select className="form-select" id="label">
+                                                <option value="label">Label</option>
+                                                <option value={1}>1</option>
+                                                <option value={2}>2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <div className="form-sec form-sec-set">
+                                            <label className="form-label" htmlFor="start-date">
+                                                From
+                                            </label>
+                                            <input
+                                                className="form-control"
+                                                type="date"
+                                                placeholder="search here"
+                                                id="start-date"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <div className="form-sec form-sec-set">
+                                            <label className="form-label" htmlFor="start-date">
+                                                To
+                                            </label>
+                                            <input
+                                                className="form-control"
+                                                type="date"
+                                                placeholder="search here"
+                                                id="start-date"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="form-group">
+                                        <div className="form-sec">
+                                            <button className="theme-btn green-cl white-cl">Apply</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div className="row pb-5 g-4">
                                 <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
                                     <div className="dash-card parot-cl">
                                         <div className="dash-icon">
@@ -165,60 +226,7 @@ function DashboardComponent() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="form-main-sec">
-                                <form className="rdc-form">
-                                    <div className="form-group">
-                                        <div className="form-sec">
-                                            <i className="fa-solid fa-magnifying-glass" />
-                                            <input
-                                                className="form-control"
-                                                type="search"
-                                                placeholder="search here"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="form-sec">
-                                            <select className="form-select" id="label">
-                                                <option value="label">Label</option>
-                                                <option value={1}>1</option>
-                                                <option value={2}>2</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="form-sec form-sec-set">
-                                            <label className="form-label" htmlFor="start-date">
-                                                From
-                                            </label>
-                                            <input
-                                                className="form-control"
-                                                type="date"
-                                                placeholder="search here"
-                                                id="start-date"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="form-sec form-sec-set">
-                                            <label className="form-label" htmlFor="start-date">
-                                                To
-                                            </label>
-                                            <input
-                                                className="form-control"
-                                                type="date"
-                                                placeholder="search here"
-                                                id="start-date"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="form-group">
-                                        <div className="form-sec">
-                                            <button className="theme-btn green-cl white-cl">Apply</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+
                             <div className="row g-4">
                                 <div className="col-md-6 col-lg-7 col-xxl-8  stem-col">
                                     <div className="dash-charts stem-child">
@@ -300,7 +308,8 @@ function DashboardComponent() {
                                             </div>
                                         </div>
                                         <div className="main-chartbox">
-                                            <canvas id="myChart" />
+                                            {/* <canvas id="myChart" /> */}
+                                            <PlateformShareChart />
                                         </div>
                                     </div>
                                 </div>
@@ -348,7 +357,8 @@ function DashboardComponent() {
                                             </div>
                                         </div>
                                         <div className="main-chartbox">
-                                            <canvas id="revenueChart" />
+                                            {/* <canvas id="revenueChart" /> */}
+                                            <RevenueByMonthChart />
                                         </div>
                                     </div>
                                 </div>
@@ -389,7 +399,8 @@ function DashboardComponent() {
                                             </div>
                                         </div>
                                         <div className="main-chartbox">
-                                            <canvas id="yearChart" />
+                                            {/* <canvas id="yearChart" /> */}
+                                            <MusicStreamsChart />
                                         </div>
                                     </div>
                                 </div>
@@ -501,7 +512,63 @@ function DashboardComponent() {
                                 role="tabpanel"
                                 aria-labelledby="home-tab"
                             >
-                                <div className="row py-5 g-4">
+                                <div className="form-main-sec row pb-5 pt-4 g-4 ">
+                                    <form className="rdc-form">
+                                        <div className="form-group">
+                                            <div className="form-sec">
+                                                <i className="fa-solid fa-magnifying-glass" />
+                                                <input
+                                                    className="form-control"
+                                                    type="search"
+                                                    placeholder="search here"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <div className="form-sec">
+                                                <select className="form-select" id="label">
+                                                    <option value="label">Label</option>
+                                                    <option value={1}>1</option>
+                                                    <option value={2}>2</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <div className="form-sec form-sec-set">
+                                                <label className="form-label" htmlFor="start-date">
+                                                    From
+                                                </label>
+                                                <input
+                                                    className="form-control"
+                                                    type="date"
+                                                    placeholder="search here"
+                                                    id="start-date"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <div className="form-sec form-sec-set">
+                                                <label className="form-label" htmlFor="start-date">
+                                                    To
+                                                </label>
+                                                <input
+                                                    className="form-control"
+                                                    type="date"
+                                                    placeholder="search here"
+                                                    id="start-date"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <div className="form-sec">
+                                                <button className="theme-btn green-cl white-cl">
+                                                    Apply
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div className="row pb-5 g-4">
                                     <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
                                         <div className="dash-card parot-cl">
                                             <div className="dash-icon">
@@ -625,62 +692,7 @@ function DashboardComponent() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="form-main-sec">
-                                    <form className="rdc-form">
-                                        <div className="form-group">
-                                            <div className="form-sec">
-                                                <i className="fa-solid fa-magnifying-glass" />
-                                                <input
-                                                    className="form-control"
-                                                    type="search"
-                                                    placeholder="search here"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <div className="form-sec">
-                                                <select className="form-select" id="label">
-                                                    <option value="label">Label</option>
-                                                    <option value={1}>1</option>
-                                                    <option value={2}>2</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <div className="form-sec form-sec-set">
-                                                <label className="form-label" htmlFor="start-date">
-                                                    From
-                                                </label>
-                                                <input
-                                                    className="form-control"
-                                                    type="date"
-                                                    placeholder="search here"
-                                                    id="start-date"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <div className="form-sec form-sec-set">
-                                                <label className="form-label" htmlFor="start-date">
-                                                    To
-                                                </label>
-                                                <input
-                                                    className="form-control"
-                                                    type="date"
-                                                    placeholder="search here"
-                                                    id="start-date"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <div className="form-sec">
-                                                <button className="theme-btn green-cl white-cl">
-                                                    Apply
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+
                                 <div className="row g-4">
                                     <div className="col-md-12 col-lg-12 col-xl-6  stem-col">
                                         <div className="dash-charts stem-child">
@@ -719,7 +731,8 @@ function DashboardComponent() {
                                                 </div>
                                             </div>
                                             <div className="main-chartbox">
-                                                <canvas id="weeklyChart" />
+                                                {/* <canvas id="weeklyChart" /> */}
+                                                <WeeklyStreamChart />
                                             </div>
                                         </div>
                                     </div>
@@ -760,7 +773,8 @@ function DashboardComponent() {
                                                 </div>
                                             </div>
                                             <div className="main-chartbox">
-                                                <canvas id="streamsChart" />
+                                                {/* <canvas id="streamsChart" /> */}
+                                                <MusicStreamComparisonChart />
                                             </div>
                                         </div>
                                     </div>
@@ -804,7 +818,8 @@ function DashboardComponent() {
                                                 </div>
                                             </div>
                                             <div className="chart-container mb-3">
-                                                <canvas id="musicChart" />
+                                                {/* <canvas id="musicChart" /> */}
+                                                <StreamingTrendsOverTimeChart />
                                             </div>
                                             <p>Streams (Millions)</p>
                                             <div className="streaming-buttons-fx">

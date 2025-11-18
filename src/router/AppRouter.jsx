@@ -51,6 +51,26 @@ import GeneralSetting from "../pages/Label/GeneralSetting";
 import LabelUploadLabel from "../pages/Label/LabelUpload";
 import ConversionLabel from "../pages/Label/Conversion";
 import LogsLabel from "../pages/Label/Logs";
+import BankDetailLabel from "../pages/Label/BankDetail";
+import BankDetailFormLabel from "../pages/Label/BankDetailForm";
+import LabelSummarySubLabel from "../pages/SubLabel/LabelSummary";
+import ContractFormSubLabel from "../pages/SubLabel/ContractForm";
+import ContractLogSubLabel from "../pages/SubLabel/ContractLog";
+import SubLabelSummarySubLabel from "../pages/SubLabel/SubLabelSummary";
+import ArtistSubLabel from "../pages/SubLabel/Artist";
+import UserManagementSubLabel from "../pages/SubLabel/UserManagement";
+import ReleasesSubLabel from "../pages/SubLabel/Releases";
+import RevenueReportsSubLabel from "../pages/SubLabel/RevenueReports";
+import SalesAndTrendsSubLabel from "../pages/SubLabel/SalesAndTrends";
+import PayoutsSubLabel from "../pages/SubLabel/Payouts";
+import StatementSubLabel from "../pages/SubLabel/Statements";
+import RevenueUploadSubLabel from "../pages/SubLabel/RevenueUpload";
+import GeneralSettingSubLabel from "../pages/SubLabel/GeneralSetting";
+import LabelUploadSubLabel from "../pages/SubLabel/LabelUpload";
+import ConversionSubLabel from "../pages/SubLabel/Conversion";
+import LogsSubLabel from "../pages/SubLabel/Logs";
+import BankDetailSubLabel from "../pages/SubLabel/BankDetail";
+import BankDetailFormSubLabel from "../pages/SubLabel/BankDetailForm";
 
 function AppRouter() {
   return (
@@ -154,6 +174,9 @@ function AppRouter() {
           <Route path="/label/label-upload" element={<LabelUploadLabel />} />
           <Route path="/label/conversion" element={<ConversionLabel />} />
           <Route path="/label/logs" element={<LogsLabel />} />
+          <Route path="/label/bank-details" element={<BankDetailLabel />} />
+          <Route path="/label/bank-details-form" element={<BankDetailFormLabel />} />
+          <Route path="/label/bank-details-form/:id" element={<BankDetailFormLabel />} />
         </Route>
 
 
@@ -166,6 +189,26 @@ function AppRouter() {
           }
         >
           <Route path="/sub-label" element={<SubLabelDashboard />} />
+          <Route path="/sub-label/label-summary" element={<LabelSummarySubLabel />} />
+          <Route path="/sub-label/contract-from" element={<ContractFormSubLabel />} />
+          <Route path="/sub-label/contract-from/:id" element={<ContractFormSubLabel />} />
+          <Route path="/sub-label/contract-logs/:id" element={<ContractLogSubLabel />} />
+          <Route path="/sub-label/sub-label-summary/:userId" element={<SubLabelSummarySubLabel />} />
+          <Route path="/sub-label/artist" element={<ArtistSubLabel />} />
+          <Route path="/sub-label/user-management" element={<UserManagementSubLabel />} />
+          <Route path="/sub-label/releases" element={<ReleasesSubLabel />} />
+          <Route path="/sub-label/revenue-reports" element={<RevenueReportsSubLabel />} />
+          <Route path="/sub-label/salesAndTrends" element={<SalesAndTrendsSubLabel />} />
+          <Route path="/sub-label/payouts" element={<PayoutsSubLabel />} />
+          <Route path="/sub-label/statements" element={<StatementSubLabel />} />
+          <Route path="/sub-label/revenue-upload" element={<RevenueUploadSubLabel />} />
+          <Route path="/sub-label/setting" element={<GeneralSettingSubLabel />} />
+          <Route path="/sub-label/label-upload" element={<LabelUploadSubLabel />} />
+          <Route path="/sub-label/conversion" element={<ConversionSubLabel />} />
+          <Route path="/sub-label/logs" element={<LogsSubLabel />} />
+          <Route path="/sub-label/bank-details" element={<BankDetailSubLabel />} />
+          <Route path="/sub-label/bank-details-form" element={<BankDetailFormSubLabel />} />
+          <Route path="/sub-label/bank-details-form/:id" element={<BankDetailFormSubLabel />} />
         </Route>
 
 

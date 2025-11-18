@@ -72,7 +72,7 @@ function ArtistComponent() {
                                 cacheOptions
                                 loadOptions={loadOptions}
                                 defaultOptions
-                                placeholder="Search Sub Label"
+                                placeholder="Search Label"
                                 isClearable
                                 onChange={(selected) => {
                                     if (selected) {

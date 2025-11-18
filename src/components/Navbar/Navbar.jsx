@@ -59,7 +59,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </NavLink>
           </li>
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink
                 to={
@@ -102,7 +102,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
 
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -137,7 +137,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -193,7 +193,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -233,7 +233,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -275,7 +275,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -317,7 +317,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -358,7 +358,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -400,7 +400,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {/* {(role === "Super Admin" || role === "Label") && (
+          {/* {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to="/superadmin/setting">
                 <svg
@@ -430,7 +430,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )} */}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               {/* ✅ Replace NavLink with clickable div but same CSS */}
               <a
@@ -514,7 +514,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -591,7 +591,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -640,7 +640,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -673,7 +673,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label") && (
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"

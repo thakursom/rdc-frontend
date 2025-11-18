@@ -66,7 +66,7 @@ function ArtistComponent() {
                     <div className="mian-sec-heading">
                         <h6>Artist</h6>
                     </div>
-                    <form className="artist-form">
+                    {/* <form className="artist-form">
                         <div className="form-group" style={{ width: "300px" }}>
                             <AsyncSelect
                                 cacheOptions
@@ -86,7 +86,7 @@ function ArtistComponent() {
 
 
                         </div>
-                    </form>
+                    </form> */}
 
                     <div className="table-sec">
                         <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>

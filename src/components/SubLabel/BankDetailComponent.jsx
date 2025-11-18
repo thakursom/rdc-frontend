@@ -20,7 +20,7 @@ function BankDetailComponent() {
         setLoading(true);
 
         const res = await apiRequest(
-            `/getBankDetails?page=${page}&limit=10&search=${search}`,
+            `/getBankDetailByUserId?page=${page}&limit=10&search=${search}`,
             "GET",
             null,
             true
@@ -110,13 +110,13 @@ function BankDetailComponent() {
                             />
                         </div>
 
-                        <button
+                        {/* <button
                             className="theme-btn green-cl white-cl me-1"
                             onClick={() => navigate(`/sub-label/bank-details-form`)}
                         >
                             <i className="fa-regular fa-circle-user me-1" />
                             Add Bank Details
-                        </button>
+                        </button> */}
                     </div>
 
                     {/* ✅ TABLE */}
@@ -150,17 +150,17 @@ function BankDetailComponent() {
                                                 <td>
                                                     <button
                                                         className="border-less border-green color-green table-button me-1"
-                                                        onClick={() => navigate(`/label/bank-details-form/${b._id}`)}
+                                                        onClick={() => navigate(`/sub-label/bank-details-form/${b._id}`)}
                                                     >
                                                         Edit <i className="fa-solid fa-chevron-right" />
                                                     </button>
 
-                                                    <button
+                                                    {/* <button
                                                         className="border-less border-red dark-red table-button"
                                                         onClick={() => handleDeleteClick(b)}
                                                     >
                                                         Delete <i className="fa-solid fa-trash" />
-                                                    </button>
+                                                    </button> */}
                                                 </td>
                                             </tr>
                                         ))

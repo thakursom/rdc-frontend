@@ -40,8 +40,8 @@ function ArtistComponent() {
 
         const result = await apiRequest(url, "GET", null, true);
 
-        console.log("result",result);
-        
+        console.log("result", result);
+
 
         if (result.success) {
             setArtists(result?.data?.artists || result.data.artists);
@@ -109,6 +109,7 @@ function ArtistComponent() {
                                     <th>Country</th>
                                     <th>Stream</th>
                                     <th>Revenue</th>
+                                    <th>Action</th>
                                     <th className="last" />
                                 </tr>
                             </thead>

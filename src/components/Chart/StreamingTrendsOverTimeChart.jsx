@@ -88,7 +88,7 @@ function StreamingTrendsOverTimeChart() {
 
       {/* CHART */}
       <div style={{ width: "100%", height: "350px" }}>
-        <canvas ref={chartRef}></canvas>
+        <canvas id="musicChart" ref={chartRef}></canvas>
       </div>
     </div>
   );

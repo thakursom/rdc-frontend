@@ -70,7 +70,7 @@ export default function PlateformShareChart() {
 
     return (
         <div style={{ width: "100%", maxWidth: "600px", margin: "0 auto" }}>
-            <canvas ref={chartRef}></canvas>
+            <canvas id="myChart" ref={chartRef}></canvas>
         </div>
     );
 }

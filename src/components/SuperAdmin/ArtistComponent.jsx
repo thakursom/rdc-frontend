@@ -64,7 +64,7 @@ function ArtistComponent() {
                         <h6>Artist</h6>
                     </div>
                     <form className="artist-form">
-                        <div className="form-group" style={{ width: "300px" }}>
+                        <div className="form-group" style={{ maxWidth: "500px" }}>
                             <AsyncSelect
                                 cacheOptions
                                 loadOptions={loadOptions}
@@ -84,21 +84,21 @@ function ArtistComponent() {
 
                         </div>
                     </form>
-
+                    <div className="form-sec" style={{ marginBottom: "15px", maxWidth: "500px" }}>
+                        <i className="fa-solid fa-magnifying-glass" />
+                        <input
+                            className="form-control"
+                            type="search"
+                            placeholder="search here"
+                            value={search}
+                            onChange={(e) => {
+                                setSearch(e.target.value);
+                                setPage(1);
+                            }}
+                        />
+                    </div>
                     <div className="table-sec">
-                        <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
-                            <i className="fa-solid fa-magnifying-glass" />
-                            <input
-                                className="form-control"
-                                type="search"
-                                placeholder="search here"
-                                value={search}
-                                onChange={(e) => {
-                                    setSearch(e.target.value);
-                                    setPage(1);
-                                }}
-                            />
-                        </div>
+
                         <table className="rdc-table">
                             <thead>
                                 <tr>
@@ -106,6 +106,7 @@ function ArtistComponent() {
                                     <th>Country</th>
                                     <th>Stream</th>
                                     <th>Revenue</th>
+                                    <th>Action</th>
                                     <th className="last" />
                                 </tr>
                             </thead>

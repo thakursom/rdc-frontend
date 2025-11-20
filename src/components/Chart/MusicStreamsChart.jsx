@@ -100,7 +100,7 @@ function MusicStreamsChart() {
 
   return (
     <div style={{ width: "100%", height: "400px" }}>
-      <canvas ref={chartRef}></canvas>
+      <canvas id="yearChart" ref={chartRef}></canvas>
     </div>
   );
 }

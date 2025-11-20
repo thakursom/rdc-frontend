@@ -78,7 +78,7 @@ function RevenueByMonthChart() {
 
   return (
     <div style={{ width: "100%", height: "450px" }}>
-      <canvas ref={chartRef}></canvas>
+      <canvas id="revenueChart" ref={chartRef}></canvas>
     </div>
   );
 }

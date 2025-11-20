@@ -112,6 +112,7 @@ function UserManagementComponent() {
                       <th>Username</th>
                       <th>Email</th>
                       <th>Roles</th>
+                      <th>Action</th>
                       {/* <th>ThirdPartyUsername</th> */}
                       <th />
                     </tr>

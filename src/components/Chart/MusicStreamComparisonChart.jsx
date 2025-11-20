@@ -77,7 +77,7 @@ function MusicStreamComparisonChart() {
 
   return (
     <div style={{ width: "100%", height: "350px" }}>
-      <canvas ref={chartRef}></canvas>
+      <canvas id="streamsChart" ref={chartRef}></canvas>
     </div>
   );
 }

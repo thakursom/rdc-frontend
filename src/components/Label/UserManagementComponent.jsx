@@ -49,16 +49,21 @@ function UserManagementComponent() {
             {/* Tabs Same */}
             <ul className="nav nav-tabs" role="tablist" style={{ marginBottom: "15px" }}>
               <li className="nav-item" role="presentation">
-                <button
+                <a
                   className={`nav-link ${filterRole === "sub label" ? "active" : ""}`}
+                  id="profile-tab"
+                  data-bs-toggle="tab"
+                  href="#profile"
                   role="tab"
+                  aria-controls="profile"
+                  aria-selected="false"
                   onClick={() => {
                     setFilterRole("sub label");
                     setPage(1);
                   }}
                 >
                   Sub Label
-                </button>
+                </a>
 
               </li>
 
@@ -112,6 +117,7 @@ function UserManagementComponent() {
                       <th>Username</th>
                       <th>Email</th>
                       <th>Roles</th>
+                      <th>Action</th>
                       {/* <th>ThirdPartyUsername</th> */}
                       <th />
                     </tr>

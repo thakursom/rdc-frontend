@@ -1710,8 +1710,9 @@ span.notifiction-icon {
     margin-right: auto;
     margin-left: auto;
 }
-
-
+.col-stem {
+    display: table;
+}
 
 
 
@@ -2003,8 +2004,6 @@ span.notifiction-icon {
     .dashTabs {
         width: 100%;
         overflow: auto;
-        position: relative;
-        z-index: -1;
     }
 
     .dashTabs.mainDashboarTabs {

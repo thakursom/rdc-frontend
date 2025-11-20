@@ -53,7 +53,7 @@ function WeeklyStreamChart() {
 
   return (
     <div style={{ width: "100%", height: "350px" }}>
-      <canvas ref={chartRef}></canvas>
+      <canvas id="weeklyChart" ref={chartRef}></canvas>
     </div>
   );
 }

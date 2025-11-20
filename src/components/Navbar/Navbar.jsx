@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Navbar({ sidebarOpen, setSidebarOpen }) {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -7,6 +7,13 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
 
   // submenu toggle
   const [settingOpen, setSettingOpen] = useState(false);
+
+  // ✅ FUNCTION TO CLOSE SIDEBAR ON MOBILE
+  const handleMobileClose = () => {
+    if (window.innerWidth <= 576) {
+      setSidebarOpen(false);
+    }
+  };
 
   return (
     <section className={`rdc-sidebar ${sidebarOpen ? "active2" : ""}`} >
@@ -37,6 +44,8 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
               className={({ isActive }) =>
                 isActive ? "sidebar-links active" : "sidebar-links"
               }
+              // ✅ AUTO CLOSE ON MOBILE
+              onClick={handleMobileClose}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -78,6 +87,8 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                 className={({ isActive }) =>
                   `sidebar-links ${isActive ? "active" : ""}`
                 }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +127,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/user-management"
                           : "/user/user-management"
-              }>
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+              >
                 <svg
                   width={26}
                   height={24}
@@ -151,7 +165,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/releases"
                           : "/user/releases"
-              }>
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+              >
                 <svg
                   width={24}
                   height={24}
@@ -207,7 +224,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/revenue-reports"
                           : "/user/revenue-reports"
-              }>
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+              >
                 <svg
                   width={22}
                   height={20}
@@ -247,7 +267,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/salesAndTrends"
                           : "/user/salesAndTrends"
-              }>
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+              >
                 <svg
                   width={24}
                   height={24}
@@ -289,7 +312,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/payouts"
                           : "/user/payouts"
-              }>
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+              >
                 <svg
                   width={24}
                   height={24}
@@ -331,7 +357,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/statements"
                           : "/user/statements"
-              }>
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width={24}
@@ -372,7 +401,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/revenue-upload"
                           : "/user/revenue-upload"
-              }>
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+              >
                 <svg
                   width={26}
                   height={26}
@@ -483,7 +515,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                               : role === "Sub Label"
                                 ? "/sub-label/setting"
                                 : "/user/setting"
-                    }>
+                    }
+                      // ✅ AUTO CLOSE ON MOBILE
+                      onClick={handleMobileClose}
+                    >
                       General Settings
                     </NavLink>
                   </li>
@@ -500,7 +535,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                               : role === "Sub Label"
                                 ? "/sub-label/bank-details"
                                 : "/user/bank-details"
-                    }>
+                    }
+                      // ✅ AUTO CLOSE ON MOBILE
+                      onClick={handleMobileClose}
+                    >
                       Bank Details
                     </NavLink>
                   </li>
@@ -528,7 +566,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/label-summary"
                           : "/user/label-summary"
-              }>
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+              >
                 <svg
                   width={26}
                   height={26}
@@ -605,7 +646,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/label-upload"
                           : "/user/label-upload"
-              }>
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+              >
                 <svg
                   width={24}
                   height={24}
@@ -654,7 +698,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/conversion"
                           : "/user/conversion"
-              } id="conversion">
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+                id="conversion">
                 <svg
                   width={24}
                   height={24}
@@ -687,7 +734,10 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                         : role === "Sub Label"
                           ? "/sub-label/logs"
                           : "/user/logs"
-              } id="logs-fx">
+              }
+                // ✅ AUTO CLOSE ON MOBILE
+                onClick={handleMobileClose}
+                id="logs-fx">
                 <svg
                   width={24}
                   height={24}

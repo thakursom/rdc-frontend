@@ -176,224 +176,226 @@ function ContractFormComponent() {
     );
 
     return (
-        <section className="rdc-rightbar" id="right-sidebar">
-            <div className="main-content-dashboard">
-                <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
-                    <h6>{id ? "Edit" : "Upload"} Contract</h6>
-                    <button
-                        className="theme-btn green-cl white-cl"
-                        onClick={() => navigate(-1)}
-                    >
-                        <i className="fa-solid fa-arrow-left me-1" /> Back
-                    </button>
-                </div>
+        <>
+            <section className="rdc-rightbar" id="right-sidebar">
+                <div className="main-content-dashboard">
+                    <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
+                        <h6>{id ? "Edit" : "Upload"} Contract</h6>
+                        <button
+                            className="theme-btn green-cl white-cl"
+                            onClick={() => navigate(-1)}
+                        >
+                            <i className="fa-solid fa-arrow-left me-1" /> Back
+                        </button>
+                    </div>
 
 
-                <div className="row g-4">
-                    <div className="col-md-12 stem-col">
-                        <div className="dash-charts stem-child">
-                            <Formik
-                                initialValues={initialValues}
-                                validationSchema={validationSchema}
-                                onSubmit={handleSubmit}
-                                enableReinitialize
-                            >
-                                {({ setFieldValue, values, isSubmitting, errors, touched }) => (
-                                    <Form className="setting-form">
-                                        <div className="row">
-                                            {/* Label Selection */}
-                                            <div className="col-md-6 mb-3">
-                                                <RequiredLabel>Select Sub Label</RequiredLabel>
-                                                <AsyncSelect
-                                                    cacheOptions
-                                                    defaultOptions
-                                                    loadOptions={loadOptions}
-                                                    placeholder="Search Sub Label"
-                                                    isClearable
-                                                    value={
-                                                        selectedLabel
-                                                            ? { value: selectedLabel, label: selectedLabelName }
-                                                            : null
-                                                    }
-                                                    onChange={(selected) => {
-                                                        if (selected) {
-                                                            setSelectedLabel(selected.value);
-                                                            setSelectedLabelName(selected.label);
-                                                            setFieldValue("label", selected.value);
-                                                        } else {
-                                                            setSelectedLabel("");
-                                                            setSelectedLabelName("");
-                                                            setFieldValue("label", "");
+                    <div className="row g-4">
+                        <div className="col-md-12 stem-col">
+                            <div className="dash-charts stem-child">
+                                <Formik
+                                    initialValues={initialValues}
+                                    validationSchema={validationSchema}
+                                    onSubmit={handleSubmit}
+                                    enableReinitialize
+                                >
+                                    {({ setFieldValue, values, isSubmitting, errors, touched }) => (
+                                        <Form className="setting-form">
+                                            <div className="row">
+                                                {/* Label Selection */}
+                                                <div className="col-md-6 mb-3">
+                                                    <RequiredLabel>Select Sub Label</RequiredLabel>
+                                                    <AsyncSelect
+                                                        cacheOptions
+                                                        defaultOptions
+                                                        loadOptions={loadOptions}
+                                                        placeholder="Search Sub Label"
+                                                        isClearable
+                                                        value={
+                                                            selectedLabel
+                                                                ? { value: selectedLabel, label: selectedLabelName }
+                                                                : null
                                                         }
-                                                    }}
-                                                    className={touched.label && errors.label ? "is-invalid" : ""}
-                                                />
-                                                <ErrorMessage
-                                                    name="label"
-                                                    component="div"
-                                                    className="text-danger small mt-1"
-                                                />
-                                            </div>
+                                                        onChange={(selected) => {
+                                                            if (selected) {
+                                                                setSelectedLabel(selected.value);
+                                                                setSelectedLabelName(selected.label);
+                                                                setFieldValue("label", selected.value);
+                                                            } else {
+                                                                setSelectedLabel("");
+                                                                setSelectedLabelName("");
+                                                                setFieldValue("label", "");
+                                                            }
+                                                        }}
+                                                        className={touched.label && errors.label ? "is-invalid" : ""}
+                                                    />
+                                                    <ErrorMessage
+                                                        name="label"
+                                                        component="div"
+                                                        className="text-danger small mt-1"
+                                                    />
+                                                </div>
 
-                                            {/* Contract Name */}
-                                            <div className="col-md-6 mb-3">
-                                                <RequiredLabel>Contract Name</RequiredLabel>
-                                                <Field
-                                                    type="text"
-                                                    name="contractName"
-                                                    className={`form-control ${touched.contractName && errors.contractName ? "is-invalid" : ""}`}
-                                                    placeholder="Enter Contract Name"
-                                                />
-                                                <ErrorMessage
-                                                    name="contractName"
-                                                    component="div"
-                                                    className="text-danger small mt-1"
-                                                />
-                                            </div>
+                                                {/* Contract Name */}
+                                                <div className="col-md-6 mb-3">
+                                                    <RequiredLabel>Contract Name</RequiredLabel>
+                                                    <Field
+                                                        type="text"
+                                                        name="contractName"
+                                                        className={`form-control ${touched.contractName && errors.contractName ? "is-invalid" : ""}`}
+                                                        placeholder="Enter Contract Name"
+                                                    />
+                                                    <ErrorMessage
+                                                        name="contractName"
+                                                        component="div"
+                                                        className="text-danger small mt-1"
+                                                    />
+                                                </div>
 
-                                            {/* Description */}
-                                            <div className="col-md-6 mb-3">
-                                                <OptionalLabel>Description</OptionalLabel>
-                                                <Field
-                                                    as="textarea"
-                                                    name="description"
-                                                    rows="3"
-                                                    className={`form-control ${touched.description && errors.description ? "is-invalid" : ""}`}
-                                                    placeholder="Enter contract description"
-                                                />
-                                                <ErrorMessage
-                                                    name="description"
-                                                    component="div"
-                                                    className="text-danger small mt-1"
-                                                />
-                                            </div>
+                                                {/* Description */}
+                                                <div className="col-md-6 mb-3">
+                                                    <OptionalLabel>Description</OptionalLabel>
+                                                    <Field
+                                                        as="textarea"
+                                                        name="description"
+                                                        rows="3"
+                                                        className={`form-control ${touched.description && errors.description ? "is-invalid" : ""}`}
+                                                        placeholder="Enter contract description"
+                                                    />
+                                                    <ErrorMessage
+                                                        name="description"
+                                                        component="div"
+                                                        className="text-danger small mt-1"
+                                                    />
+                                                </div>
 
 
-                                            {/* Start Date */}
-                                            <div className="col-md-6 mb-3">
-                                                <RequiredLabel>Start Date</RequiredLabel>
-                                                <Field
-                                                    type="date"
-                                                    name="startDate"
-                                                    className={`form-control ${touched.startDate && errors.startDate ? "is-invalid" : ""}`}
-                                                    min={getTodayDate()}
-                                                />
-                                                <ErrorMessage
-                                                    name="startDate"
-                                                    component="div"
-                                                    className="text-danger small mt-1"
-                                                />
-                                            </div>
+                                                {/* Start Date */}
+                                                <div className="col-md-6 mb-3">
+                                                    <RequiredLabel>Start Date</RequiredLabel>
+                                                    <Field
+                                                        type="date"
+                                                        name="startDate"
+                                                        className={`form-control ${touched.startDate && errors.startDate ? "is-invalid" : ""}`}
+                                                        min={getTodayDate()}
+                                                    />
+                                                    <ErrorMessage
+                                                        name="startDate"
+                                                        component="div"
+                                                        className="text-danger small mt-1"
+                                                    />
+                                                </div>
 
-                                            {/* End Date */}
-                                            <div className="col-md-6 mb-3">
-                                                <RequiredLabel>End Date</RequiredLabel>
-                                                <Field
-                                                    type="date"
-                                                    name="endDate"
-                                                    className={`form-control ${touched.endDate && errors.endDate ? "is-invalid" : ""}`}
-                                                    min={values.startDate || getTodayDate()}
-                                                />
-                                                <ErrorMessage
-                                                    name="endDate"
-                                                    component="div"
-                                                    className="text-danger small mt-1"
-                                                />
-                                            </div>
+                                                {/* End Date */}
+                                                <div className="col-md-6 mb-3">
+                                                    <RequiredLabel>End Date</RequiredLabel>
+                                                    <Field
+                                                        type="date"
+                                                        name="endDate"
+                                                        className={`form-control ${touched.endDate && errors.endDate ? "is-invalid" : ""}`}
+                                                        min={values.startDate || getTodayDate()}
+                                                    />
+                                                    <ErrorMessage
+                                                        name="endDate"
+                                                        component="div"
+                                                        className="text-danger small mt-1"
+                                                    />
+                                                </div>
 
-                                            {/* Label Percentage */}
-                                            <div className="col-md-6 mb-3">
-                                                <OptionalLabel>Label Percentage (%)</OptionalLabel>
-                                                <Field
-                                                    type="number"
-                                                    name="labelPercentage"
-                                                    className={`form-control ${touched.labelPercentage && errors.labelPercentage ? "is-invalid" : ""}`}
-                                                    placeholder="0"
-                                                    min="0"
-                                                    max="100"
-                                                    step="0.01"
-                                                />
-                                                <ErrorMessage
-                                                    name="labelPercentage"
-                                                    component="div"
-                                                    className="text-danger small mt-1"
-                                                />
-                                            </div>
+                                                {/* Label Percentage */}
+                                                <div className="col-md-6 mb-3">
+                                                    <OptionalLabel>Label Percentage (%)</OptionalLabel>
+                                                    <Field
+                                                        type="number"
+                                                        name="labelPercentage"
+                                                        className={`form-control ${touched.labelPercentage && errors.labelPercentage ? "is-invalid" : ""}`}
+                                                        placeholder="0"
+                                                        min="0"
+                                                        max="100"
+                                                        step="0.01"
+                                                    />
+                                                    <ErrorMessage
+                                                        name="labelPercentage"
+                                                        component="div"
+                                                        className="text-danger small mt-1"
+                                                    />
+                                                </div>
 
-                                            {/* PDF Upload */}
-                                            <div className="col-md-6 mb-3">
-                                                {!id ? (
-                                                    <RequiredLabel>Upload Contract PDF</RequiredLabel>
-                                                ) : (
-                                                    <OptionalLabel>Upload Contract PDF</OptionalLabel>
-                                                )}
-
-                                                {/* Show current PDF when editing */}
-                                                {id && existingPdf && (
-                                                    <div className="mb-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
-                                                        <div className="d-flex align-items-center">
-                                                            <i className="fa-regular fa-file-pdf text-danger me-2"></i>
-                                                            <span className="small">{existingPdf}</span>
-                                                        </div>
-                                                        <span className="badge bg-success">Current File</span>
-                                                    </div>
-                                                )}
-
-                                                <input
-                                                    type="file"
-                                                    accept="application/pdf"
-                                                    className="form-control"
-                                                    onChange={(e) => {
-                                                        const file = e.target.files[0];
-                                                        setFieldValue("pdf", file);
-                                                        setFileName(file?.name || "");
-                                                    }}
-                                                />
-
-                                                {/* Show new file name when selected */}
-                                                {values.pdf && (
-                                                    <div className="mt-2 p-2 bg-light rounded d-flex align-items-center">
-                                                        <i className="fa-regular fa-file-pdf text-danger me-2"></i>
-                                                        <span className="small">{values.pdf.name}</span>
-                                                    </div>
-                                                )}
-
-                                                {id && (
-                                                    <div className="form-text">
-                                                        Leave empty to keep current file
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                            {/* Submit Button */}
-                                            <div className="col-md-12 text-end mt-3">
-                                                <button
-                                                    type="submit"
-                                                    className="theme-btn green-cl white-cl"
-                                                    disabled={isSubmitting}
-                                                >
-                                                    {isSubmitting ? (
-                                                        <>
-                                                            <span className="spinner-border spinner-border-sm me-2" />
-                                                            {id ? "Updating..." : "Uploading..."}
-                                                        </>
+                                                {/* PDF Upload */}
+                                                <div className="col-md-6 mb-3">
+                                                    {!id ? (
+                                                        <RequiredLabel>Upload Contract PDF</RequiredLabel>
                                                     ) : (
-                                                        <>
-                                                            <i className="fa-regular fa-paper-plane me-2"></i>
-                                                            {id ? "Update Contract" : "Upload Contract"}
-                                                        </>
+                                                        <OptionalLabel>Upload Contract PDF</OptionalLabel>
                                                     )}
-                                                </button>
+
+                                                    {/* Show current PDF when editing */}
+                                                    {id && existingPdf && (
+                                                        <div className="mb-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
+                                                            <div className="d-flex align-items-center">
+                                                                <i className="fa-regular fa-file-pdf text-danger me-2"></i>
+                                                                <span className="small">{existingPdf}</span>
+                                                            </div>
+                                                            <span className="badge bg-success">Current File</span>
+                                                        </div>
+                                                    )}
+
+                                                    <input
+                                                        type="file"
+                                                        accept="application/pdf"
+                                                        className="form-control"
+                                                        onChange={(e) => {
+                                                            const file = e.target.files[0];
+                                                            setFieldValue("pdf", file);
+                                                            setFileName(file?.name || "");
+                                                        }}
+                                                    />
+
+                                                    {/* Show new file name when selected */}
+                                                    {values.pdf && (
+                                                        <div className="mt-2 p-2 bg-light rounded d-flex align-items-center">
+                                                            <i className="fa-regular fa-file-pdf text-danger me-2"></i>
+                                                            <span className="small">{values.pdf.name}</span>
+                                                        </div>
+                                                    )}
+
+                                                    {id && (
+                                                        <div className="form-text">
+                                                            Leave empty to keep current file
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* Submit Button */}
+                                                <div className="col-md-12 text-end mt-3">
+                                                    <button
+                                                        type="submit"
+                                                        className="theme-btn green-cl white-cl"
+                                                        disabled={isSubmitting}
+                                                    >
+                                                        {isSubmitting ? (
+                                                            <>
+                                                                <span className="spinner-border spinner-border-sm me-2" />
+                                                                {id ? "Updating..." : "Uploading..."}
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <i className="fa-regular fa-paper-plane me-2"></i>
+                                                                {id ? "Update Contract" : "Upload Contract"}
+                                                            </>
+                                                        )}
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Form>
-                                )}
-                            </Formik>
+                                        </Form>
+                                    )}
+                                </Formik>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </>
     );
 }
 

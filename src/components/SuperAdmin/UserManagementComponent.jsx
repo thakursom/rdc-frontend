@@ -90,7 +90,7 @@ function UserManagementComponent() {
             {/*Table */}
 
             <div className="d-flex justify-content-between align-items-center flex-wrap">
-              <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
+              <div className="form-sec" style={{ marginBottom: "15px", maxWidth: "400px" }}>
                 <i className="fa-solid fa-magnifying-glass" />
                 <input
                   className="form-control"
@@ -123,7 +123,6 @@ function UserManagementComponent() {
                       <th>Email</th>
                       <th>Roles</th>
                       <th>Action</th>
-                      <th />
                     </tr>
                   </thead>
 

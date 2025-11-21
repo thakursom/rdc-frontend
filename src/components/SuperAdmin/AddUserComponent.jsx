@@ -37,144 +37,146 @@ function AddUserComponent() {
     };
 
     return (
-        <section className="rdc-rightbar" id="right-sidebar">
-            <div className="main-content-dashboard">
+        <>
+            <section className="rdc-rightbar" id="right-sidebar">
+                <div className="main-content-dashboard">
 
-                {/* Page heading */}
-                <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
-                    <h6>Add User</h6>
-                    <button
-                        className="theme-btn green-cl white-cl"
-                        onClick={() => navigate(-1)}
-                    >
-                        <i className="fa-solid fa-arrow-left me-1" /> Back
-                    </button>
+                    {/* Page heading */}
+                    <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
+                        <h6>Add User</h6>
+                        <button
+                            className="theme-btn green-cl white-cl"
+                            onClick={() => navigate(-1)}
+                        >
+                            <i className="fa-solid fa-arrow-left me-1" /> Back
+                        </button>
+                    </div>
+
+                    {/* White Card */}
+                    <div className="form-card bank-details">
+                        <Formik
+                            initialValues={{
+                                name: "",
+                                email: "",
+                                password: "",
+                                confirmPassword: "",
+                                role: "",
+                            }}
+                            validationSchema={validationSchema}
+                            onSubmit={onSubmit}
+                        >
+                            {({ isSubmitting }) => (
+                                <Form>
+                                    <div className="row">
+
+                                        {/* Name */}
+                                        <div className="col-md-6 mb-3">
+                                            <label>
+                                                Name <span className="required">*</span>
+                                            </label>
+                                            <Field
+                                                type="text"
+                                                name="name"
+                                                className="form-control"
+                                            />
+                                            <ErrorMessage
+                                                name="name"
+                                                component="small"
+                                                className="text-danger"
+                                            />
+                                        </div>
+
+                                        {/* Email */}
+                                        <div className="col-md-6 mb-3">
+                                            <label>
+                                                Email Address <span className="required">*</span>
+                                            </label>
+                                            <Field
+                                                type="email"
+                                                name="email"
+                                                className="form-control"
+                                            />
+                                            <ErrorMessage
+                                                name="email"
+                                                component="small"
+                                                className="text-danger"
+                                            />
+                                        </div>
+
+                                        {/* Password */}
+                                        <div className="col-md-6 mb-3">
+                                            <label>
+                                                Password <span className="required">*</span>
+                                            </label>
+                                            <Field
+                                                type="password"
+                                                name="password"
+                                                className="form-control"
+                                            />
+                                            <ErrorMessage
+                                                name="password"
+                                                component="small"
+                                                className="text-danger"
+                                            />
+                                        </div>
+
+                                        {/* Confirm Password */}
+                                        <div className="col-md-6 mb-3">
+                                            <label>
+                                                Confirm Password{" "}
+                                                <span className="required">*</span>
+                                            </label>
+                                            <Field
+                                                type="password"
+                                                name="confirmPassword"
+                                                className="form-control"
+                                            />
+                                            <ErrorMessage
+                                                name="confirmPassword"
+                                                component="small"
+                                                className="text-danger"
+                                            />
+                                        </div>
+
+                                        {/* Role */}
+                                        <div className="col-md-6 mb-3">
+                                            <label>
+                                                Role <span className="required">*</span>
+                                            </label>
+                                            <Field
+                                                as="select"
+                                                name="role"
+                                                className="form-control"
+                                            >
+                                                <option value="">Select</option>
+                                                <option value="Manager">Manager</option>
+                                                <option value="Label">Label</option>
+                                            </Field>
+                                            <ErrorMessage
+                                                name="role"
+                                                component="small"
+                                                className="text-danger"
+                                            />
+                                        </div>
+
+                                        {/* Submit Button */}
+                                        <div className="col-12 mt-2 addUser">
+                                            <button
+                                                className="save-btn"
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                            >
+                                                {isSubmitting ? "Saving..." : "Save"}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </Form>
+                            )}
+                        </Formik>
+                    </div>
                 </div>
-
-                {/* White Card */}
-                <div className="form-card bank-details">
-                    <Formik
-                        initialValues={{
-                            name: "",
-                            email: "",
-                            password: "",
-                            confirmPassword: "",
-                            role: "",
-                        }}
-                        validationSchema={validationSchema}
-                        onSubmit={onSubmit}
-                    >
-                        {({ isSubmitting }) => (
-                            <Form>
-                                <div className="row">
-
-                                    {/* Name */}
-                                    <div className="col-md-6 mb-3">
-                                        <label>
-                                            Name <span className="required">*</span>
-                                        </label>
-                                        <Field
-                                            type="text"
-                                            name="name"
-                                            className="form-control"
-                                        />
-                                        <ErrorMessage
-                                            name="name"
-                                            component="small"
-                                            className="text-danger"
-                                        />
-                                    </div>
-
-                                    {/* Email */}
-                                    <div className="col-md-6 mb-3">
-                                        <label>
-                                            Email Address <span className="required">*</span>
-                                        </label>
-                                        <Field
-                                            type="email"
-                                            name="email"
-                                            className="form-control"
-                                        />
-                                        <ErrorMessage
-                                            name="email"
-                                            component="small"
-                                            className="text-danger"
-                                        />
-                                    </div>
-
-                                    {/* Password */}
-                                    <div className="col-md-6 mb-3">
-                                        <label>
-                                            Password <span className="required">*</span>
-                                        </label>
-                                        <Field
-                                            type="password"
-                                            name="password"
-                                            className="form-control"
-                                        />
-                                        <ErrorMessage
-                                            name="password"
-                                            component="small"
-                                            className="text-danger"
-                                        />
-                                    </div>
-
-                                    {/* Confirm Password */}
-                                    <div className="col-md-6 mb-3">
-                                        <label>
-                                            Confirm Password{" "}
-                                            <span className="required">*</span>
-                                        </label>
-                                        <Field
-                                            type="password"
-                                            name="confirmPassword"
-                                            className="form-control"
-                                        />
-                                        <ErrorMessage
-                                            name="confirmPassword"
-                                            component="small"
-                                            className="text-danger"
-                                        />
-                                    </div>
-
-                                    {/* Role */}
-                                    <div className="col-md-6 mb-3">
-                                        <label>
-                                            Role <span className="required">*</span>
-                                        </label>
-                                        <Field
-                                            as="select"
-                                            name="role"
-                                            className="form-control"
-                                        >
-                                            <option value="">Select</option>
-                                            <option value="Manager">Manager</option>
-                                            <option value="Label">Label</option>
-                                        </Field>
-                                        <ErrorMessage
-                                            name="role"
-                                            component="small"
-                                            className="text-danger"
-                                        />
-                                    </div>
-
-                                    {/* Submit Button */}
-                                    <div className="col-12 mt-2">
-                                        <button
-                                            className="save-btn"
-                                            type="submit"
-                                            disabled={isSubmitting}
-                                        >
-                                            {isSubmitting ? "Saving..." : "Save"}
-                                        </button>
-                                    </div>
-                                </div>
-                            </Form>
-                        )}
-                    </Formik>
-                </div>
-            </div>
-        </section>
+            </section>
+        </>
     );
 }
 

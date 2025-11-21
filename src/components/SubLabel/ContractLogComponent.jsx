@@ -67,76 +67,77 @@ function ContractLogComponent() {
     };
 
     return (
-        <section className="rdc-rightbar" id="right-sidebar">
-            <div className="main-content-dashboard">
-                {/* Header with Back button + Search */}
-                <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
-                    <h6>Contract Logs</h6>
-                    <button
-                        className="theme-btn green-cl white-cl"
-                        onClick={() => navigate(-1)}
-                    >
-                        <i className="fa-solid fa-arrow-left me-1" /> Back
-                    </button>
-                </div>
-
-                {/* Table Section */}
-                <div>
-                    {loading ? (
-                        <div
-                            style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                height: "300px",
-                            }}
+        <>
+            <section className="rdc-rightbar" id="right-sidebar">
+                <div className="main-content-dashboard">
+                    {/* Header with Back button + Search */}
+                    <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
+                        <h6>Contract Logs</h6>
+                        <button
+                            className="theme-btn green-cl white-cl"
+                            onClick={() => navigate(-1)}
                         >
-                            <Loader />
-                        </div>
-                    ) : (
-                        <>
-                            <div className="table-sec">
-                                <table className="rdc-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Client</th>
-                                            <th>Action</th>
-                                            <th>IP Address</th>
-                                            <th>Date</th>
-                                            <th>View</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {logs.length > 0 ? (
-                                            logs.map((log) => (
-                                                <tr key={log._id}>
-                                                    <td>{log.user?.name || "N/A"}</td>
-                                                    <td>{log.action}</td>
-                                                    <td>{log.ipAddress?.replace(/^::ffff:/, "") || "-"}</td>
-                                                    <td>{new Date(log.createdAt).toLocaleString()}</td>
-                                                    <td>
-                                                        <button
-                                                            className="purple-cl white-cl icon-btn"
-                                                            onClick={() => handleViewLog(log)}
-                                                        >
-                                                            <i className="fa-solid fa-eye" />
-                                                        </button>
+                            <i className="fa-solid fa-arrow-left me-1" /> Back
+                        </button>
+                    </div>
+
+                    {/* Table Section */}
+                    <div>
+                        {loading ? (
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: "300px",
+                                }}
+                            >
+                                <Loader />
+                            </div>
+                        ) : (
+                            <>
+                                <div className="table-sec">
+                                    <table className="rdc-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Client</th>
+                                                <th>Action</th>
+                                                <th>IP Address</th>
+                                                <th>Date</th>
+                                                <th>View</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {logs.length > 0 ? (
+                                                logs.map((log) => (
+                                                    <tr key={log._id}>
+                                                        <td>{log.user?.name || "N/A"}</td>
+                                                        <td>{log.action}</td>
+                                                        <td>{log.ipAddress?.replace(/^::ffff:/, "") || "-"}</td>
+                                                        <td>{new Date(log.createdAt).toLocaleString()}</td>
+                                                        <td>
+                                                            <button
+                                                                className="purple-cl white-cl icon-btn"
+                                                                onClick={() => handleViewLog(log)}
+                                                            >
+                                                                <i className="fa-solid fa-eye" />
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan="6" style={{ textAlign: "center" }}>
+                                                        No logs found
                                                     </td>
                                                 </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="6" style={{ textAlign: "center" }}>
-                                                    No logs found
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
 
-                            {/* Pagination */}
-                            {/* <div
+                                {/* Pagination */}
+                                {/* <div
                                 style={{
                                     marginTop: "25px",
                                     display: "flex",
@@ -149,55 +150,56 @@ function ContractLogComponent() {
                                     currentPage={page}
                                 />
                             </div> */}
-                        </>
-                    )}
-                </div>
+                            </>
+                        )}
+                    </div>
 
-                {/* Modal */}
-                {showModal && selectedLog && (
-                    <div className="modal-overlay">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5>Log Details</h5>
-                                <button className="close-btn" onClick={closeModal}>
-                                    &times;
-                                </button>
-                            </div>
-                            <div className="modal-body">
-                                <p>
-                                    <strong>Client:</strong> {selectedLog.user?.name} ({selectedLog.user?.email})
-                                </p>
-                                <p>
-                                    <strong>Action:</strong> {selectedLog.action}
-                                </p>
-                                <p>
-                                    <strong>Message:</strong> {selectedLog.message}
-                                </p>
-                                <p>
-                                    <strong>IP:</strong>{" "}
-                                    {selectedLog.ipAddress?.replace(/^::ffff:/, "") || "-"}
-                                </p>
-                                <p>
-                                    <strong>Date:</strong> {new Date(selectedLog.createdAt).toLocaleString()}
-                                </p>
-                                <hr />
-                                <h6>Full Data (JSON)</h6>
-                                <pre
-                                    style={{
-                                        background: "#f8f9fa",
-                                        padding: "10px",
-                                        borderRadius: "8px",
-                                        overflowX: "auto",
-                                    }}
-                                >
-                                    {JSON.stringify(selectedLog.data, null, 2)}
-                                </pre>
+                    {/* Modal */}
+                    {showModal && selectedLog && (
+                        <div className="modal-overlay">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5>Log Details</h5>
+                                    <button className="close-btn" onClick={closeModal}>
+                                        &times;
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    <p>
+                                        <strong>Client:</strong> {selectedLog.user?.name} ({selectedLog.user?.email})
+                                    </p>
+                                    <p>
+                                        <strong>Action:</strong> {selectedLog.action}
+                                    </p>
+                                    <p>
+                                        <strong>Message:</strong> {selectedLog.message}
+                                    </p>
+                                    <p>
+                                        <strong>IP:</strong>{" "}
+                                        {selectedLog.ipAddress?.replace(/^::ffff:/, "") || "-"}
+                                    </p>
+                                    <p>
+                                        <strong>Date:</strong> {new Date(selectedLog.createdAt).toLocaleString()}
+                                    </p>
+                                    <hr />
+                                    <h6>Full Data (JSON)</h6>
+                                    <pre
+                                        style={{
+                                            background: "#f8f9fa",
+                                            padding: "10px",
+                                            borderRadius: "8px",
+                                            overflowX: "auto",
+                                        }}
+                                    >
+                                        {JSON.stringify(selectedLog.data, null, 2)}
+                                    </pre>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
-            </div>
-        </section>
+                    )}
+                </div>
+            </section>
+        </>
     );
 }
 

@@ -169,218 +169,220 @@ function BankDetailFormComponent() {
     );
 
     return (
-        <section className="rdc-rightbar" id="right-sidebar">
-            <div className="main-content-dashboard">
-                <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
-                    <h6>{id ? "Edit" : "Add"} Bank Details</h6>
-                    <button
-                        className="theme-btn green-cl white-cl"
-                        onClick={() => navigate(-1)}
-                    >
-                        <i className="fa-solid fa-arrow-left me-1" /> Back
-                    </button>
-                </div>
+        <>
+            <section className="rdc-rightbar" id="right-sidebar">
+                <div className="main-content-dashboard">
+                    <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
+                        <h6>{id ? "Edit" : "Add"} Bank Details</h6>
+                        <button
+                            className="theme-btn green-cl white-cl"
+                            onClick={() => navigate(-1)}
+                        >
+                            <i className="fa-solid fa-arrow-left me-1" /> Back
+                        </button>
+                    </div>
 
-                <div className="row g-4">
-                    <div className="col-md-12 stem-col">
-                        <div className="dash-charts stem-child">
-                            <Formik
-                                initialValues={initialValues}
-                                validationSchema={validationSchema}
-                                validate={validateForm} // Add custom validation
-                                onSubmit={handleSubmit}
-                                enableReinitialize
-                            >
-                                {({ setFieldValue, values, isSubmitting, errors, touched }) => (
-                                    <Form className="setting-form">
-                                        <div className="row">
+                    <div className="row g-4">
+                        <div className="col-md-12 stem-col">
+                            <div className="dash-charts stem-child">
+                                <Formik
+                                    initialValues={initialValues}
+                                    validationSchema={validationSchema}
+                                    validate={validateForm} // Add custom validation
+                                    onSubmit={handleSubmit}
+                                    enableReinitialize
+                                >
+                                    {({ setFieldValue, values, isSubmitting, errors, touched }) => (
+                                        <Form className="setting-form">
+                                            <div className="row">
 
-                                            {/* User Dropdown */}
-                                            <div className="col-md-6 mb-3">
-                                                <RequiredLabel>Select Sub Label</RequiredLabel>
-                                                <AsyncSelect
-                                                    cacheOptions
-                                                    defaultOptions
-                                                    loadOptions={loadOptions}
-                                                    placeholder="Search Sub Label"
-                                                    isClearable
-                                                    value={
-                                                        selectedUser
-                                                            ? { value: selectedUser, label: selectedUserLabel || "User" }
-                                                            : null
-                                                    }
-                                                    onChange={(selected) => {
-                                                        if (selected) {
-                                                            setSelectedUser(selected.value);
-                                                            setSelectedUserLabel(selected.label);
-                                                            setFieldValue("user_id", selected.value);
-                                                        } else {
-                                                            setSelectedUser("");
-                                                            setSelectedUserLabel("");
-                                                            setFieldValue("user_id", "");
+                                                {/* User Dropdown */}
+                                                <div className="col-md-6 mb-3">
+                                                    <RequiredLabel>Select Sub Label</RequiredLabel>
+                                                    <AsyncSelect
+                                                        cacheOptions
+                                                        defaultOptions
+                                                        loadOptions={loadOptions}
+                                                        placeholder="Search Sub Label"
+                                                        isClearable
+                                                        value={
+                                                            selectedUser
+                                                                ? { value: selectedUser, label: selectedUserLabel || "User" }
+                                                                : null
                                                         }
-                                                    }}
-                                                    className={touched.user_id && errors.user_id ? "is-invalid" : ""}
-                                                />
-                                                {errors.user_id && touched.user_id && (
-                                                    <div className="text-danger small mt-1">{errors.user_id}</div>
-                                                )}
-                                            </div>
-
-                                            {/* Payment Method */}
-                                            <div className="col-md-6 mb-3">
-                                                <RequiredLabel>Payment Method</RequiredLabel>
-                                                <Field
-                                                    as="select"
-                                                    name="paymentMethod"
-                                                    className={`form-control ${touched.paymentMethod && errors.paymentMethod ? "is-invalid" : ""}`}
-                                                    onChange={(e) => {
-                                                        setFieldValue("paymentMethod", e.target.value);
-                                                        setPaymentMethod(e.target.value);
-                                                    }}
-                                                >
-                                                    <option value="">-- Select Method --</option>
-                                                    <option value="bank">Bank</option>
-                                                    <option value="paypal">PayPal</option>
-                                                    <option value="upi">UPI</option>
-                                                </Field>
-                                                {errors.paymentMethod && touched.paymentMethod && (
-                                                    <div className="text-danger small mt-1">{errors.paymentMethod}</div>
-                                                )}
-                                            </div>
-
-                                            {/* Dynamic Fields */}
-                                            {paymentMethod === "paypal" && (
-                                                <div className="col-md-6 mb-3">
-                                                    <RequiredLabel>PayPal Email</RequiredLabel>
-                                                    <Field
-                                                        type="email"
-                                                        name="paypalEmail"
-                                                        className={`form-control ${touched.paypalEmail && errors.paypalEmail ? "is-invalid" : ""}`}
-                                                        placeholder="Enter PayPal email"
+                                                        onChange={(selected) => {
+                                                            if (selected) {
+                                                                setSelectedUser(selected.value);
+                                                                setSelectedUserLabel(selected.label);
+                                                                setFieldValue("user_id", selected.value);
+                                                            } else {
+                                                                setSelectedUser("");
+                                                                setSelectedUserLabel("");
+                                                                setFieldValue("user_id", "");
+                                                            }
+                                                        }}
+                                                        className={touched.user_id && errors.user_id ? "is-invalid" : ""}
                                                     />
-                                                    {errors.paypalEmail && touched.paypalEmail && (
-                                                        <div className="text-danger small mt-1">{errors.paypalEmail}</div>
+                                                    {errors.user_id && touched.user_id && (
+                                                        <div className="text-danger small mt-1">{errors.user_id}</div>
                                                     )}
                                                 </div>
-                                            )}
 
-                                            {paymentMethod === "upi" && (
+                                                {/* Payment Method */}
                                                 <div className="col-md-6 mb-3">
-                                                    <RequiredLabel>UPI ID</RequiredLabel>
+                                                    <RequiredLabel>Payment Method</RequiredLabel>
                                                     <Field
-                                                        type="text"
-                                                        name="upiId"
-                                                        className={`form-control ${touched.upiId && errors.upiId ? "is-invalid" : ""}`}
-                                                        placeholder="Enter UPI ID"
-                                                    />
-                                                    {errors.upiId && touched.upiId && (
-                                                        <div className="text-danger small mt-1">{errors.upiId}</div>
+                                                        as="select"
+                                                        name="paymentMethod"
+                                                        className={`form-control ${touched.paymentMethod && errors.paymentMethod ? "is-invalid" : ""}`}
+                                                        onChange={(e) => {
+                                                            setFieldValue("paymentMethod", e.target.value);
+                                                            setPaymentMethod(e.target.value);
+                                                        }}
+                                                    >
+                                                        <option value="">-- Select Method --</option>
+                                                        <option value="bank">Bank</option>
+                                                        <option value="paypal">PayPal</option>
+                                                        <option value="upi">UPI</option>
+                                                    </Field>
+                                                    {errors.paymentMethod && touched.paymentMethod && (
+                                                        <div className="text-danger small mt-1">{errors.paymentMethod}</div>
                                                     )}
                                                 </div>
-                                            )}
 
-                                            {paymentMethod === "bank" && (
-                                                <>
+                                                {/* Dynamic Fields */}
+                                                {paymentMethod === "paypal" && (
                                                     <div className="col-md-6 mb-3">
-                                                        <RequiredLabel>Bank Name</RequiredLabel>
+                                                        <RequiredLabel>PayPal Email</RequiredLabel>
                                                         <Field
-                                                            type="text"
-                                                            name="bankName"
-                                                            className={`form-control ${touched.bankName && errors.bankName ? "is-invalid" : ""}`}
-                                                            placeholder="Enter bank name"
+                                                            type="email"
+                                                            name="paypalEmail"
+                                                            className={`form-control ${touched.paypalEmail && errors.paypalEmail ? "is-invalid" : ""}`}
+                                                            placeholder="Enter PayPal email"
                                                         />
-                                                        {errors.bankName && touched.bankName && (
-                                                            <div className="text-danger small mt-1">{errors.bankName}</div>
+                                                        {errors.paypalEmail && touched.paypalEmail && (
+                                                            <div className="text-danger small mt-1">{errors.paypalEmail}</div>
                                                         )}
                                                     </div>
+                                                )}
 
+                                                {paymentMethod === "upi" && (
                                                     <div className="col-md-6 mb-3">
-                                                        <RequiredLabel>Account Holder Name</RequiredLabel>
+                                                        <RequiredLabel>UPI ID</RequiredLabel>
                                                         <Field
                                                             type="text"
-                                                            name="accountHolderName"
-                                                            className={`form-control ${touched.accountHolderName && errors.accountHolderName ? "is-invalid" : ""}`}
-                                                            placeholder="Enter account holder name"
+                                                            name="upiId"
+                                                            className={`form-control ${touched.upiId && errors.upiId ? "is-invalid" : ""}`}
+                                                            placeholder="Enter UPI ID"
                                                         />
-                                                        {errors.accountHolderName && touched.accountHolderName && (
-                                                            <div className="text-danger small mt-1">{errors.accountHolderName}</div>
+                                                        {errors.upiId && touched.upiId && (
+                                                            <div className="text-danger small mt-1">{errors.upiId}</div>
                                                         )}
                                                     </div>
+                                                )}
 
-                                                    <div className="col-md-6 mb-3">
-                                                        <RequiredLabel>Account Number</RequiredLabel>
-                                                        <Field
-                                                            type="text"
-                                                            name="accountNumber"
-                                                            className={`form-control ${touched.accountNumber && errors.accountNumber ? "is-invalid" : ""}`}
-                                                            placeholder="Enter account number"
-                                                        />
-                                                        {errors.accountNumber && touched.accountNumber && (
-                                                            <div className="text-danger small mt-1">{errors.accountNumber}</div>
+                                                {paymentMethod === "bank" && (
+                                                    <>
+                                                        <div className="col-md-6 mb-3">
+                                                            <RequiredLabel>Bank Name</RequiredLabel>
+                                                            <Field
+                                                                type="text"
+                                                                name="bankName"
+                                                                className={`form-control ${touched.bankName && errors.bankName ? "is-invalid" : ""}`}
+                                                                placeholder="Enter bank name"
+                                                            />
+                                                            {errors.bankName && touched.bankName && (
+                                                                <div className="text-danger small mt-1">{errors.bankName}</div>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="col-md-6 mb-3">
+                                                            <RequiredLabel>Account Holder Name</RequiredLabel>
+                                                            <Field
+                                                                type="text"
+                                                                name="accountHolderName"
+                                                                className={`form-control ${touched.accountHolderName && errors.accountHolderName ? "is-invalid" : ""}`}
+                                                                placeholder="Enter account holder name"
+                                                            />
+                                                            {errors.accountHolderName && touched.accountHolderName && (
+                                                                <div className="text-danger small mt-1">{errors.accountHolderName}</div>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="col-md-6 mb-3">
+                                                            <RequiredLabel>Account Number</RequiredLabel>
+                                                            <Field
+                                                                type="text"
+                                                                name="accountNumber"
+                                                                className={`form-control ${touched.accountNumber && errors.accountNumber ? "is-invalid" : ""}`}
+                                                                placeholder="Enter account number"
+                                                            />
+                                                            {errors.accountNumber && touched.accountNumber && (
+                                                                <div className="text-danger small mt-1">{errors.accountNumber}</div>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="col-md-6 mb-3">
+                                                            <RequiredLabel>IFSC / Routing Number</RequiredLabel>
+                                                            <Field
+                                                                type="text"
+                                                                name="ifscRouting"
+                                                                className={`form-control ${touched.ifscRouting && errors.ifscRouting ? "is-invalid" : ""}`}
+                                                                placeholder="Enter IFSC or routing number"
+                                                            />
+                                                            {errors.ifscRouting && touched.ifscRouting && (
+                                                                <div className="text-danger small mt-1">{errors.ifscRouting}</div>
+                                                            )}
+                                                        </div>
+
+                                                        <div className="col-md-6 mb-3">
+                                                            <OptionalLabel>SWIFT Code</OptionalLabel>
+                                                            <Field
+                                                                type="text"
+                                                                name="swiftCode"
+                                                                className="form-control"
+                                                                placeholder="Enter SWIFT code"
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-md-6 mb-3">
+                                                            <OptionalLabel>Branch</OptionalLabel>
+                                                            <Field
+                                                                type="text"
+                                                                name="branch"
+                                                                className="form-control"
+                                                                placeholder="Enter branch name"
+                                                            />
+                                                        </div>
+                                                    </>
+                                                )}
+
+                                                <div className="col-md-12 mt-2 text-end">
+                                                    <button
+                                                        className="theme-btn green-cl white-cl"
+                                                        type="submit"
+                                                        disabled={isSubmitting}
+                                                    >
+                                                        {isSubmitting ? (
+                                                            <>
+                                                                <span className="spinner-border spinner-border-sm me-2" />
+                                                                {id ? "Updating..." : "Saving..."}
+                                                            </>
+                                                        ) : (
+                                                            id ? "Update" : "Save"
                                                         )}
-                                                    </div>
-
-                                                    <div className="col-md-6 mb-3">
-                                                        <RequiredLabel>IFSC / Routing Number</RequiredLabel>
-                                                        <Field
-                                                            type="text"
-                                                            name="ifscRouting"
-                                                            className={`form-control ${touched.ifscRouting && errors.ifscRouting ? "is-invalid" : ""}`}
-                                                            placeholder="Enter IFSC or routing number"
-                                                        />
-                                                        {errors.ifscRouting && touched.ifscRouting && (
-                                                            <div className="text-danger small mt-1">{errors.ifscRouting}</div>
-                                                        )}
-                                                    </div>
-
-                                                    <div className="col-md-6 mb-3">
-                                                        <OptionalLabel>SWIFT Code</OptionalLabel>
-                                                        <Field
-                                                            type="text"
-                                                            name="swiftCode"
-                                                            className="form-control"
-                                                            placeholder="Enter SWIFT code"
-                                                        />
-                                                    </div>
-
-                                                    <div className="col-md-6 mb-3">
-                                                        <OptionalLabel>Branch</OptionalLabel>
-                                                        <Field
-                                                            type="text"
-                                                            name="branch"
-                                                            className="form-control"
-                                                            placeholder="Enter branch name"
-                                                        />
-                                                    </div>
-                                                </>
-                                            )}
-
-                                            <div className="col-md-12 mt-2 text-end">
-                                                <button
-                                                    className="theme-btn green-cl white-cl"
-                                                    type="submit"
-                                                    disabled={isSubmitting}
-                                                >
-                                                    {isSubmitting ? (
-                                                        <>
-                                                            <span className="spinner-border spinner-border-sm me-2" />
-                                                            {id ? "Updating..." : "Saving..."}
-                                                        </>
-                                                    ) : (
-                                                        id ? "Update" : "Save"
-                                                    )}
-                                                </button>
+                                                    </button>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Form>
-                                )}
-                            </Formik>
+                                        </Form>
+                                    )}
+                                </Formik>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </>
     );
 }
 

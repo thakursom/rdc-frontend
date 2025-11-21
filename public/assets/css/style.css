@@ -666,12 +666,12 @@ form.rdc-form {
 
 .main-chartbox canvas#weeklyChart {
     width: 100% !important;
-    height: 380px !important;
+    height: 350px !important;
 }
 
 .main-chartbox canvas#streamsChart {
     width: 100% !important;
-    height: 380px !important;
+    height: 350px !important;
 }
 
 .chart-container canvas#musicChart {
@@ -686,17 +686,6 @@ form.rdc-form {
     padding: 5px 0;
 }
 
-.streaming-buttons-fx {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    padding: 20px 0;
-    flex-wrap: wrap;
-}
-
-.streaming-buttons-fx button {
-    padding: 5px 15px;
-}
 
 .stream-btn {
     padding: 0.4rem 1rem;
@@ -1710,10 +1699,49 @@ span.notifiction-icon {
     margin-right: auto;
     margin-left: auto;
 }
+
 .col-stem {
     display: table;
 }
 
+.custom-pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 5px;
+    list-style: none;
+    align-items: center;
+    padding: 0;
+}
+
+.custom-page a {
+    padding: 6px 12px;
+    border: 1px solid #d0c6f7;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #14cdbb;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.custom-page a:hover {
+    background: #f2eefe;
+    border-color: #14cdbb;
+}
+
+.custom-active a {
+    background: #14cdbb;
+    color: #fff !important;
+    border-color: #14cdbb;
+}
+
+.custom-disabled a {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.addUser {
+    text-align: end;
+}
 
 
 
@@ -2067,14 +2095,6 @@ span.notifiction-icon {
         height: 200px !important;
     }
 
-    .streaming-buttons-fx button {
-        padding: 5px 10px;
-        font-size: 12px;
-    }
-
-    .streaming-buttons-fx {
-        gap: 5px;
-    }
 
     .chart-box {
         padding: 20px;
@@ -2444,6 +2464,18 @@ span.notifiction-icon {
     ul#myTabs li {
         margin-bottom: 20px;
     }
+
+    .bank-details {
+        margin: 0 auto;
+    }
+
+    .form-card {
+        background: white;
+        width: 100%;
+        padding: 30px 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px #E8E8E8;
+    }
 }
 
 @media(max-width:425px) {
@@ -2459,38 +2491,4 @@ span.notifiction-icon {
     .rdc-checkbox {
         gap: 10px 20px;
     }
-}
-
-.custom-pagination {
-    display: flex;
-    gap: 6px;
-    list-style: none;
-    align-items: center;
-    padding: 0;
-}
-
-.custom-page a {
-    padding: 6px 12px;
-    border: 1px solid #d0c6f7;
-    border-radius: 6px;
-    text-decoration: none;
-    color: #14cdbb;
-    font-size: 14px;
-    transition: 0.2s;
-}
-
-.custom-page a:hover {
-    background: #f2eefe;
-    border-color: #14cdbb;
-}
-
-.custom-active a {
-    background: #14cdbb;
-    color: #fff !important;
-    border-color: #14cdbb;
-}
-
-.custom-disabled a {
-    opacity: 0.5;
-    cursor: not-allowed;
 }

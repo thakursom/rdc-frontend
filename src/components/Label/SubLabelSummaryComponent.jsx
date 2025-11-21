@@ -27,68 +27,70 @@ function SubLabelSummaryComponent() {
     }, []);
 
     return (
-        <section className="rdc-rightbar" id="right-sidebar">
-            <div className="main-content-dashboard">
-                <div className="mian-sec-heading">
-                    <h6>Sub Label Summary</h6>
-                    <button
-                        className="theme-btn green-cl white-cl"
-                        onClick={() => navigate(-1)}
-                    >
-                        <i className="fa-solid fa-arrow-left me-1" /> Back
-                    </button>
-                </div>
+        <>
+            <section className="rdc-rightbar" id="right-sidebar">
+                <div className="main-content-dashboard">
+                    <div className="mian-sec-heading">
+                        <h6>Sub Label Summary</h6>
+                        <button
+                            className="theme-btn green-cl white-cl"
+                            onClick={() => navigate(-1)}
+                        >
+                            <i className="fa-solid fa-arrow-left me-1" /> Back
+                        </button>
+                    </div>
 
-                <div className="table-sec">
-                    <table className="rdc-table">
-                        <thead>
-                            <tr>
-                                <th className="main-th start">Sub Label Name</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Status</th>
-                                <th>Description</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            {labels.length === 0 ? (
+                    <div className="table-sec">
+                        <table className="rdc-table">
+                            <thead>
                                 <tr>
-                                    <td colSpan="6" style={{ textAlign: "center" }}>
-                                        No contracts found
-                                    </td>
+                                    <th className="main-th start">Sub Label Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>Description</th>
+                                    <th>Action</th>
                                 </tr>
-                            ) : (
-                                labels.map((item, index) => (
-                                    <tr key={index}>
-                                        <td className="main-td">{item.userName}</td>
-                                        <td>{new Date(item.startDate).toLocaleDateString()}</td>
-                                        <td>{new Date(item.endDate).toLocaleDateString()}</td>
+                            </thead>
 
-                                        <td className={item.status === "active" ? "dark-green" : "dark-red"}>
-                                            {item.status}
-                                        </td>
-
-                                        <td>{item.description || "N/A"}</td>
-
-                                        <td>
-                                            <button className="border-less border-purple color-purple table-button me-1">
-                                                NOC
-                                            </button>
-
-                                            <button className="border-less border-yellow color-yellow table-button">
-                                                Send Mail
-                                            </button>
+                            <tbody>
+                                {labels.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="6" style={{ textAlign: "center" }}>
+                                            No contracts found
                                         </td>
                                     </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                                ) : (
+                                    labels.map((item, index) => (
+                                        <tr key={index}>
+                                            <td className="main-td">{item.userName}</td>
+                                            <td>{new Date(item.startDate).toLocaleDateString()}</td>
+                                            <td>{new Date(item.endDate).toLocaleDateString()}</td>
+
+                                            <td className={item.status === "active" ? "dark-green" : "dark-red"}>
+                                                {item.status}
+                                            </td>
+
+                                            <td>{item.description || "N/A"}</td>
+
+                                            <td>
+                                                <button className="border-less border-purple color-purple table-button me-1">
+                                                    NOC
+                                                </button>
+
+                                                <button className="border-less border-yellow color-yellow table-button">
+                                                    Send Mail
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </>
     );
 }
 

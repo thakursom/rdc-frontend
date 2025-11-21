@@ -174,279 +174,281 @@ function LabelSummaryComponent() {
 
 
     return (
-        <section className="rdc-rightbar" id="right-sidebar">
-            <div className="main-content-dashboard">
-                <div className="mian-sec-heading">
-                    <h6>Sub Label Summary</h6>
-                </div>
-
-                <div className="dashTabs mainDashboarTabs">
-                    {/* ✅ SEARCH BAR + ADD BUTTON */}
-                    <div className="d-flex justify-content-between align-items-center flex-wrap">
-                        <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
-                            <i className="fa-solid fa-magnifying-glass" />
-                            <input
-                                className="form-control"
-                                type="search"
-                                placeholder="search here"
-                                value={search}
-                                onChange={(e) => {
-                                    setSearch(e.target.value);
-                                    setPage(1);
-                                }}
-                            />
-                        </div>
-
-                        <button
-                            className="theme-btn green-cl white-cl me-1"
-                            onClick={() => navigate(`/sub-label/contract-from`)}
-                        >
-                            <i className="fa-solid fa-file-signature me-1" />
-                            Add New Contract
-                        </button>
+        <>
+            <section className="rdc-rightbar" id="right-sidebar">
+                <div className="main-content-dashboard">
+                    <div className="mian-sec-heading">
+                        <h6>Sub Label Summary</h6>
                     </div>
 
-                    {/* ✅ TABLE */}
-                    <div className="table-sec">
-                        {loading ? (
-                            <Loader />
-                        ) : (
-                            <table className="rdc-table">
-                                <thead>
-                                    <tr>
-                                        {/* <th>Contract Name</th> */}
-                                        <th>Label Name</th>
-                                        <th>Start Date</th>
-                                        <th>End Date</th>
-                                        <th>Description</th>
-                                        <th>Status</th>
-                                        <th className="act">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {contracts.length > 0 ? (
-                                        contracts.map((contract, i) => (
-                                            <tr key={i}>
-                                                {/* <td>{contract.contractName}</td> */}
-                                                <td>{contract.userName}</td>
-                                                <td>{new Date(contract.startDate).toISOString().split("T")[0]}</td>
-                                                <td>{new Date(contract.endDate).toISOString().split("T")[0]}</td>
-                                                <td>{contract.description || 'N/A'}</td>
-                                                <td>
-                                                    <span
-                                                        className={`badge ${contract.status === "active"
-                                                            ? "bg-success"
-                                                            : contract.status === "Pending"
-                                                                ? "bg-warning"
-                                                                : "bg-danger"
-                                                            }`}
-                                                    >
-                                                        {contract.status}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <button className="border-less border-green color-green table-button me-1"
-                                                        onClick={() =>
-                                                            navigate(`/label/sub-label-summary/${contract.user_id}`)
-                                                        }
-                                                    >
-                                                        Sub Label
-                                                    </button>
-                                                    <button className="border-less border-purple color-purple table-button me-1">
-                                                        NOC
-                                                    </button>
-                                                    <button
-                                                        className="border-less border-green color-green table-button me-1"
-                                                        onClick={() =>
-                                                            navigate(`/label/contract-from/${contract._id}`)
-                                                        }
-                                                    >
-                                                        Edit <i className="fa-solid fa-chevron-right" />
-                                                    </button>
+                    <div className="dashTabs mainDashboarTabs">
+                        {/* ✅ SEARCH BAR + ADD BUTTON */}
+                        <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                            <div className="form-sec" style={{ marginBottom: "15px", maxWidth: "400px" }}>
+                                <i className="fa-solid fa-magnifying-glass" />
+                                <input
+                                    className="form-control"
+                                    type="search"
+                                    placeholder="search here"
+                                    value={search}
+                                    onChange={(e) => {
+                                        setSearch(e.target.value);
+                                        setPage(1);
+                                    }}
+                                />
+                            </div>
 
-                                                    <button
-                                                        className="border-less border-red dark-red table-button me-1"
-                                                        onClick={() => handleDeleteClick(contract)}
-                                                    >
-                                                        Delete <i className="fa-solid fa-trash" />
-                                                    </button>
+                            <button
+                                className="theme-btn green-cl white-cl me-1"
+                                onClick={() => navigate(`/sub-label/contract-from`)}
+                            >
+                                <i className="fa-solid fa-file-signature me-1" />
+                                Add New Contract
+                            </button>
+                        </div>
 
-                                                    <button
-                                                        className="border-less border-purple color-purple table-button me-1"
-                                                        onClick={() =>
-                                                            navigate(`/label/contract-logs/${contract._id}`)
-                                                        }
-                                                    >
-                                                        View Logs <i className="fa-solid fa-right-to-bracket"></i>
-                                                    </button>
+                        {/* ✅ TABLE */}
+                        <div className="table-sec">
+                            {loading ? (
+                                <Loader />
+                            ) : (
+                                <table className="rdc-table">
+                                    <thead>
+                                        <tr>
+                                            {/* <th>Contract Name</th> */}
+                                            <th>Label Name</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                            <th>Description</th>
+                                            <th>Status</th>
+                                            <th className="act">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {contracts.length > 0 ? (
+                                            contracts.map((contract, i) => (
+                                                <tr key={i}>
+                                                    {/* <td>{contract.contractName}</td> */}
+                                                    <td>{contract.userName}</td>
+                                                    <td>{new Date(contract.startDate).toISOString().split("T")[0]}</td>
+                                                    <td>{new Date(contract.endDate).toISOString().split("T")[0]}</td>
+                                                    <td>{contract.description || 'N/A'}</td>
+                                                    <td>
+                                                        <span
+                                                            className={`badge ${contract.status === "active"
+                                                                ? "bg-success"
+                                                                : contract.status === "Pending"
+                                                                    ? "bg-warning"
+                                                                    : "bg-danger"
+                                                                }`}
+                                                        >
+                                                            {contract.status}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <button className="border-less border-green color-green table-button me-1"
+                                                            onClick={() =>
+                                                                navigate(`/label/sub-label-summary/${contract.user_id}`)
+                                                            }
+                                                        >
+                                                            Sub Label
+                                                        </button>
+                                                        <button className="border-less border-purple color-purple table-button me-1">
+                                                            NOC
+                                                        </button>
+                                                        <button
+                                                            className="border-less border-green color-green table-button me-1"
+                                                            onClick={() =>
+                                                                navigate(`/label/contract-from/${contract._id}`)
+                                                            }
+                                                        >
+                                                            Edit <i className="fa-solid fa-chevron-right" />
+                                                        </button>
 
-                                                    <button
-                                                        className="border-less border-yellow color-yellow table-button"
-                                                        onClick={() => handleReminderClick(contract)}
-                                                    >
-                                                        Send Reminder <i className="fa-solid fa-envelope"></i>
-                                                    </button>
+                                                        <button
+                                                            className="border-less border-red dark-red table-button me-1"
+                                                            onClick={() => handleDeleteClick(contract)}
+                                                        >
+                                                            Delete <i className="fa-solid fa-trash" />
+                                                        </button>
+
+                                                        <button
+                                                            className="border-less border-purple color-purple table-button me-1"
+                                                            onClick={() =>
+                                                                navigate(`/label/contract-logs/${contract._id}`)
+                                                            }
+                                                        >
+                                                            View Logs <i className="fa-solid fa-right-to-bracket"></i>
+                                                        </button>
+
+                                                        <button
+                                                            className="border-less border-yellow color-yellow table-button"
+                                                            onClick={() => handleReminderClick(contract)}
+                                                        >
+                                                            Send Reminder <i className="fa-solid fa-envelope"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="6" style={{ textAlign: "center" }}>
+                                                    No Contracts Found
                                                 </td>
                                             </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="6" style={{ textAlign: "center" }}>
-                                                No Contracts Found
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
+                                        )}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
 
-                    {/* ✅ PAGINATION */}
-                    <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
-                        <CustomPagination
-                            pageCount={totalPages}
-                            onPageChange={handlePageChange}
-                            currentPage={page}
-                        />
+                        {/* ✅ PAGINATION */}
+                        <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
+                            <CustomPagination
+                                pageCount={totalPages}
+                                onPageChange={handlePageChange}
+                                currentPage={page}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* ✅ DELETE MODAL */}
-            {showDeleteModal && (
-                <div className="modal-backdrop show">
-                    <div className="modal d-block" tabIndex="-1">
-                        <div className="modal-dialog modal-dialog-centered">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Confirm Deletion</h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        onClick={handleCloseDeleteModal}
-                                        disabled={deleteLoading}
-                                    >
-                                        <i className="fa-solid fa-xmark"></i>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    <p>
-                                        Are you sure you want to delete contract{" "}
-                                        <strong>{contractToDelete?.contractName}</strong>?
-                                    </p>
-                                    <p className="text-muted small">
-                                        Client: {contractToDelete?.userName || "N/A"}
-                                    </p>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn green-cl white-cl"
-                                        onClick={handleCloseDeleteModal}
-                                        disabled={deleteLoading}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                        onClick={handleConfirmDelete}
-                                        disabled={deleteLoading}
-                                    >
-                                        {deleteLoading ? (
-                                            <>
-                                                <span className="spinner-border spinner-border-sm me-2" />
-                                                Deleting...
-                                            </>
-                                        ) : (
-                                            "Delete"
-                                        )}
-                                    </button>
+                {/* ✅ DELETE MODAL */}
+                {showDeleteModal && (
+                    <div className="modal-backdrop show">
+                        <div className="modal d-block" tabIndex="-1">
+                            <div className="modal-dialog modal-dialog-centered">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title">Confirm Deletion</h5>
+                                        <button
+                                            type="button"
+                                            className="btn-close"
+                                            onClick={handleCloseDeleteModal}
+                                            disabled={deleteLoading}
+                                        >
+                                            <i className="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <p>
+                                            Are you sure you want to delete contract{" "}
+                                            <strong>{contractToDelete?.contractName}</strong>?
+                                        </p>
+                                        <p className="text-muted small">
+                                            Client: {contractToDelete?.userName || "N/A"}
+                                        </p>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button
+                                            type="button"
+                                            className="btn green-cl white-cl"
+                                            onClick={handleCloseDeleteModal}
+                                            disabled={deleteLoading}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={handleConfirmDelete}
+                                            disabled={deleteLoading}
+                                        >
+                                            {deleteLoading ? (
+                                                <>
+                                                    <span className="spinner-border spinner-border-sm me-2" />
+                                                    Deleting...
+                                                </>
+                                            ) : (
+                                                "Delete"
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* ✅ REMINDER MODAL */}
-            {showReminderModal && (
-                <div className="modal-backdrop  show" id="modal-view">
-                    <div className="modal d-block" tabIndex="-1">
-                        <div className="modal-dialog modal-dialog-centered">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Send Reminder</h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        onClick={handleCloseReminderModal}
-                                        disabled={emailLoading || whatsappLoading}
-                                    >
-                                        <i className="fa-solid fa-xmark"></i>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    <p>
-                                        Are you sure you want to send a reminder for contract{" "}
-                                        <strong>{contractToRemind?.contractName}</strong>?
-                                    </p>
-                                    <p className="text-muted small">
-                                        Client: {contractToRemind?.userName || "N/A"}
-                                    </p>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn green-cl white-cl"
-                                        onClick={handleCloseReminderModal}
-                                        disabled={emailLoading || whatsappLoading}
-                                    >
-                                        Cancel
-                                    </button>
+                {/* ✅ REMINDER MODAL */}
+                {showReminderModal && (
+                    <div className="modal-backdrop  show" id="modal-view">
+                        <div className="modal d-block" tabIndex="-1">
+                            <div className="modal-dialog modal-dialog-centered">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title">Send Reminder</h5>
+                                        <button
+                                            type="button"
+                                            className="btn-close"
+                                            onClick={handleCloseReminderModal}
+                                            disabled={emailLoading || whatsappLoading}
+                                        >
+                                            <i className="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <p>
+                                            Are you sure you want to send a reminder for contract{" "}
+                                            <strong>{contractToRemind?.contractName}</strong>?
+                                        </p>
+                                        <p className="text-muted small">
+                                            Client: {contractToRemind?.userName || "N/A"}
+                                        </p>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button
+                                            type="button"
+                                            className="btn green-cl white-cl"
+                                            onClick={handleCloseReminderModal}
+                                            disabled={emailLoading || whatsappLoading}
+                                        >
+                                            Cancel
+                                        </button>
 
-                                    {/* WhatsApp Reminder Button */}
-                                    <button
-                                        type="button"
-                                        className="btn btn-success"
-                                        onClick={() => handleSendWhatsappReminder(contractToRemind)}
-                                        disabled={whatsappLoading || emailLoading}
-                                    >
-                                        {whatsappLoading ? (
-                                            <>
-                                                <span className="spinner-border spinner-border-sm me-2" />
-                                                Sending...
-                                            </>
-                                        ) : (
-                                            <>
-                                                Send WhatsApp
-                                            </>
-                                        )}
-                                    </button>
+                                        {/* WhatsApp Reminder Button */}
+                                        <button
+                                            type="button"
+                                            className="btn btn-success"
+                                            onClick={() => handleSendWhatsappReminder(contractToRemind)}
+                                            disabled={whatsappLoading || emailLoading}
+                                        >
+                                            {whatsappLoading ? (
+                                                <>
+                                                    <span className="spinner-border spinner-border-sm me-2" />
+                                                    Sending...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    Send WhatsApp
+                                                </>
+                                            )}
+                                        </button>
 
-                                    {/* Email Reminder Button */}
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary"
-                                        onClick={handleConfirmReminder}
-                                        disabled={emailLoading || whatsappLoading}
-                                    >
-                                        {emailLoading ? (
-                                            <>
-                                                <span className="spinner-border spinner-border-sm me-2" />
-                                                Sending...
-                                            </>
-                                        ) : (
-                                            "Send Email"
-                                        )}
-                                    </button>
+                                        {/* Email Reminder Button */}
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary"
+                                            onClick={handleConfirmReminder}
+                                            disabled={emailLoading || whatsappLoading}
+                                        >
+                                            {emailLoading ? (
+                                                <>
+                                                    <span className="spinner-border spinner-border-sm me-2" />
+                                                    Sending...
+                                                </>
+                                            ) : (
+                                                "Send Email"
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </section>
+                )}
+            </section>
+        </>
     );
 }
 

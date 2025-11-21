@@ -846,13 +846,6 @@ function DashboardComponent() {
                                                 <StreamingTrendsOverTimeChart />
                                             </div>
                                             <p>Streams (Millions)</p>
-                                            <div className="streaming-buttons-fx">
-                                                <button className="stream-btn all active">All</button>
-                                                <button className="stream-btn rdc">RDC</button>
-                                                <button className="stream-btn tunec">TuneC</button>
-                                                <button className="stream-btn ditto">Ditto</button>
-                                                <button className="stream-btn amus">Amus</button>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

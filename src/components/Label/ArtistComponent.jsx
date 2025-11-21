@@ -67,7 +67,7 @@ function ArtistComponent() {
                         <h6>Artist</h6>
                     </div>
                     <form className="artist-form">
-                        <div className="form-group" style={{ width: "300px" }}>
+                        <div className="form-group" style={{ width: "400px" }}>
                             <AsyncSelect
                                 cacheOptions
                                 loadOptions={loadOptions}
@@ -89,7 +89,7 @@ function ArtistComponent() {
                     </form>
 
                     <div className="table-sec">
-                        <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
+                        <div className="form-sec" style={{ marginBottom: "15px", width: "400px" }}>
                             <i className="fa-solid fa-magnifying-glass" />
                             <input
                                 className="form-control"
@@ -105,12 +105,11 @@ function ArtistComponent() {
                         <table className="rdc-table">
                             <thead>
                                 <tr>
-                                    <th className="main-th start">Artist</th>
+                                    <th style={{ width: "30%" }} className="main-th start">Artist</th>
                                     <th>Country</th>
                                     <th>Stream</th>
                                     <th>Revenue</th>
                                     <th>Action</th>
-                                    <th className="last" />
                                 </tr>
                             </thead>
                             <tbody>

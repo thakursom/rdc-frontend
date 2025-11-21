@@ -86,162 +86,164 @@ function BankDetailComponent() {
     };
 
     return (
-        <section className="rdc-rightbar" id="right-sidebar">
-            <div className="main-content-dashboard">
-                <div className="mian-sec-heading">
-                    <h6>User Bank Details</h6>
-                </div>
+        <>
+            <section className="rdc-rightbar" id="right-sidebar">
+                <div className="main-content-dashboard">
+                    <div className="mian-sec-heading">
+                        <h6>User Bank Details</h6>
+                    </div>
 
-                <div className="dashTabs mainDashboarTabs">
+                    <div className="dashTabs mainDashboarTabs">
 
-                    {/* ✅ SEARCH */}
-                    <div className="d-flex justify-content-between align-items-center flex-wrap">
-                        <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
-                            <i className="fa-solid fa-magnifying-glass" />
-                            <input
-                                className="form-control"
-                                type="search"
-                                placeholder="search here"
-                                value={search}
-                                onChange={(e) => {
-                                    setSearch(e.target.value);
-                                    setPage(1);
-                                }}
-                            />
+                        {/* ✅ SEARCH */}
+                        <div className="d-flex justify-content-between align-items-center flex-wrap">
+                            <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
+                                <i className="fa-solid fa-magnifying-glass" />
+                                <input
+                                    className="form-control"
+                                    type="search"
+                                    placeholder="search here"
+                                    value={search}
+                                    onChange={(e) => {
+                                        setSearch(e.target.value);
+                                        setPage(1);
+                                    }}
+                                />
+                            </div>
+
+                            <button
+                                className="theme-btn green-cl white-cl me-1"
+                                onClick={() => navigate(`/label/bank-details-form`)}
+                            >
+                                <i className="fa-regular fa-circle-user me-1" />
+                                Add Bank Details
+                            </button>
                         </div>
 
-                        <button
-                            className="theme-btn green-cl white-cl me-1"
-                            onClick={() => navigate(`/label/bank-details-form`)}
-                        >
-                            <i className="fa-regular fa-circle-user me-1" />
-                            Add Bank Details
-                        </button>
-                    </div>
+                        {/* ✅ TABLE */}
+                        <div className="table-sec">
+                            {loading ? (
+                                <Loader />
+                            ) : (
+                                <table className="rdc-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Client</th>
+                                            <th>Payment Method</th>
+                                            <th>Details</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
 
-                    {/* ✅ TABLE */}
-                    <div className="table-sec">
-                        {loading ? (
-                            <Loader />
-                        ) : (
-                            <table className="rdc-table">
-                                <thead>
-                                    <tr>
-                                        <th>Client</th>
-                                        <th>Payment Method</th>
-                                        <th>Details</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
+                                    <tbody>
+                                        {bankDetails.length > 0 ? (
+                                            bankDetails.map((b, i) => (
+                                                <tr key={i}>
+                                                    {/* FIXED: Using userName instead of user_id.name */}
+                                                    <td>{b.userName || "N/A"}</td>
+                                                    <td>{b.paymentMethod}</td>
+                                                    <td>
+                                                        {b.paymentMethod === "bank" && `Bank: ${b.bankName}, Account: ${b.accountNumber}`}
+                                                        {b.paymentMethod === "paypal" && `Email: ${b.paypalEmail}`}
+                                                        {b.paymentMethod === "upi" && `UPI ID: ${b.upiId}`}
+                                                    </td>
 
-                                <tbody>
-                                    {bankDetails.length > 0 ? (
-                                        bankDetails.map((b, i) => (
-                                            <tr key={i}>
-                                                {/* FIXED: Using userName instead of user_id.name */}
-                                                <td>{b.userName || "N/A"}</td>
-                                                <td>{b.paymentMethod}</td>
-                                                <td>
-                                                    {b.paymentMethod === "bank" && `Bank: ${b.bankName}, Account: ${b.accountNumber}`}
-                                                    {b.paymentMethod === "paypal" && `Email: ${b.paypalEmail}`}
-                                                    {b.paymentMethod === "upi" && `UPI ID: ${b.upiId}`} 
-                                                </td>
+                                                    <td>
+                                                        <button
+                                                            className="border-less border-green color-green table-button me-1"
+                                                            onClick={() => navigate(`/label/bank-details-form/${b._id}`)}
+                                                        >
+                                                            Edit <i className="fa-solid fa-chevron-right" />
+                                                        </button>
 
-                                                <td>
-                                                    <button
-                                                        className="border-less border-green color-green table-button me-1"
-                                                        onClick={() => navigate(`/label/bank-details-form/${b._id}`)}
-                                                    >
-                                                        Edit <i className="fa-solid fa-chevron-right" />
-                                                    </button>
-
-                                                    <button
-                                                        className="border-less border-red dark-red table-button"
-                                                        onClick={() => handleDeleteClick(b)}
-                                                    >
-                                                        Delete <i className="fa-solid fa-trash" />
-                                                    </button>
+                                                        <button
+                                                            className="border-less border-red dark-red table-button"
+                                                            onClick={() => handleDeleteClick(b)}
+                                                        >
+                                                            Delete <i className="fa-solid fa-trash" />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="4" style={{ textAlign: "center" }}>
+                                                    No Records Found
                                                 </td>
                                             </tr>
-                                        ))
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="4" style={{ textAlign: "center" }}>
-                                                No Records Found
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
+                                        )}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
 
-                    {/* ✅ PAGINATION */}
-                    <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
-                        <CustomPagination
-                            pageCount={totalPages}
-                            onPageChange={handlePageChange}
-                            currentPage={page}
-                        />
+                        {/* ✅ PAGINATION */}
+                        <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
+                            <CustomPagination
+                                pageCount={totalPages}
+                                onPageChange={handlePageChange}
+                                currentPage={page}
+                            />
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {/* ✅ DELETE CONFIRMATION MODAL */}
-            {showDeleteModal && (
-                <div className="modal-backdrop show">
-                    <div className="modal d-block" tabIndex="-1">
-                        <div className="modal-dialog modal-dialog-centered">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title">Confirm Deletion</h5>
-                                    <button
-                                        type="button"
-                                        className="btn-close"
-                                        onClick={handleCloseModal}
-                                        disabled={deleteLoading}
-                                    ><i class="fa-solid fa-xmark"></i></button>
-                                </div>
-                                <div className="modal-body">
-                                    <p>
-                                        Are you sure you want to delete bank details for{" "}
-                                        <strong>{bankToDelete?.userName || "N/A"}</strong>?
-                                    </p>
-                                    <p className="text-muted small">
-                                        Payment Method: {bankToDelete?.paymentMethod}
-                                    </p>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn green-cl white-cl"
-                                        onClick={handleCloseModal}
-                                        disabled={deleteLoading}
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                        onClick={handleConfirmDelete}
-                                        disabled={deleteLoading}
-                                    >
-                                        {deleteLoading ? (
-                                            <>
-                                                <span className="spinner-border spinner-border-sm me-2" />
-                                                Deleting...
-                                            </>
-                                        ) : (
-                                            "Delete"
-                                        )}
-                                    </button>
+                {/* ✅ DELETE CONFIRMATION MODAL */}
+                {showDeleteModal && (
+                    <div className="modal-backdrop show">
+                        <div className="modal d-block" tabIndex="-1">
+                            <div className="modal-dialog modal-dialog-centered">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title">Confirm Deletion</h5>
+                                        <button
+                                            type="button"
+                                            className="btn-close"
+                                            onClick={handleCloseModal}
+                                            disabled={deleteLoading}
+                                        ><i class="fa-solid fa-xmark"></i></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <p>
+                                            Are you sure you want to delete bank details for{" "}
+                                            <strong>{bankToDelete?.userName || "N/A"}</strong>?
+                                        </p>
+                                        <p className="text-muted small">
+                                            Payment Method: {bankToDelete?.paymentMethod}
+                                        </p>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button
+                                            type="button"
+                                            className="btn green-cl white-cl"
+                                            onClick={handleCloseModal}
+                                            disabled={deleteLoading}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={handleConfirmDelete}
+                                            disabled={deleteLoading}
+                                        >
+                                            {deleteLoading ? (
+                                                <>
+                                                    <span className="spinner-border spinner-border-sm me-2" />
+                                                    Deleting...
+                                                </>
+                                            ) : (
+                                                "Delete"
+                                            )}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </section>
+                )}
+            </section>
+        </>
     );
 }
 

@@ -15,7 +15,7 @@ export const clearToken = () => {
     window.location.href = "/";
 };
 
-// ✅ Common API function supporting both JSON & FormData
+// Common API function supporting both JSON & FormData
 export const apiRequest = async (endpoint, method = "GET", body = null, auth = false) => {
     const headers = {};
 
@@ -24,7 +24,7 @@ export const apiRequest = async (endpoint, method = "GET", body = null, auth = f
         headers["authorization"] = `Bearer ${authToken}`;
     }
 
-    // ✅ Detect if body is FormData
+    // Detect if body is FormData
     const isFormData = body instanceof FormData;
 
     const options = { method, headers };
@@ -42,7 +42,7 @@ export const apiRequest = async (endpoint, method = "GET", body = null, auth = f
         const response = await fetch(`${BASE_URL}${endpoint}`, options);
         const data = await response.json();
 
-        // ✅ Auto logout if token expired
+        // Auto logout if token expired
         if (data.message === "Token expired" || response.status === 401) {
             clearToken();
         }

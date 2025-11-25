@@ -410,15 +410,14 @@ function RevenueUploadComponent() {
                                     )}
                                 </tbody>
                             </table>
-
-                            {/* Pagination */}
-                            <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
-                                <CustomPagination
-                                    pageCount={totalPages}
-                                    onPageChange={handlePageChange}
-                                    currentPage={page}
-                                />
-                            </div>
+                        </div>
+                        {/* Pagination */}
+                        <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
+                            <CustomPagination
+                                pageCount={totalPages}
+                                onPageChange={handlePageChange}
+                                currentPage={page}
+                            />
                         </div>
                     </div>
                 </div>

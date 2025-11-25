@@ -24,7 +24,7 @@ function ContractFormComponent() {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    // ✅ Simplified Validation Schema
+    // Simplified Validation Schema
     const validationSchema = Yup.object({
         label: Yup.string().required("Label is required"),
         contractName: Yup.string()
@@ -44,7 +44,7 @@ function ContractFormComponent() {
 
     });
 
-    // ✅ Fetch existing contract when editing
+    // Fetch existing contract when editing
     useEffect(() => {
         if (id) {
             const fetchContract = async () => {
@@ -53,7 +53,7 @@ function ContractFormComponent() {
                     if (res.success) {
                         const detail = res.data?.data;
 
-                        // ✅ Set initial values for Formik
+                        // Set initial values for Formik
                         setInitialValues({
                             label: detail.user_id || "",
                             contractName: detail.contractName || "",
@@ -68,16 +68,16 @@ function ContractFormComponent() {
                             pdf: null, // Keep as null for edits
                         });
 
-                        // ✅ Store existing PDF filename
+                        // Store existing PDF filename
                         setExistingPdf(detail.pdf || "");
 
-                        // ✅ Prefill dropdown label properly
+                        // Prefill dropdown label properly
                         if (detail.user_id && detail.userName) {
                             setSelectedLabel(detail.user_id);
                             setSelectedLabelName(detail.userName);
                         }
 
-                        // ✅ Prefill file name
+                        // Prefill file name
                         setFileName(detail.pdf || "");
                     }
                 } catch (error) {
@@ -88,7 +88,7 @@ function ContractFormComponent() {
         }
     }, [id]);
 
-    // ✅ Fetch dropdown labels dynamically
+    // Fetch dropdown labels dynamically
     const loadOptions = async (inputValue) => {
         try {
             const res = await apiRequest(`/fetchAllLabel?search=${inputValue}`, "GET", null, true);
@@ -107,10 +107,10 @@ function ContractFormComponent() {
 
     const getTodayDate = () => new Date().toISOString().split("T")[0];
 
-    // ✅ Handle save/update with manual PDF validation
+    // Handle save/update with manual PDF validation
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            // ✅ Manual PDF validation
+            // Manual PDF validation
             if (!id && !values.pdf) {
                 toast.error("PDF file is required for new contracts");
                 return;
@@ -121,7 +121,7 @@ function ContractFormComponent() {
                 return;
             }
 
-            // ✅ File type validation
+            // File type validation
             if (values.pdf && values.pdf.type !== "application/pdf") {
                 toast.error("Only PDF files are allowed");
                 return;
@@ -135,7 +135,7 @@ function ContractFormComponent() {
             payload.append("endDate", values.endDate);
             payload.append("labelPercentage", values.labelPercentage);
 
-            // ✅ Only append PDF if it's a new file
+            // Only append PDF if it's a new file
             if (values.pdf) {
                 payload.append("pdf", values.pdf);
             }
@@ -149,7 +149,7 @@ function ContractFormComponent() {
 
             if (res.success) {
                 toast.success(id ? "Contract Updated Successfully!" : "Contract Uploaded Successfully!");
-                navigate("/superadmin/contract");
+                navigate("/superadmin/label-summary");
             } else {
                 toast.error(res.message || "Something went wrong");
             }
@@ -161,14 +161,14 @@ function ContractFormComponent() {
         }
     };
 
-    // ✅ Required field label component
+    // Required field label component
     const RequiredLabel = ({ children }) => (
         <label className="form-label fw-semibold">
             {children} <span className="text-danger">*</span>
         </label>
     );
 
-    // ✅ Optional field label component
+    // Optional field label component
     const OptionalLabel = ({ children }) => (
         <label className="form-label fw-semibold">
             {children}

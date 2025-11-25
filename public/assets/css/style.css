@@ -781,7 +781,6 @@ table.rdc-table {
     width: 100% !important;
     border-collapse: collapse;
     text-align: center;
-    margin-bottom: 25px;
     white-space: nowrap !important;
 }
 
@@ -1715,7 +1714,7 @@ span.notifiction-icon {
 
 .custom-page a {
     padding: 6px 12px;
-    border: 1px solid #d0c6f7;
+    border: 1px solid #14cdbb;
     border-radius: 6px;
     text-decoration: none;
     color: #14cdbb;
@@ -2108,7 +2107,6 @@ span.notifiction-icon {
     .table-sec {
         width: 100%;
         overflow: auto;
-        padding: 15px 0;
     }
 
     table.rdc-table th {

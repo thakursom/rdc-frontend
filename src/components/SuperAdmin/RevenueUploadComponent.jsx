@@ -107,20 +107,10 @@ function RevenueUploadComponent() {
     }, [page]);
 
 
-    const handleDownload = async (filePath, fileName) => {
-        const response = await apiRequest(
-            `/downloadRevenueFile?filePath=${encodeURIComponent(filePath)}`,
-            "GET",
-            null,
-            false,
-            true,
-            { responseType: "blob" }
-        );
-
-        const url = window.URL.createObjectURL(new Blob([response]));
+    const handleDownload = (filePath, fileName) => {
         const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", fileName);
+        link.href = filePath;
+        link.download = fileName;
         document.body.appendChild(link);
         link.click();
         link.remove();

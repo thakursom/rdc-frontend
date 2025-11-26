@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { apiRequest } from "../../../src/services/api";
 import CustomPagination from "../Pagination/CustomPagination";
 import { toast } from "react-toastify";
 import Loader from "../Loader/Loader";
+import { useNavigate } from "react-router-dom";
 
 // Validation schema - Updated for Excel files
 const validationSchema = Yup.object({
@@ -31,6 +32,9 @@ function RevenueUploadComponent() {
     const [revenueList, setRevenueList] = useState([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
+    const navigate = useNavigate();
+    const fileInputRef = useRef(null);
 
     const formik = useFormik({
         initialValues: {
@@ -63,7 +67,10 @@ function RevenueUploadComponent() {
                 if (result.success) {
                     toast.success("Revenue uploaded successfully!");
                     formik.resetForm();
-                    // Refresh the list after successful upload
+                    if (fileInputRef.current) {
+                        fileInputRef.current.value = "";
+                    }
+
                     fetchRevenueUploads();
                 } else {
                     toast.error(result.message || "Upload failed!");
@@ -107,14 +114,14 @@ function RevenueUploadComponent() {
     }, [page]);
 
 
-    const handleDownload = (filePath, fileName) => {
-        const link = document.createElement("a");
-        link.href = filePath;
-        link.download = fileName;
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-    };
+    // const handleDownload = (filePath, fileName) => {
+    //     const link = document.createElement("a");
+    //     link.href = filePath;
+    //     link.download = fileName;
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     link.remove();
+    // };
 
 
     // Handle pagination click
@@ -288,6 +295,7 @@ function RevenueUploadComponent() {
 
                                                 <div className="form-group">
                                                     <input
+                                                        ref={fileInputRef}
                                                         className={`form-control ${formik.touched.file && formik.errors.file ? 'is-invalid' : ''}`}
                                                         type="file"
                                                         name="file"
@@ -379,7 +387,7 @@ function RevenueUploadComponent() {
                                         <th>FileName</th>
                                         <th>From</th>
                                         <th>To</th>
-                                        <th>Download</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
 
@@ -392,11 +400,16 @@ function RevenueUploadComponent() {
                                                 <td>{item.periodFrom}</td>
                                                 <td>{item.periodTo}</td>
                                                 <td>
-                                                    <button
+                                                    {/* <button
                                                         className="border-less border-purple color-purple table-button me-1"
                                                         onClick={() => handleDownload(item.filePath, item.fileName)}
                                                     >
                                                         Download <i className="fa-solid fa-download" />
+                                                    </button> */}
+                                                    <button className="border-less border-purple color-purple table-button"
+                                                        onClick={() => navigate(`/superadmin/revenues/${item.user_id}`)}
+                                                    >
+                                                        View <i className="fa-solid fa-chevron-right" />
                                                     </button>
                                                 </td>
                                             </tr>

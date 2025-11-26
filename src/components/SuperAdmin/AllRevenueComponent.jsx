@@ -11,7 +11,8 @@ function AllRevenueComponent() {
     const [revenues, setRevenues] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [perPage, setPerPage] = useState(25);
+    const [pageCount, setPageCount] = useState(1);
 
     const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ function AllRevenueComponent() {
 
         try {
             const result = await apiRequest(
-                `/getRevenueById?userId=${userId}&page=${page}`,
+                `/getRevenueById?userId=${userId}&page=${page}&limit=${perPage}`,
                 "GET",
                 null,
                 true
@@ -29,7 +30,7 @@ function AllRevenueComponent() {
 
             if (result.success) {
                 setRevenues(result.data.data || []);
-                setTotalPages(result.data.pagination.totalPages || 1);
+                setPageCount(result.data.pagination.totalPages || 1);
             } else {
                 toast.error(result.message || "Failed to fetch revenue data");
                 setRevenues([]);
@@ -47,11 +48,18 @@ function AllRevenueComponent() {
 
     useEffect(() => {
         fetchRevenueData();
-    }, [userId, page]);
+    }, [userId, page, perPage]);
 
     // Pagination change handler
     const handlePageChange = (selectedObj) => {
         setPage(selectedObj.selected + 1);
+    };
+
+    const handlePerPageChange = (value) => {
+        console.log("");
+
+        setPerPage(value);
+        setPage(1); // reset to first page
     };
 
     return (
@@ -123,9 +131,11 @@ function AllRevenueComponent() {
                     {/* Pagination */}
                     <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                         <CustomPagination
-                            pageCount={totalPages}
-                            onPageChange={handlePageChange}
+                            pageCount={pageCount}
                             currentPage={page}
+                            onPageChange={handlePageChange}
+                            perPage={perPage}
+                            onPerPageChange={handlePerPageChange}
                         />
                     </div>
                 </div>

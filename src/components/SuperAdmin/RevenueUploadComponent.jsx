@@ -31,7 +31,8 @@ function RevenueUploadComponent() {
     const [loading, setLoading] = useState(false);
     const [revenueList, setRevenueList] = useState([]);
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [perPage, setPerPage] = useState(25);
+    const [pageCount, setPageCount] = useState(1);
 
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -87,7 +88,7 @@ function RevenueUploadComponent() {
     const fetchRevenueUploads = async () => {
         try {
             const response = await apiRequest(
-                `/fetchAllRevenueUploads?page=${page}`,
+                `/fetchAllRevenueUploads?page=${page}&limit=${perPage}`,
                 "GET",
                 null,
                 true
@@ -95,23 +96,23 @@ function RevenueUploadComponent() {
 
             if (response.success) {
                 setRevenueList(response?.data?.data || []);
-                setTotalPages(response?.data?.pagination?.totalPages || response?.data?.totalPages || 1);
+                setPageCount(response?.data?.pagination?.totalPages || response?.data?.totalPages || 1);
             } else {
                 toast.error(response.message || "Failed to fetch revenue uploads");
                 setRevenueList([]);
-                setTotalPages(1);
+                setPageCount(1);
             }
         } catch (error) {
             console.error(error);
             toast.error("Error fetching uploads");
             setRevenueList([]);
-            setTotalPages(1);
+            setPageCount(1);
         }
     };
 
     useEffect(() => {
         fetchRevenueUploads();
-    }, [page]);
+    }, [page, perPage]);
 
 
     // const handleDownload = (filePath, fileName) => {
@@ -127,6 +128,13 @@ function RevenueUploadComponent() {
     // Handle pagination click
     const handlePageChange = (selectedObj) => {
         setPage(selectedObj.selected + 1);
+    };
+
+    const handlePerPageChange = (value) => {
+        console.log("");
+
+        setPerPage(value);
+        setPage(1); // reset to first page
     };
 
     const handleProcessUploadClick = () => {
@@ -427,9 +435,11 @@ function RevenueUploadComponent() {
                         {/* Pagination */}
                         <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                             <CustomPagination
-                                pageCount={totalPages}
-                                onPageChange={handlePageChange}
+                                pageCount={pageCount}
                                 currentPage={page}
+                                onPageChange={handlePageChange}
+                                perPage={perPage}
+                                onPerPageChange={handlePerPageChange}
                             />
                         </div>
                     </div>

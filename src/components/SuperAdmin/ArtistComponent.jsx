@@ -7,7 +7,8 @@ import AsyncSelect from 'react-select/async';
 function ArtistComponent() {
     const [Artists, setArtists] = useState([]);
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [perPage, setPerPage] = useState(25);
+    const [pageCount, setPageCount] = useState(1);
     const [search, setSearch] = useState("");
     const [labelFilter, setLabelFilter] = useState("");
     const navigate = useNavigate();
@@ -33,27 +34,34 @@ function ArtistComponent() {
 
 
     const fetchArtists = async () => {
-        let url = `/fetchAllArtist?page=${page}&search=${search}`;
+        let url = `/fetchAllArtist?page=${page}&limit=${perPage}&search=${search}`;
         if (labelFilter) {
-            url = `/fetchUserAndSubUsersArtist?id=${labelFilter}&page=${page}&search=${search}`;
+            url = `/fetchUserAndSubUsersArtist?id=${labelFilter}&page=${page}&limit=${perPage}&search=${search}`;
         }
 
         const result = await apiRequest(url, "GET", null, true);
 
         if (result.success) {
             setArtists(result?.data?.artists || result.data.artists);
-            setTotalPages(result?.data?.pagination?.totalPages || 1);
+            setPageCount(result?.data?.pagination?.totalPages || 1);
         }
     };
 
 
     useEffect(() => {
         fetchArtists();
-    }, [page, search, labelFilter]);
+    }, [page, perPage, search, labelFilter]);
 
 
     const handlePageChange = (selectedObj) => {
         setPage(selectedObj.selected + 1);
+    };
+
+    const handlePerPageChange = (value) => {
+        console.log("");
+
+        setPerPage(value);
+        setPage(1); // reset to first page
     };
 
     return (
@@ -135,9 +143,11 @@ function ArtistComponent() {
                     {/* ✅ Pagination */}
                     <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                         <CustomPagination
-                            pageCount={totalPages}
-                            onPageChange={handlePageChange}
+                            pageCount={pageCount}
                             currentPage={page}
+                            onPageChange={handlePageChange}
+                            perPage={perPage}
+                            onPerPageChange={handlePerPageChange}
                         />
                     </div>
 

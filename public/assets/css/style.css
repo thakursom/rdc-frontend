@@ -32,6 +32,10 @@
     --dark-green: #1ABC0B;
 }
 
+.bg-green {
+    background-color: var(--dark-green) !important;
+}
+
 .dark-green {
     color: var(--dark-green) !important;
 }
@@ -56,7 +60,7 @@
     background: var(--parot);
 }
 
-.navy-cl {
+.navy-cl { 
     background-color: var(--navy-cl);
 }
 

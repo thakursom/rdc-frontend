@@ -338,7 +338,7 @@ function LabelSummaryComponent() {
                                     <div className="modal-footer">
                                         <button
                                             type="button"
-                                            className="btn green-cl white-cl"
+                                            className="theme-btn green-cl white-cl"
                                             onClick={handleCloseDeleteModal}
                                             disabled={deleteLoading}
                                         >
@@ -346,7 +346,7 @@ function LabelSummaryComponent() {
                                         </button>
                                         <button
                                             type="button"
-                                            className="btn btn-danger"
+                                            className="theme-btn bg-red white-cl"
                                             onClick={handleConfirmDelete}
                                             disabled={deleteLoading}
                                         >
@@ -395,7 +395,7 @@ function LabelSummaryComponent() {
                                     <div className="modal-footer">
                                         <button
                                             type="button"
-                                            className="btn green-cl white-cl"
+                                            className="theme-btn green-cl white-cl"
                                             onClick={handleCloseReminderModal}
                                             disabled={emailLoading || whatsappLoading}
                                         >
@@ -405,7 +405,7 @@ function LabelSummaryComponent() {
                                         {/* WhatsApp Reminder Button */}
                                         <button
                                             type="button"
-                                            className="btn btn-success"
+                                            className="theme-btn bg-green white-cl"
                                             onClick={() => handleSendWhatsappReminder(contractToRemind)}
                                             disabled={whatsappLoading || emailLoading}
                                         >
@@ -424,7 +424,7 @@ function LabelSummaryComponent() {
                                         {/* Email Reminder Button */}
                                         <button
                                             type="button"
-                                            className="btn btn-primary"
+                                            className="theme-btn navy-cl white-cl"
                                             onClick={handleConfirmReminder}
                                             disabled={emailLoading || whatsappLoading}
                                         >

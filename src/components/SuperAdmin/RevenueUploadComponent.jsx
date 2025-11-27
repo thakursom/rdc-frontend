@@ -531,7 +531,7 @@ function RevenueUploadComponent() {
                                 <div className="modal-footer">
                                     <button
                                         type="button"
-                                        className="btn btn-secondary"
+                                        className="theme-btn bg-red white-cl"
                                         onClick={handleCloseAcceptModal}
                                         disabled={acceptingId}
                                     >
@@ -539,7 +539,7 @@ function RevenueUploadComponent() {
                                     </button>
                                     <button
                                         type="button"
-                                        className="btn green-cl white-cl"
+                                        className="theme-btn green-cl white-cl"
                                         onClick={handleConfirmAccept}
                                         disabled={acceptingId}
                                     >

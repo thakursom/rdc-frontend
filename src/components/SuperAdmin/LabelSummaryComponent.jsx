@@ -11,14 +11,9 @@ function LabelSummaryComponent() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
-    console.log("contracts", contracts);
-
-
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [contractToDelete, setContractToDelete] = useState(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
-
-    // ✅ New States for Reminder Modal
     const [showReminderModal, setShowReminderModal] = useState(false);
     const [contractToRemind, setContractToRemind] = useState(null);
     const [emailLoading, setEmailLoading] = useState(false);
@@ -26,7 +21,7 @@ function LabelSummaryComponent() {
 
     const navigate = useNavigate();
 
-    // ✅ Fetch contracts
+    // Fetch contracts
     const fetchContracts = async () => {
         setLoading(true);
         try {
@@ -59,7 +54,7 @@ function LabelSummaryComponent() {
         setPage(selectedObj.selected + 1);
     };
 
-    // ✅ Delete Modal Handlers
+    // Delete Modal Handlers
     const handleDeleteClick = (contract) => {
         setContractToDelete(contract);
         setShowDeleteModal(true);
@@ -97,7 +92,7 @@ function LabelSummaryComponent() {
         }
     };
 
-    // ✅ Reminder Modal Handlers
+    // Reminder Modal Handlers
     const handleReminderClick = (contract) => {
         setContractToRemind(contract);
         setShowReminderModal(true);
@@ -183,7 +178,7 @@ function LabelSummaryComponent() {
                     </div>
 
                     <div className="dashTabs mainDashboarTabs">
-                        {/* ✅ SEARCH BAR + ADD BUTTON */}
+                        {/* SEARCH BAR + ADD BUTTON */}
                         <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
                             <div className="form-sec" style={{ marginBottom: "15px", maxWidth: "400px" }}>
                                 <i className="fa-solid fa-magnifying-glass" />
@@ -208,7 +203,7 @@ function LabelSummaryComponent() {
                             </button>
                         </div>
 
-                        {/* ✅ TABLE */}
+                        {/* TABLE */}
                         <div className="table-sec">
                             {loading ? (
                                 <Loader />
@@ -303,7 +298,7 @@ function LabelSummaryComponent() {
                             )}
                         </div>
 
-                        {/* ✅ PAGINATION */}
+                        {/* PAGINATION */}
                         <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                             <CustomPagination
                                 pageCount={totalPages}
@@ -314,7 +309,7 @@ function LabelSummaryComponent() {
                     </div>
                 </div>
 
-                {/* ✅ DELETE MODAL */}
+                {/* DELETE MODAL */}
                 {showDeleteModal && (
                     <div className="modal-backdrop show">
                         <div className="modal d-block" tabIndex="-1">
@@ -371,7 +366,7 @@ function LabelSummaryComponent() {
                     </div>
                 )}
 
-                {/* ✅ REMINDER MODAL */}
+                {/* REMINDER MODAL */}
                 {showReminderModal && (
                     <div className="modal-backdrop  show" id="modal-view">
                         <div className="modal d-block" tabIndex="-1">

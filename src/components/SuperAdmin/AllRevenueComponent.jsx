@@ -11,7 +11,7 @@ function AllRevenueComponent() {
     const [revenues, setRevenues] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const [perPage, setPerPage] = useState(25);
+    const [perPage, setPerPage] = useState(10);
     const [pageCount, setPageCount] = useState(1);
 
     const navigate = useNavigate();
@@ -87,7 +87,7 @@ function AllRevenueComponent() {
                                         <th>Title</th>
                                         <th>Artist</th>
                                         <th>Tracks</th>
-                                        <th>Release Date</th>
+                                        {/* <th>Release Date</th> */}
                                         <th>Label</th>
                                         <th>ISRC</th>
                                         <th>Retailer</th>
@@ -105,7 +105,7 @@ function AllRevenueComponent() {
                                                 <td>{item.track_title || item.release || "N/A"}</td>
                                                 <td>{item.track_artist || "N/A"}</td>
                                                 <td>{item.track_count || "N/A"}</td>
-                                                <td>{item.date || "N/A"}</td>
+                                                {/* <td>{item.date || "N/A"}</td> */}
                                                 <td>{item.label || "N/A"}</td>
                                                 <td>{item.isrc_code || "N/A"}</td>
                                                 <td>{item.retailer || "N/A"}</td>

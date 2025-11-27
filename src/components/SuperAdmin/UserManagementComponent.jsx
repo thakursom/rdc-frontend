@@ -8,7 +8,7 @@ function UserManagementComponent() {
   const [users, setUsers] = useState([]);
   const [filterRole, setFilterRole] = useState("label");
   const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(25);
+  const [perPage, setPerPage] = useState(10);
   const [pageCount, setPageCount] = useState(1);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);

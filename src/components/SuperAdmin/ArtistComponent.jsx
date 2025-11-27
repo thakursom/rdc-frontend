@@ -7,7 +7,7 @@ import AsyncSelect from 'react-select/async';
 function ArtistComponent() {
     const [Artists, setArtists] = useState([]);
     const [page, setPage] = useState(1);
-    const [perPage, setPerPage] = useState(25);
+    const [perPage, setPerPage] = useState(10);
     const [pageCount, setPageCount] = useState(1);
     const [search, setSearch] = useState("");
     const [labelFilter, setLabelFilter] = useState("");

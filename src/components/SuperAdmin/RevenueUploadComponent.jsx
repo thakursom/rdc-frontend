@@ -31,8 +31,11 @@ function RevenueUploadComponent() {
     const [loading, setLoading] = useState(false);
     const [revenueList, setRevenueList] = useState([]);
     const [page, setPage] = useState(1);
-    const [perPage, setPerPage] = useState(25);
+    const [perPage, setPerPage] = useState(10);
     const [pageCount, setPageCount] = useState(1);
+    const [acceptingId, setAcceptingId] = useState(null);
+    const [showAcceptModal, setShowAcceptModal] = useState(false);
+    const [itemToAccept, setItemToAccept] = useState(null);
 
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -58,10 +61,9 @@ function RevenueUploadComponent() {
 
             try {
                 const result = await apiRequest(
-                    "/upload-revenue",
+                    "/uploadRevenue",
                     "POST",
                     formData,
-                    true,
                     true
                 );
 
@@ -114,16 +116,42 @@ function RevenueUploadComponent() {
         fetchRevenueUploads();
     }, [page, perPage]);
 
+    const handleAcceptClick = (item) => {
+        setItemToAccept(item);
+        setShowAcceptModal(true);
+    };
 
-    // const handleDownload = (filePath, fileName) => {
-    //     const link = document.createElement("a");
-    //     link.href = filePath;
-    //     link.download = fileName;
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     link.remove();
-    // };
+    const handleCloseAcceptModal = () => {
+        setShowAcceptModal(false);
+        setItemToAccept(null);
+        setAcceptingId(null);
+    };
 
+    const handleConfirmAccept = async () => {
+        if (!itemToAccept) return;
+
+        setAcceptingId(itemToAccept._id);
+        try {
+            const result = await apiRequest(
+                `/uploadTblRevenue?uploadId=${itemToAccept._id}`,
+                "POST",
+                null,
+                true
+            );
+            if (result.success) {
+                toast.success("Accepted Successfully");
+                fetchRevenueUploads();
+                handleCloseAcceptModal();
+            } else {
+                toast.error(result.message || "Accept failed!");
+            }
+        } catch (error) {
+            console.log("Error:", error);
+            toast.error("Error accepting upload");
+        } finally {
+            setAcceptingId(null);
+        }
+    };
 
     // Handle pagination click
     const handlePageChange = (selectedObj) => {
@@ -131,8 +159,6 @@ function RevenueUploadComponent() {
     };
 
     const handlePerPageChange = (value) => {
-        console.log("");
-
         setPerPage(value);
         setPage(1); // reset to first page
     };
@@ -187,9 +213,6 @@ function RevenueUploadComponent() {
 
     return (
         <>
-            {/* Show Loader when uploading */}
-            {loading && <Loader />}
-
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
                     <div className="mian-sec-heading">
@@ -386,6 +409,9 @@ function RevenueUploadComponent() {
                             </div>
                         </div>
 
+                        {/* Show Loader when uploading */}
+                        {loading && <Loader />}
+
                         {/* Revenue Uploads Table */}
                         <div className="table-sec mt-5">
                             <table className="rdc-table">
@@ -408,23 +434,44 @@ function RevenueUploadComponent() {
                                                 <td>{item.periodFrom}</td>
                                                 <td>{item.periodTo}</td>
                                                 <td>
-                                                    {/* <button
-                                                        className="border-less border-purple color-purple table-button me-1"
-                                                        onClick={() => handleDownload(item.filePath, item.fileName)}
-                                                    >
-                                                        Download <i className="fa-solid fa-download" />
-                                                    </button> */}
-                                                    <button className="border-less border-purple color-purple table-button"
-                                                        onClick={() => navigate(`/superadmin/revenues/${item.user_id}`)}
-                                                    >
-                                                        View <i className="fa-solid fa-chevron-right" />
-                                                    </button>
+                                                    {/* Show View button only if NOT accepted */}
+                                                    {!item.isAccepted && (
+                                                        <button
+                                                            className="border-less border-purple color-purple table-button me-1"
+                                                            onClick={() => navigate(`/superadmin/revenues/${item._id}`)}
+                                                        >
+                                                            View <i className="fa-solid fa-chevron-right" />
+                                                        </button>
+                                                    )}
+
+                                                    {/* Show Accept button only if NOT accepted */}
+                                                    {!item.isAccepted ? (
+                                                        <button
+                                                            className="border-less border-green color-green table-button me-1"
+                                                            onClick={() => handleAcceptClick(item)}
+                                                            disabled={acceptingId === item._id}
+                                                        >
+                                                            {acceptingId === item._id ? (
+                                                                <>
+                                                                    <i className="fa-solid fa-spinner fa-spin me-1" />
+                                                                    Accepting...
+                                                                </>
+                                                            ) : (
+                                                                "Accept"
+                                                            )}
+                                                        </button>
+                                                    ) : (
+                                                        <span className="text-success">
+                                                            <i className="fa-solid fa-check-circle me-1" />
+                                                            Accepted
+                                                        </span>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="4" style={{ textAlign: "center" }}>
+                                            <td colSpan="5" style={{ textAlign: "center" }}>
                                                 No Revenue Uploads Found
                                             </td>
                                         </tr>
@@ -445,6 +492,72 @@ function RevenueUploadComponent() {
                     </div>
                 </div>
             </section>
+
+            {/* Accept Confirmation Modal */}
+            {showAcceptModal && (
+                <div className="modal-backdrop show">
+                    <div className="modal d-block" tabIndex="-1">
+                        <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title">Confirm Acceptance</h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={handleCloseAcceptModal}
+                                        disabled={acceptingId}
+                                    >
+                                        <i className="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    <p>
+                                        Are you sure you want to accept the revenue upload for{" "}
+                                        <strong>{itemToAccept?.platform}</strong>?
+                                    </p>
+                                    <div className="upload-details">
+                                        <p className="text-muted small mb-1">
+                                            <strong>File:</strong> {itemToAccept?.fileName}
+                                        </p>
+                                        <p className="text-muted small mb-1">
+                                            <strong>Period:</strong> {itemToAccept?.periodFrom} to {itemToAccept?.periodTo}
+                                        </p>
+                                    </div>
+                                    <p className="text-warning small mt-2">
+                                        <i className="fa-solid fa-exclamation-triangle me-1" />
+                                        This action cannot be undone.
+                                    </p>
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary"
+                                        onClick={handleCloseAcceptModal}
+                                        disabled={acceptingId}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn green-cl white-cl"
+                                        onClick={handleConfirmAccept}
+                                        disabled={acceptingId}
+                                    >
+                                        {acceptingId ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-2" />
+                                                Accepting...
+                                            </>
+                                        ) : (
+                                            "Accept"
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

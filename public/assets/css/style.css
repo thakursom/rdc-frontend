@@ -1742,7 +1742,30 @@ span.notifiction-icon {
     text-align: end;
 }
 
+.pagination-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
 
+ul.custom-pagination {
+    margin: 0 !important;
+}
+
+select.rows-select {
+    background: #fff;
+    padding: 1px 0px;
+    color: #363636;
+    border: 1px solid #14cdbb;
+    border-radius: 3px;
+}
+
+.rows-per-page span {
+    color: #363636;
+    margin-right: 5px;
+}
 
 
 

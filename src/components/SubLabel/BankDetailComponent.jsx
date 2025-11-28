@@ -8,7 +8,8 @@ function BankDetailComponent() {
     const [bankDetails, setBankDetails] = useState([]);
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [perPage, setPerPage] = useState(10);
+    const [pageCount, setPageCount] = useState(1);
     const [loading, setLoading] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [bankToDelete, setBankToDelete] = useState(null);
@@ -20,7 +21,7 @@ function BankDetailComponent() {
         setLoading(true);
 
         const res = await apiRequest(
-            `/getBankDetailByUserId?page=${page}&limit=10&search=${search}`,
+            `/getBankDetailByUserId?page=${page}&limit=${perPage}&search=${search}`,
             "GET",
             null,
             true
@@ -29,7 +30,7 @@ function BankDetailComponent() {
 
         if (res.success) {
             setBankDetails(res.data.data);
-            setTotalPages(res.data.pagination.totalPages);
+            setPageCount(res.data.pagination.totalPages);
         }
 
         setLoading(false);
@@ -37,17 +38,22 @@ function BankDetailComponent() {
 
     useEffect(() => {
         fetchBankDetails();
-    }, [page, search]);
+    }, [page, perPage, search]);
 
     const handlePageChange = (selectedObj) => {
         setPage(selectedObj.selected + 1);
     };
 
-    // Open confirmation modal
-    const handleDeleteClick = (bank) => {
-        setBankToDelete(bank);
-        setShowDeleteModal(true);
+    const handlePerPageChange = (value) => {
+        setPerPage(value);
+        setPage(1); // reset to first page
     };
+
+    // Open confirmation modal
+    // const handleDeleteClick = (bank) => {
+    //     setBankToDelete(bank);
+    //     setShowDeleteModal(true);
+    // };
 
     // Close confirmation modal
     const handleCloseModal = () => {
@@ -95,7 +101,7 @@ function BankDetailComponent() {
 
                     <div className="dashTabs mainDashboarTabs">
 
-                        {/* ✅ SEARCH */}
+                        {/* SEARCH */}
                         <div className="d-flex justify-content-between align-items-center flex-wrap">
                             <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
                                 <i className="fa-solid fa-magnifying-glass" />
@@ -120,7 +126,7 @@ function BankDetailComponent() {
                         </button> */}
                         </div>
 
-                        {/* ✅ TABLE */}
+                        {/* TABLE */}
                         <div className="table-sec">
                             {loading ? (
                                 <Loader />
@@ -177,18 +183,20 @@ function BankDetailComponent() {
                             )}
                         </div>
 
-                        {/* ✅ PAGINATION */}
+                        {/* PAGINATION */}
                         <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                             <CustomPagination
-                                pageCount={totalPages}
-                                onPageChange={handlePageChange}
+                                pageCount={pageCount}
                                 currentPage={page}
+                                onPageChange={handlePageChange}
+                                perPage={perPage}
+                                onPerPageChange={handlePerPageChange}
                             />
                         </div>
                     </div>
                 </div>
 
-                {/* ✅ DELETE CONFIRMATION MODAL */}
+                {/* DELETE CONFIRMATION MODAL */}
                 {showDeleteModal && (
                     <div className="modal-backdrop show">
                         <div className="modal d-block" tabIndex="-1">

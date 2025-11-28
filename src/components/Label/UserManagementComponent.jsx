@@ -8,7 +8,8 @@ function UserManagementComponent() {
   const [users, setUsers] = useState([]);
   const [filterRole, setFilterRole] = useState("sub label");
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [pageCount, setPageCount] = useState(1);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -16,11 +17,11 @@ function UserManagementComponent() {
   const fetchUsers = async () => {
     setLoading(true);
 
-    const result = await apiRequest(`/fetchAllUser?page=${page}&filterRole=${filterRole}&search=${search}`, "GET", null, true);
+    const result = await apiRequest(`/fetchAllUser?page=${page}&limit=${perPage}&filterRole=${filterRole}&search=${search}`, "GET", null, true);
 
     if (result.success) {
       setUsers(result.data.users);
-      setTotalPages(result.data.pagination.totalPages);
+      setPageCount(result.data.pagination.totalPages);
     } else {
       console.log("Error Fetching Users", result.message);
     }
@@ -29,12 +30,17 @@ function UserManagementComponent() {
 
   useEffect(() => {
     fetchUsers();
-  }, [filterRole, page, search]);
+  }, [filterRole, page, perPage, search]);
 
 
   // Handle pagination click
   const handlePageChange = (selectedObj) => {
     setPage(selectedObj.selected + 1);
+  };
+
+  const handlePerPageChange = (value) => {
+    setPerPage(value);
+    setPage(1); // reset to first page
   };
 
   return (
@@ -157,9 +163,11 @@ function UserManagementComponent() {
             {/* Pagination */}
             <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
               <CustomPagination
-                pageCount={totalPages}
-                onPageChange={handlePageChange}
+                pageCount={pageCount}
                 currentPage={page}
+                onPageChange={handlePageChange}
+                perPage={perPage}
+                onPerPageChange={handlePerPageChange}
               />
             </div>
 

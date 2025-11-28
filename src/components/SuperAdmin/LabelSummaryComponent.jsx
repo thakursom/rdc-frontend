@@ -9,7 +9,8 @@ function LabelSummaryComponent() {
     const [contracts, setContracts] = useState([]);
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [perPage, setPerPage] = useState(10);
+    const [pageCount, setPageCount] = useState(1);
     const [loading, setLoading] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [contractToDelete, setContractToDelete] = useState(null);
@@ -26,7 +27,7 @@ function LabelSummaryComponent() {
         setLoading(true);
         try {
             const res = await apiRequest(
-                `/getAllContracts?page=${page}&limit=10&search=${search}`,
+                `/getAllContracts?page=${page}&limit=${perPage}&search=${search}`,
                 "GET",
                 null,
                 true
@@ -34,7 +35,7 @@ function LabelSummaryComponent() {
 
             if (res.success) {
                 setContracts(res.data.data);
-                setTotalPages(res.data.pagination.totalPages);
+                setPageCount(res.data.pagination.totalPages);
             } else {
                 toast.error("Failed to fetch contracts");
             }
@@ -48,10 +49,15 @@ function LabelSummaryComponent() {
 
     useEffect(() => {
         fetchContracts();
-    }, [page, search]);
+    }, [page, perPage, search]);
 
     const handlePageChange = (selectedObj) => {
         setPage(selectedObj.selected + 1);
+    };
+
+    const handlePerPageChange = (value) => {
+        setPerPage(value);
+        setPage(1); // reset to first page
     };
 
     // Delete Modal Handlers
@@ -301,9 +307,11 @@ function LabelSummaryComponent() {
                         {/* PAGINATION */}
                         <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                             <CustomPagination
-                                pageCount={totalPages}
-                                onPageChange={handlePageChange}
+                                pageCount={pageCount}
                                 currentPage={page}
+                                onPageChange={handlePageChange}
+                                perPage={perPage}
+                                onPerPageChange={handlePerPageChange}
                             />
                         </div>
                     </div>

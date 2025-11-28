@@ -144,7 +144,7 @@ function BankDetailFormComponent() {
                 toast.success(id ? "Updated Successfully!" : "Saved Successfully!");
                 navigate("/superadmin/bank-details");
             } else {
-                toast.error(res.message || "Something went wrong");
+                toast.error(res?.data?.message || "Something went wrong");
             }
         } catch (error) {
             console.error("Submission error:", error);

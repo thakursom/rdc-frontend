@@ -94,7 +94,7 @@ function PayoutComponent() {
                                         <tr key={p._id}>
                                             <td className="main-td">{p.userName || "N/A"}</td>
                                             <td>{p.paymentMethod || "N/A"}</td>
-                                            <td>{p.totalAmount || "N/A"}</td>
+                                            <td>{p.amount || "N/A"}</td>
                                             <td>{p.description || "N/A"}</td>
                                             <td>{new Date(p.createdAt).toLocaleDateString() || "N/A"}</td>
                                         </tr>

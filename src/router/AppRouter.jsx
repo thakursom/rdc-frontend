@@ -72,6 +72,7 @@ import LogsSubLabel from "../pages/SubLabel/Logs";
 import BankDetailSubLabel from "../pages/SubLabel/BankDetail";
 import BankDetailFormSubLabel from "../pages/SubLabel/BankDetailForm";
 import AllRevenue from "../pages/SuperAdmin/AllRevenue";
+import AddPayout from "../pages/SuperAdmin/AddPayout";
 
 function AppRouter() {
   return (
@@ -125,6 +126,7 @@ function AppRouter() {
           <Route path="/superadmin/contract-from/:id" element={<ContractForm />} />
           <Route path="/superadmin/contract-logs/:id" element={<ContractLog />} />
           <Route path="/superadmin/revenues/:userId" element={<AllRevenue />} />
+          <Route path="/superadmin/payout-from" element={<AddPayout />} />
         </Route>
 
         {/* ADMIN ROUTES */}

@@ -1,10 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiRequest } from "../../services/api";
 
 function SubLabelComponent() {
     const { userId } = useParams();
     const [labels, setLabels] = useState([]);
+    const navigate = useNavigate();
 
     const fetchSubLabels = async () => {
 
@@ -27,6 +28,12 @@ function SubLabelComponent() {
                 <div className="main-content-dashboard">
                     <div className="mian-sec-heading">
                         <h6>Sub Label</h6>
+                        <button
+                            className="theme-btn green-cl white-cl"
+                            onClick={() => navigate(-1)}
+                        >
+                            <i className="fa-solid fa-arrow-left me-1" /> Back
+                        </button>
                     </div>
                     <div className="subLabel-button">
                         <div className="btn-left-sec subLabelBtn">

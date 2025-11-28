@@ -77,6 +77,25 @@ function UserManagementComponent() {
 
               <li className="nav-item" role="presentation">
                 <a
+                  className={`nav-link ${filterRole === "sub label" ? "active" : ""}`}
+                  id="profile-tab"
+                  data-bs-toggle="tab"
+                  href="#profile"
+                  role="tab"
+                  aria-controls="profile"
+                  aria-selected="false"
+                  onClick={() => {
+                    setFilterRole("sub label");
+                    setPage(1);
+                  }}
+                >
+                  Sub Label
+                </a>
+
+              </li>
+
+              <li className="nav-item" role="presentation">
+                <a
                   className={`nav-link ${filterRole === "manager" ? "active" : ""}`}
                   id="profile-tab"
                   data-bs-toggle="tab"
@@ -143,17 +162,23 @@ function UserManagementComponent() {
                           <td>{u.role || "N/A"}</td>
                           {/* <td>{u.third_party_username || "N/A"}</td> */}
                           <td>
+                            {/* View Button (Always show) */}
                             <button className="border-less border-purple color-purple table-button me-1">
                               <a className="color-purple" href="#">
                                 View
                               </a>{" "}
                               <i className="fa-solid fa-chevron-right" />
                             </button>
-                            <button className="border-less border-green color-green table-button"
-                              onClick={() => navigate(`/superadmin/sub-label/${u.id}`)}
-                            >
-                              Sub Label <i className="fa-solid fa-chevron-right" />
-                            </button>
+
+                            {/* Sub Label Button (Hide when Sub Label tab is active) */}
+                            {filterRole !== "sub label" && (
+                              <button
+                                className="border-less border-green color-green table-button"
+                                onClick={() => navigate(`/superadmin/sub-label/${u.id}`)}
+                              >
+                                Sub Label <i className="fa-solid fa-chevron-right" />
+                              </button>
+                            )}
                           </td>
                         </tr>
                       ))

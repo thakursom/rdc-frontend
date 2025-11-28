@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiRequest } from "../../services/api";
 
@@ -6,6 +6,7 @@ function ArtistDetailComponent() {
     const { userId } = useParams();
 
     const [ArtistDetails, setArtistDetails] = useState([]);
+    const navigate = useNavigate();
     console.log("ArtistDetails", ArtistDetails);
 
 
@@ -30,7 +31,12 @@ function ArtistDetailComponent() {
                 <div className="main-content-dashboard">
                     <div className="mian-sec-heading artistHeading">
                         <h6>Artist Detail</h6>
-                        <button className="theme-btn green-cl white-cl">Back to Artist</button>
+                        <button
+                            className="theme-btn green-cl white-cl"
+                            onClick={() => navigate(-1)}
+                        >
+                            <i className="fa-solid fa-arrow-left me-1" /> Back
+                        </button>
                     </div>
                     <div className="heading-content">
                         <div className="inner-content">

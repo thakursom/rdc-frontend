@@ -40,6 +40,32 @@ function DashboardComponent() {
                                     Streams
                                 </a>
                             </li>
+                            <li className="nav-item" role="presentation">
+                                <a
+                                    className="nav-link"
+                                    id="home-tab"
+                                    data-bs-toggle="tab"
+                                    href="#home"
+                                    role="tab"
+                                    aria-controls="home"
+                                    aria-selected="true"
+                                >
+                                    Youtube
+                                </a>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                                <a
+                                    className="nav-link"
+                                    id="profile-tab"
+                                    data-bs-toggle="tab"
+                                    href="#profile"
+                                    role="tab"
+                                    aria-controls="profile"
+                                    aria-selected="false"
+                                >
+                                    Audio Platform
+                                </a>
+                            </li>
                         </ul>
                         <div className="tab-content" id="myTabContent">
                             <div

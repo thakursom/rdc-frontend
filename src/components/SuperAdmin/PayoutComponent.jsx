@@ -53,8 +53,7 @@ function PayoutComponent() {
                         <h6>Payouts</h6>
                     </div>
 
-                    <div className="processing-fx">
-                        <h6>Pending Payouts</h6>
+                    <div className="d-flex justify-content-end w-100 mb-2">
                         <button
                             className="theme-btn green-cl white-cl me-1"
                             onClick={() => navigate(`/superadmin/payout-from`)}
@@ -102,23 +101,16 @@ function PayoutComponent() {
                                 )}
                             </tbody>
                         </table>
-
-                        {/* Pagination */}
-                        <div
-                            style={{
-                                marginTop: "25px",
-                                display: "flex",
-                                justifyContent: "flex-end",
-                            }}
-                        >
-                            <CustomPagination
-                                pageCount={pageCount}
-                                currentPage={page}
-                                onPageChange={handlePageChange}
-                                perPage={perPage}
-                                onPerPageChange={handlePerPageChange}
-                            />
-                        </div>
+                    </div>
+                    {/* Pagination */}
+                    <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end", }}>
+                        <CustomPagination
+                            pageCount={pageCount}
+                            currentPage={page}
+                            onPageChange={handlePageChange}
+                            perPage={perPage}
+                            onPerPageChange={handlePerPageChange}
+                        />
                     </div>
                 </div>
             </section>

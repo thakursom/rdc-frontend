@@ -333,6 +333,7 @@ function AddPayoutComponent() {
                                         <label>Total Amount *</label>
                                         <input
                                             className="form-control"
+                                            placeholder="Enter payout total amount"
                                             value={selectedUserAmount || ""}
                                             disabled={true}
                                         />

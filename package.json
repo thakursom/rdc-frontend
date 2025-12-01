@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "chart.js": "^4.5.1",
+    "csv-writer": "^1.6.0",
+    "exceljs": "^4.4.0",
     "formik": "^2.4.9",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -19,6 +21,7 @@
     "react-router-dom": "^7.9.5",
     "react-select": "^5.10.2",
     "react-toastify": "^11.0.5",
+    "xlsx": "^0.18.5",
     "yup": "^1.7.1"
   },
   "devDependencies": {

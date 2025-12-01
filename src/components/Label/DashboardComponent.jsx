@@ -53,7 +53,7 @@ function DashboardComponent() {
                                     Youtube
                                 </a>
                             </li>
-                            <li className="nav-item" role="presentation">
+                            {/* <li className="nav-item" role="presentation">
                                 <a
                                     className="nav-link"
                                     id="profile-tab"
@@ -65,7 +65,7 @@ function DashboardComponent() {
                                 >
                                     Audio Platform
                                 </a>
-                            </li>
+                            </li> */}
                         </ul>
                         <div className="tab-content" id="myTabContent">
                             <div

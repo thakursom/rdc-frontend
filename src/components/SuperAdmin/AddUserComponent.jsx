@@ -23,6 +23,9 @@ function AddUserComponent() {
 
     const onSubmit = async (values, { resetForm, setSubmitting }) => {
         const sendData = { ...values };
+
+        sendData.userEmail = sendData.email;
+        delete sendData.email;
         delete sendData.confirmPassword;
 
         const result = await apiRequest("/add-user", "POST", sendData, true);

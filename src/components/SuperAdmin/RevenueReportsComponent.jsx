@@ -249,7 +249,6 @@ function RevenueReportsComponent() {
                         </div>
                     </div>
 
-                    {/* बाकी सब तुम्हारा पुराना UI same रहेगा */}
                     <div className="revnue-filters">
                         <form className="revenue-filter-fx" onSubmit={handleFilterSubmit}>
                             <div className="row g-3 mb-4">
@@ -262,10 +261,16 @@ function RevenueReportsComponent() {
                                             <option value="Apple Music">Apple Music</option>
                                             <option value="Spotify">Spotify</option>
                                             <option value="Gaana">Gaana</option>
-                                            <option value="JioSaavn">Jio Saavn</option>
+                                            <option value="jio_savan">Jio Saavn</option>
                                             <option value="Facebook">Facebook</option>
                                             <option value="Amazon">Amazon</option>
                                             <option value="TikTok">Tik Tok</option>
+                                            <option value="Sound Recording (Audio Claim)">Sound Recording</option>
+                                            <option value="Art Track (YouTube Music)">YouTube Art Track</option>
+                                            <option value="YouTubePartnerChannel">YouTube Partner Channel</option>
+                                            <option value="YouTubeRDCChannel">YouTube RDC Channel</option>
+                                            <option value="YouTubeVideoClaim">YouTube Video Claim(UGC)</option>
+                                            <option value="YTPremiumRevenue">YT Premium Revenue</option>
                                         </select>
                                     </div>
                                 </div>
@@ -275,7 +280,7 @@ function RevenueReportsComponent() {
                                             onChange={e => handleFilterChange('month', e.target.value)}
                                             disabled={loading || exporting}>
                                             <option value="">Month</option>
-                                            {[1,2,3,4,5,6,7,8,9,10,11,12].map(m => (
+                                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(m => (
                                                 <option key={m} value={m}>{m}</option>
                                             ))}
                                         </select>

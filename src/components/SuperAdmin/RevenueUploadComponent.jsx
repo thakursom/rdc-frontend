@@ -249,7 +249,13 @@ function RevenueUploadComponent() {
                                                         <option value="JioSaavan">Jio Saavan</option>
                                                         <option value="Facebook">Facebook</option>
                                                         <option value="Amazon">Amazon</option>
-                                                        <option value="TikTok">Tik Tok</option>
+                                                        <option value="TikTok">TikTok</option>
+                                                        <option value="SoundRecording">Sound Recording</option>
+                                                        <option value="YouTubeArtTrack">YouTube Art Track</option>
+                                                        <option value="YouTubePartnerChannel">YouTube Partner Channel</option>
+                                                        <option value="YouTubeRDCChannel">YouTube RDC Channel</option>
+                                                        <option value="YouTubeVideoClaim">YouTube Video Claim(UGC)</option>
+                                                        <option value="YTPremiumRevenue">YT Premium Revenue</option>
                                                     </select>
 
                                                     {formik.touched.platform && formik.errors.platform && (

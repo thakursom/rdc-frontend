@@ -23,7 +23,7 @@ function LogComponent() {
 
         if (result.success) {
             setLogs(result?.data?.data || []);
-            setPageCount(result?.data?.data?.totalPages || 1);
+            setPageCount(result?.data?.totalPages || 1);
         } else {
             console.log("Error Fetching Logs:", result.message);
         }

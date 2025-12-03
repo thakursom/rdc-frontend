@@ -62,8 +62,8 @@ function LogComponent() {
                                         <th>Action</th>
                                         <th>Description</th>
                                         <th>IP</th>
-                                        {/* <th>Status</th>
-                                        <th>Action</th> */}
+                                        <th>Date</th>
+                                        {/* <th>Action</th> */}
                                     </tr>
                                 </thead>
 
@@ -75,9 +75,9 @@ function LogComponent() {
                                                 <td>{log.action || "N/A"}</td>
                                                 <td>{log.description || "N/A"}</td>
                                                 <td>{log.ip || "N/A"}</td>
-                                                {/* <td>{log.status || "N/A"}</td>
+                                                <td>{log.createdAt ? new Date(log.createdAt).toISOString().split("T")[0] : "N/A"}</td>
 
-                                                <td>
+                                                {/* <td>
                                                     <button className="green-cl white-cl icon-btn me-1">
                                                         <i className="fa-solid fa-download" />
                                                     </button>

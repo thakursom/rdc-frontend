@@ -95,7 +95,7 @@ function PayoutComponent() {
                                             <td>{p.paymentMethod || "N/A"}</td>
                                             <td>{p.amount || "N/A"}</td>
                                             <td>{p.description || "N/A"}</td>
-                                            <td>{new Date(p.createdAt).toLocaleDateString() || "N/A"}</td>
+                                            <td>{p.createdAt ? new Date(p.createdAt).toISOString().split("T")[0] : "N/A"}</td>
                                         </tr>
                                     ))
                                 )}

@@ -7,6 +7,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
 
   // submenu toggle
   const [settingOpen, setSettingOpen] = useState(false);
+  const [revenueReportOpen, setRevenueReportOpen] = useState(false);
 
   // ✅ FUNCTION TO CLOSE SIDEBAR ON MOBILE
   const handleMobileClose = () => {
@@ -210,7 +211,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
+          {/* {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -250,6 +251,93 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                 </svg>
                 Revenue Reports
               </NavLink>
+            </li>
+          )} */}
+
+          {(role === "Super Admin" || role === "Label" || role === "Sub Label") && (
+            <li className="sidebar-item">
+              <a
+                className="sidebar-links"
+                onClick={() => setRevenueReportOpen(!revenueReportOpen)}
+                style={{ cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}
+              >
+                <span style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+                  <svg
+                    width={22}
+                    height={20}
+                    viewBox="0 0 24 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3.20935 19.0537C3.34192 19.0537 3.44933 18.9494 3.44933 18.8206V12.2698C3.44933 12.141 3.34192 12.0367 3.20935 12.0367H1.28956C1.25804 12.0367 1.22683 12.0427 1.19772 12.0544C1.1686 12.0661 1.14214 12.0833 1.11986 12.105C1.09757 12.1266 1.0799 12.1523 1.06784 12.1806C1.05578 12.2089 1.04958 12.2392 1.04958 12.2698V18.8206C1.04958 18.9494 1.15699 19.0537 1.28956 19.0537H3.20935ZM3.20935 19.986H1.28956C0.626863 19.986 0.0896863 19.4642 0.0896863 18.8206V12.2698C0.0896863 11.6262 0.626863 11.1044 1.28956 11.1044H3.20935C3.87205 11.1044 4.40922 11.6262 4.40922 12.2698V18.8206C4.40922 19.4642 3.87205 19.986 3.20935 19.986ZM9.73398 19.0537C9.86655 19.0537 9.97395 18.9494 9.97395 18.8206V10.917C9.97395 10.7883 9.86655 10.684 9.73398 10.684H7.81418C7.78267 10.684 7.75146 10.69 7.72234 10.7017C7.69322 10.7134 7.66677 10.7306 7.64448 10.7522C7.6222 10.7739 7.60452 10.7996 7.59246 10.8278C7.58041 10.8561 7.5742 10.8864 7.57421 10.917V18.8206C7.57421 18.9494 7.68161 19.0537 7.81418 19.0537H9.73398ZM9.73398 19.986H7.81418C7.15149 19.986 6.61431 19.4642 6.61431 18.8206V10.917C6.61431 10.2734 7.15149 9.75171 7.81418 9.75171H9.73398C10.3967 9.75171 10.9338 10.2734 10.9338 10.917V18.8206C10.9338 19.4642 10.3967 19.986 9.73398 19.986ZM16.2586 19.0677C16.3912 19.0677 16.4986 18.9634 16.4986 18.8347V9.57816C16.4986 9.44954 16.3911 9.34509 16.2586 9.34509H14.3388C14.2064 9.34509 14.0988 9.44954 14.0988 9.57816V18.8347C14.0988 18.9634 14.2062 19.0677 14.3388 19.0677H16.2586ZM16.2586 20H14.3388C13.6761 20 13.1389 19.4783 13.1389 18.8347V9.57816C13.1389 8.9347 13.6762 8.41282 14.3388 8.41282H16.2586C16.9213 8.41282 17.4585 8.9347 17.4585 9.57816V18.8347C17.4585 19.4783 16.9213 20 16.2586 20ZM22.7832 19.0678C22.9158 19.0678 23.0232 18.9635 23.0232 18.8347V8.41287C23.0232 8.28411 22.9158 8.1798 22.7832 8.1798H20.8634C20.8319 8.17979 20.8007 8.18582 20.7716 8.19753C20.7425 8.20924 20.716 8.22641 20.6937 8.24805C20.6715 8.26969 20.6538 8.29539 20.6417 8.32367C20.6297 8.35195 20.6235 8.38226 20.6235 8.41287V18.8347C20.6235 18.9635 20.7309 19.0678 20.8634 19.0678H22.7832ZM22.7832 20.0001H20.8634C20.2007 20.0001 19.6636 19.4783 19.6636 18.8347V8.41287C19.6636 7.76924 20.2007 7.24753 20.8634 7.24753H22.7832C23.4459 7.24753 23.9831 7.76924 23.9831 8.41287V18.8347C23.9831 19.4783 23.4459 20.0001 22.7832 20.0001ZM22.6378 0.837938C15.8743 4.53878 8.32568 6.72203 0.450983 7.18464C0.186402 7.20019 -0.0151149 7.4211 0.000891183 7.67807C0.0168973 7.93503 0.244357 8.13075 0.508938 8.1152C8.5297 7.64402 16.2195 5.41993 23.109 1.65017C23.3399 1.5238 23.4216 1.23955 23.2915 1.01524C23.1614 0.790938 22.8688 0.711572 22.6378 0.837938Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M21.1198 0.932271L23.5194 0.935776C23.7844 0.936163 23.9996 0.727791 24 0.470347C24.0004 0.212902 23.7859 0.00389257 23.5208 0.00350564L21.1213 5.37997e-07C20.8562 -0.000386391 20.641 0.207986 20.6406 0.46543C20.6402 0.722874 20.8548 0.931884 21.1198 0.932271Z"
+                      fill="black"
+                    />
+                    <path
+                      d="M23.0402 0.468144L23.033 2.78578C23.0322 3.04322 23.2464 3.25255 23.5115 3.25333C23.7765 3.2541 23.9921 3.04605 23.9929 2.7886L24.0001 0.470967C24.0008 0.213522 23.7866 0.00419398 23.5216 0.00342012C23.2565 0.00264626 23.041 0.2107 23.0402 0.468144Z"
+                      fill="black"
+                    />
+                  </svg>
+                  Revenue Reports
+                </span>
+
+                <span className="arrow">{revenueReportOpen ? "▲" : "▼"}</span>
+              </a>
+
+              {/* ✅ Dropdown submenu */}
+              {revenueReportOpen && (
+                <ul className="submenu">
+                  <li>
+                    <NavLink className="sidebar-links" to={
+                      role === "Super Admin"
+                        ? "/superadmin/youtube-revenue-reports"
+                        : role === "Admin"
+                          ? "/admin/youtube-revenue-reports"
+                          : role === "Manager"
+                            ? "/manager/youtube-revenue-reports"
+                            : role === "Label"
+                              ? "/label/youtube-revenue-reports"
+                              : role === "Sub Label"
+                                ? "/sub-label/youtube-revenue-reports"
+                                : "/user/youtube-revenue-reports"
+                    }
+                      // ✅ AUTO CLOSE ON MOBILE
+                      onClick={handleMobileClose}
+                    >
+                      Youtube
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="sidebar-links" to={
+                      role === "Super Admin"
+                        ? "/superadmin/audio-streaming-revenue-reports"
+                        : role === "Admin"
+                          ? "/admin/audio-streaming-revenue-reports"
+                          : role === "Manager"
+                            ? "/manager/audio-streaming-revenue-reports"
+                            : role === "Label"
+                              ? "/label/audio-streaming-revenue-reports"
+                              : role === "Sub Label"
+                                ? "/sub-label/audio-streaming-revenue-reports"
+                                : "/user/audio-streaming-revenue-reports"
+                    }
+                      // ✅ AUTO CLOSE ON MOBILE
+                      onClick={handleMobileClose}
+                    >
+                      Audio Streaming
+                    </NavLink>
+                  </li>
+                  {/* <li>
+                <NavLink className="sidebar-links" to="/superadmin/contract">
+                  Contract
+                </NavLink>
+              </li> */}
+                </ul>
+              )}
             </li>
           )}
 

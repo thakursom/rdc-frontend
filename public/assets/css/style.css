@@ -60,7 +60,7 @@
     background: var(--parot);
 }
 
-.navy-cl { 
+.navy-cl {
     background-color: var(--navy-cl);
 }
 
@@ -1770,6 +1770,15 @@ select.rows-select {
     color: #363636;
     margin-right: 5px;
 }
+
+.dateRange {
+    margin-top: .5rem !important;
+    position: absolute;
+    bottom: -49px;
+    left: -98px;
+    display: flex;
+}
+
 
 
 

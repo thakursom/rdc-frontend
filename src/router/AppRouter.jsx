@@ -13,7 +13,7 @@ import ManagerDashboard from "../pages/Manager/ManagerDashboard";
 import Artist from "../pages/SuperAdmin/Artist";
 import UserManagement from "../pages/SuperAdmin/UserManagement";
 import Releases from "../pages/SuperAdmin/Releases";
-import RevenueReports from "../pages/SuperAdmin/RevenueReports";
+import YoutubeRevenueReports from "../pages/SuperAdmin/YoutubeRevenueReports";
 import SalesAndTrends from "../pages/SuperAdmin/salesAndTrends";
 import Payouts from "../pages/SuperAdmin/Payouts";
 import Statements from "../pages/SuperAdmin/Statements";
@@ -73,6 +73,7 @@ import BankDetailSubLabel from "../pages/SubLabel/BankDetail";
 import BankDetailFormSubLabel from "../pages/SubLabel/BankDetailForm";
 import AllRevenue from "../pages/SuperAdmin/AllRevenue";
 import AddPayout from "../pages/SuperAdmin/AddPayout";
+import AudioStreamingRevenueReports from "../pages/SuperAdmin/AudioStreamingRevenueReports";
 
 function AppRouter() {
   return (
@@ -104,7 +105,8 @@ function AppRouter() {
           <Route path="/superadmin/artist" element={<Artist />} />
           <Route path="/superadmin/user-management" element={<UserManagement />} />
           <Route path="/superadmin/releases" element={<Releases />} />
-          <Route path="/superadmin/revenue-reports" element={<RevenueReports />} />
+          <Route path="/superadmin/youtube-revenue-reports" element={<YoutubeRevenueReports />} />
+          <Route path="/superadmin/audio-streaming-revenue-reports" element={<AudioStreamingRevenueReports />} />
           <Route path="/superadmin/salesAndTrends" element={<SalesAndTrends />} />
           <Route path="/superadmin/payouts" element={<Payouts />} />
           <Route path="/superadmin/statements" element={<Statements />} />
@@ -169,7 +171,7 @@ function AppRouter() {
           <Route path="/label/artist" element={<ArtistLabel />} />
           <Route path="/label/user-management" element={<UserManagementLabel />} />
           <Route path="/label/releases" element={<ReleasesLabel />} />
-          <Route path="/label/revenue-reports" element={<RevenueReportsLabel />} />
+          <Route path="/label/youtube-revenue-reports" element={<RevenueReportsLabel />} />
           <Route path="/label/salesAndTrends" element={<SalesAndTrendsLabel />} />
           <Route path="/label/payouts" element={<PayoutsLabel />} />
           <Route path="/label/statements" element={<StatementLabel />} />
@@ -201,7 +203,7 @@ function AppRouter() {
           <Route path="/sub-label/artist" element={<ArtistSubLabel />} />
           <Route path="/sub-label/user-management" element={<UserManagementSubLabel />} />
           <Route path="/sub-label/releases" element={<ReleasesSubLabel />} />
-          <Route path="/sub-label/revenue-reports" element={<RevenueReportsSubLabel />} />
+          <Route path="/sub-label/youtube-revenue-reports" element={<RevenueReportsSubLabel />} />
           <Route path="/sub-label/salesAndTrends" element={<SalesAndTrendsSubLabel />} />
           <Route path="/sub-label/payouts" element={<PayoutsSubLabel />} />
           <Route path="/sub-label/statements" element={<StatementSubLabel />} />

@@ -220,6 +220,20 @@ function AudioStreamingRevenueReportsComponent() {
         }
     };
 
+    const getLast12MonthsRange = () => {
+        const now = new Date();
+        const currentMonth = now.toLocaleString('default', { month: 'short' });
+        const currentYear = now.getFullYear();
+
+        const pastDate = new Date();
+        pastDate.setMonth(pastDate.getMonth() - 11);
+
+        const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
+        const pastYear = pastDate.getFullYear();
+
+        return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
+    };
+
     return (
         <>
             <section className="rdc-rightbar" id="right-sidebar">
@@ -439,20 +453,7 @@ function AudioStreamingRevenueReportsComponent() {
                                     <div className="dash-charts stem-child">
                                         <div className="chart-content-head">
                                             <h5>Net Revenue By Month <p><i className="fa-solid fa-circle" /> By Channel</p><span>
-                                                {(() => {
-                                                    const now = new Date();
-                                                    const currentMonth = now.toLocaleString('default', { month: 'short' });
-                                                    const currentYear = now.getFullYear();
-
-                                                    // Go back 11 months from now
-                                                    const pastDate = new Date();
-                                                    pastDate.setMonth(pastDate.getMonth() - 11);
-
-                                                    const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
-                                                    const pastYear = pastDate.getFullYear();
-
-                                                    return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
-                                                })()}
+                                                {getLast12MonthsRange()}
                                             </span></h5>
                                         </div>
                                         <div className="main-chartbox">
@@ -464,20 +465,7 @@ function AudioStreamingRevenueReportsComponent() {
                                     <div className="dash-charts stem-child">
                                         <div className="chart-content-head">
                                             <h5>Revenue By Channel <p><i className="fa-solid fa-circle" /></p><span>
-                                                {(() => {
-                                                    const now = new Date();
-                                                    const currentMonth = now.toLocaleString('default', { month: 'short' });
-                                                    const currentYear = now.getFullYear();
-
-                                                    // Go back 11 months from now
-                                                    const pastDate = new Date();
-                                                    pastDate.setMonth(pastDate.getMonth() - 11);
-
-                                                    const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
-                                                    const pastYear = pastDate.getFullYear();
-
-                                                    return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
-                                                })()}
+                                                {getLast12MonthsRange()}
                                             </span></h5>
                                         </div>
                                         <div className="main-chartbox">
@@ -489,20 +477,7 @@ function AudioStreamingRevenueReportsComponent() {
                                     <div className="dash-charts stem-child">
                                         <div className="chart-content-head">
                                             <h5>Revenue By Country <p><i className="fa-solid fa-circle" /></p><span>
-                                                {(() => {
-                                                    const now = new Date();
-                                                    const currentMonth = now.toLocaleString('default', { month: 'short' });
-                                                    const currentYear = now.getFullYear();
-
-                                                    // Go back 11 months from now
-                                                    const pastDate = new Date();
-                                                    pastDate.setMonth(pastDate.getMonth() - 11);
-
-                                                    const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
-                                                    const pastYear = pastDate.getFullYear();
-
-                                                    return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
-                                                })()}
+                                                {getLast12MonthsRange()}
                                             </span></h5>
                                         </div>
                                         <div className="main-chartbox">

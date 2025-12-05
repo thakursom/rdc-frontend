@@ -1774,12 +1774,24 @@ select.rows-select {
 .dateRange {
     margin-top: .5rem !important;
     position: absolute;
-    bottom: -49px;
-    left: -98px;
+    bottom: -55px;
+    left: 0px;
     display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
 }
-
-
+.input-group-fx {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 6px;
+}
+.input-group-fx input {
+    height: 25px !important;
+    margin: 0 !important;
+}
 
 
 /* ############## Media Query ############## */

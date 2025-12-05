@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import YoutubeRdcRevenueChart from "../Chart/YoutubeRdcRevenueChart";
 import YoutubeRevenueBarChart from "../Chart/YoutubeRevenueBarChart";
 import YoutubeCountryRevenueChart from "../Chart/YoutubeCountryRevenueChart";
@@ -24,13 +24,141 @@ function YoutubeRevenueReportsComponent() {
     });
 
     const [data, setData] = useState(null);
-    // console.log("data", data.revenueByMonth);
-
     const [loading, setLoading] = useState(true);
     const [showDates, setShowDates] = useState(false);
 
-    const buildQueryString = () => {
+    // Separate state for checkbox filters that require button click
+    const [checkboxFilters, setCheckboxFilters] = useState({
+        releases: false,
+        artist: false,
+        track: false,
+        partner: false,
+        contentType: false,
+        format: false,
+        territory: false,
+        quarters: false,
+    });
+
+    // Track initial render
+    const initialRender = useRef(true);
+    // Track if filters have been applied via button
+    const [filtersApplied, setFiltersApplied] = useState(false);
+    const [downloadStatus, setDownloadStatus] = useState("");
+    const DOWNLOAD_STATUS_KEY = "youtubeExcelDownloadStatus";
+
+    // Check localStorage on mount
+    useEffect(() => {
+        const saved = localStorage.getItem(DOWNLOAD_STATUS_KEY);
+        if (saved === "downloaded") {
+            setDownloadStatus("downloaded");
+        } else if (saved === "preparing") {
+            setDownloadStatus("preparing");
+        }
+    }, []);
+
+    // Sync status to localStorage whenever it changes
+    useEffect(() => {
+        if (downloadStatus) {
+            localStorage.setItem(DOWNLOAD_STATUS_KEY, downloadStatus);
+        } else {
+            localStorage.removeItem(DOWNLOAD_STATUS_KEY);
+        }
+    }, [downloadStatus]);
+
+    const buildQueryString = (useCheckboxFilters = false) => {
         const params = new URLSearchParams();
+
+        // Always include these filters
+        if (filters.platform) params.append("platform", filters.platform);
+        if (filters.month) params.append("month", filters.month);
+        if (filters.quarter) params.append("quarter", filters.quarter);
+        if (filters.fromDate) params.append("fromDate", filters.fromDate);
+        if (filters.toDate) params.append("toDate", filters.toDate);
+
+        // Only include checkbox filters when filter button is clicked
+        if (useCheckboxFilters) {
+            if (checkboxFilters.releases) params.append("releases", "true");
+            if (checkboxFilters.artist) params.append("artist", "true");
+            if (checkboxFilters.track) params.append("track", "true");
+            if (checkboxFilters.partner) params.append("partner", "true");
+            if (checkboxFilters.contentType) params.append("contentType", "true");
+            if (checkboxFilters.format) params.append("format", "true");
+            if (checkboxFilters.territory) params.append("territory", "true");
+            if (checkboxFilters.quarters) params.append("quarters", "true");
+        }
+
+        params.append("page", filters.page);
+        params.append("limit", filters.limit);
+        return params.toString();
+    };
+
+    const fetchReports = async (useCheckboxFilters = false) => {
+        setLoading(true);
+        try {
+            const query = buildQueryString(useCheckboxFilters);
+            const result = await apiRequest(`/youtubeRevenueReport?${query}`, "GET", null, true);
+            console.log("result", result);
+
+            if (result.success) {
+                setData(result.data.data);
+                if (useCheckboxFilters) {
+                    setFiltersApplied(true);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        // Skip initial render if it's not the first time and checkbox filters haven't been applied
+        if (initialRender.current) {
+            initialRender.current = false;
+            fetchReports(false);
+        } else if (!filtersApplied) {
+            // Only fetch automatically if checkbox filters haven't been applied yet
+            fetchReports(false);
+        }
+    }, [filters.platform, filters.month, filters.quarter, filters.fromDate, filters.toDate, filters.page]);
+
+    // Handle checkbox filter changes separately
+    const handleCheckboxChange = (e) => {
+        const { name, checked } = e.target;
+        setCheckboxFilters(prev => ({
+            ...prev,
+            [name]: checked
+        }));
+        // Reset filters applied flag when checkboxes change
+        setFiltersApplied(false);
+    };
+
+    const handleFilterChange = (e) => {
+        const { name, value, type, checked } = e.target;
+
+        if (["releases", "artist", "track", "partner", "contentType", "format", "territory", "quarters"].includes(name)) {
+            // These are now handled by handleCheckboxChange
+            return;
+        }
+
+        setFilters(prev => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+            page: 1
+        }));
+    };
+
+    const handleApplyFilters = (e) => {
+        e.preventDefault();
+        // Merge checkbox filters into main filters for the API call
+        fetchReports(true);
+    };
+
+
+    const handleExcelDownload = async () => {
+        const params = new URLSearchParams();
+
         if (filters.platform) params.append("platform", filters.platform);
         if (filters.month) params.append("month", filters.month);
         if (filters.quarter) params.append("quarter", filters.quarter);
@@ -46,43 +174,68 @@ function YoutubeRevenueReportsComponent() {
         if (filters.territory) params.append("territory", "true");
         if (filters.quarters) params.append("quarters", "true");
 
-        params.append("page", filters.page);
-        params.append("limit", filters.limit);
-        return params.toString();
-    };
+        const queryString = params.toString();
 
-    const fetchReports = async () => {
-        setLoading(true);
-        try {
-            const query = buildQueryString();
-            const result = await apiRequest(`/youtubeRevenueReport?${query}`, "GET", null, true);
-            console.log("result", result);
-
-            if (result.success) {
-                setData(result.data.data);
+        let platformName = "All_Platforms";
+        if (filters.platform && filters.platform.trim() !== "") {
+            const platforms = filters.platform.split(",").map(p => p.trim());
+            if (platforms.length === 1) {
+                platformName = platforms[0].replace(/[^a-zA-Z0-9]/g, "_");
+            } else if (platforms.length > 1) {
+                platformName = `${platforms.length}_Platforms`;
             }
+        }
+
+        const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const filename = `${platformName}_Revenue_Report_${today}.xlsx`;
+
+        try {
+            // Set status to preparing
+            setDownloadStatus("preparing");
+            localStorage.setItem(DOWNLOAD_STATUS_KEY, "preparing");
+
+            setLoading(true);
+
+            const response = await apiRequest(
+                `/revenueReports/export/youtubeExcel${queryString ? `?${queryString}` : ''}`,
+                "GET",
+                null,
+                true,
+                { responseType: 'blob' }
+            );
+
+            if (!response || response.size === 0) {
+                alert("No data found to export.");
+                setDownloadStatus("");
+                localStorage.removeItem(DOWNLOAD_STATUS_KEY);
+                return;
+            }
+
+            const blob = new Blob([response], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });
+
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+            // Success: Update status
+            setDownloadStatus("downloaded");
+            localStorage.setItem(DOWNLOAD_STATUS_KEY, "downloaded");
+
         } catch (error) {
-            console.error(error);
+            console.error("Excel download error:", error);
+            alert("Failed to download Excel file.");
+            setDownloadStatus("");
+            localStorage.removeItem(DOWNLOAD_STATUS_KEY);
         } finally {
             setLoading(false);
         }
-    };
-
-    useEffect(() => {
-        fetchReports();
-    }, [filters]);
-
-    const handleFilterChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFilters(prev => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-            page: 1
-        }));
-    };
-
-    const handlePageChange = (newPage) => {
-        setFilters(prev => ({ ...prev, page: newPage }));
     };
 
     return (
@@ -92,18 +245,41 @@ function YoutubeRevenueReportsComponent() {
                     <div className="mian-sec-heading">
                         <h6>Revenue Reports</h6>
                         <div className="btn-right-sec">
-                            <button className="theme-btn green-cl white-cl me-1">
+                            <button
+                                className="theme-btn green-cl white-cl me-1 position-relative"
+                                onClick={handleExcelDownload}
+                                disabled={loading || downloadStatus === "preparing"}
+                            >
                                 <i className="fa-solid fa-file-excel" /> Excel
-                            </button>
-                            <button className="theme-btn purple-cl white-cl table-button">
-                                <i className="fa-regular fa-file-lines me-1" /> Pdf
                             </button>
                         </div>
                     </div>
 
+                    {downloadStatus === "preparing" && (
+                        <div className="alert alert-warning alert-sm mt-2 py-2">
+                            Data getting ready to export… Please wait
+                        </div>
+                    )}
+                    {downloadStatus === "downloaded" && (
+                        <div className="alert alert-success alert-sm mt-2 py-2 d-flex justify-content-between align-items-center">
+                            <span>File downloaded successfully!</span>
+                            <button
+                                type="button"
+                                className="btn btn-link text-success p-0 border-0"
+                                onClick={() => {
+                                    setDownloadStatus("");
+                                    localStorage.removeItem("youtubeExcelDownloadStatus");
+                                }}
+                                style={{ fontSize: "1.2rem", lineHeight: "1" }}
+                            >
+                                ×
+                            </button>
+                        </div>
+                    )}
+
                     {/* === YOUR ORIGINAL FILTERS === */}
                     <div className="revnue-filters">
-                        <form className="revenue-filter-fx" onSubmit={(e) => { e.preventDefault(); fetchReports(); }}>
+                        <form className="revenue-filter-fx" onSubmit={handleApplyFilters}>
                             <div className="row g-3 mb-4">
                                 <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
                                     <div className="form-group">
@@ -176,22 +352,26 @@ function YoutubeRevenueReportsComponent() {
 
                                             {showDates && (
                                                 <div className="mt-2 dateRange">
-                                                    <label>From</label>
-                                                    <input
-                                                        type="date"
-                                                        name="fromDate"
-                                                        className="form-control mb-2"
-                                                        value={filters.fromDate}
-                                                        onChange={handleFilterChange}
-                                                    />
-                                                    <label>To</label>
-                                                    <input
-                                                        type="date"
-                                                        name="toDate"
-                                                        className="form-control"
-                                                        value={filters.toDate}
-                                                        onChange={handleFilterChange}
-                                                    />
+                                                    <div className="input-group-fx">
+                                                        <label>From</label>
+                                                        <input
+                                                            type="date"
+                                                            name="fromDate"
+                                                            className="form-control mb-2"
+                                                            value={filters.fromDate}
+                                                            onChange={handleFilterChange}
+                                                        />
+                                                    </div>
+                                                    <div className="input-group-fx">
+                                                        <label>To</label>
+                                                        <input
+                                                            type="date"
+                                                            name="toDate"
+                                                            className="form-control"
+                                                            value={filters.toDate}
+                                                            onChange={handleFilterChange}
+                                                        />
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
@@ -199,15 +379,15 @@ function YoutubeRevenueReportsComponent() {
                                 </div>
                             </div>
 
-                            <div className={`rdc-checkbox ${showDates ? "p-4" : ""}`}>
+                            <div className={`rdc-checkbox ${showDates ? "pt-5" : ""}`}>
                                 {["releases", "artist", "track", "partner", "contentType", "format", "territory", "quarters"].map(key => (
                                     <div key={key} className="form-check">
                                         <input
                                             className="form-check-input"
                                             type="checkbox"
                                             name={key}
-                                            checked={filters[key]}
-                                            onChange={handleFilterChange}
+                                            checked={checkboxFilters[key]}
+                                            onChange={handleCheckboxChange}
                                             id={key}
                                         />
                                         <label className="form-check-label" htmlFor={key}>
@@ -217,9 +397,14 @@ function YoutubeRevenueReportsComponent() {
                                 ))}
 
                                 <div className="form-check">
-                                    <button type="submit" className="theme-btn green-cl white-cl" disabled={loading}>
+                                    <button
+                                        type="submit"
+                                        className="theme-btn green-cl white-cl"
+                                        disabled={loading}
+                                    >
                                         <i className="fa-solid fa-filter me-2" />
-                                        {loading ? "Filtering..." : "Filter"}
+                                        {/* {loading && filtersApplied ? "Filtering..." : "Apply Filters"} */}
+                                        Filter
                                     </button>
                                 </div>
                             </div>
@@ -269,7 +454,22 @@ function YoutubeRevenueReportsComponent() {
                                 <div className="col-md-12 stem-col">
                                     <div className="dash-charts stem-child">
                                         <div className="chart-content-head">
-                                            <h5>Net Revenue By Month <p><i className="fa-solid fa-circle" /> By Channel</p><span>Sep 2024 - Aug 2025</span></h5>
+                                            <h5>Net Revenue By Month <p><i className="fa-solid fa-circle" /> By Channel</p><span>
+                                                {(() => {
+                                                    const now = new Date();
+                                                    const currentMonth = now.toLocaleString('default', { month: 'short' });
+                                                    const currentYear = now.getFullYear();
+
+                                                    // Go back 11 months from now
+                                                    const pastDate = new Date();
+                                                    pastDate.setMonth(pastDate.getMonth() - 11);
+
+                                                    const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
+                                                    const pastYear = pastDate.getFullYear();
+
+                                                    return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
+                                                })()}
+                                            </span></h5>
                                         </div>
                                         <div className="main-chartbox">
                                             <YoutubeRdcRevenueChart revenueByMonth={data?.revenueByMonth || {}} />
@@ -279,7 +479,22 @@ function YoutubeRevenueReportsComponent() {
                                 <div className="col-md-6 stem-col">
                                     <div className="dash-charts stem-child">
                                         <div className="chart-content-head">
-                                            <h5>Revenue By Channel <p><i className="fa-solid fa-circle" /></p><span>Sep 2024 - Aug 2025</span></h5>
+                                            <h5>Revenue By Channel <p><i className="fa-solid fa-circle" /></p><span>
+                                                {(() => {
+                                                    const now = new Date();
+                                                    const currentMonth = now.toLocaleString('default', { month: 'short' });
+                                                    const currentYear = now.getFullYear();
+
+                                                    // Go back 11 months from now
+                                                    const pastDate = new Date();
+                                                    pastDate.setMonth(pastDate.getMonth() - 11);
+
+                                                    const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
+                                                    const pastYear = pastDate.getFullYear();
+
+                                                    return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
+                                                })()}
+                                            </span></h5>
                                         </div>
                                         <div className="main-chartbox">
                                             <YoutubeRevenueBarChart revenueByChannel={data?.revenueByChannel || {}} />
@@ -289,7 +504,22 @@ function YoutubeRevenueReportsComponent() {
                                 <div className="col-md-6 stem-col">
                                     <div className="dash-charts stem-child">
                                         <div className="chart-content-head">
-                                            <h5>Revenue By Country <p><i className="fa-solid fa-circle" /></p><span>Sep 2024 - Aug 2025</span></h5>
+                                            <h5>Revenue By Country <p><i className="fa-solid fa-circle" /></p><span>
+                                                {(() => {
+                                                    const now = new Date();
+                                                    const currentMonth = now.toLocaleString('default', { month: 'short' });
+                                                    const currentYear = now.getFullYear();
+
+                                                    // Go back 11 months from now
+                                                    const pastDate = new Date();
+                                                    pastDate.setMonth(pastDate.getMonth() - 11);
+
+                                                    const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
+                                                    const pastYear = pastDate.getFullYear();
+
+                                                    return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
+                                                })()}
+                                            </span></h5>
                                         </div>
                                         <div className="main-chartbox">
                                             <YoutubeCountryRevenueChart revenueByCountry={data?.revenueByCountry || {}} />

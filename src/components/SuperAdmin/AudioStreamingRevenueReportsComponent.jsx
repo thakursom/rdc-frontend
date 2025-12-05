@@ -43,6 +43,27 @@ function AudioStreamingRevenueReportsComponent() {
     const initialRender = useRef(true);
     // Track if filters have been applied via button
     const [filtersApplied, setFiltersApplied] = useState(false);
+    const [downloadStatus, setDownloadStatus] = useState("");
+    const DOWNLOAD_STATUS_KEY = "audioStreamingExcelDownloadStatus";
+
+    // Check localStorage on mount
+    useEffect(() => {
+        const saved = localStorage.getItem(DOWNLOAD_STATUS_KEY);
+        if (saved === "downloaded") {
+            setDownloadStatus("downloaded");
+        } else if (saved === "preparing") {
+            setDownloadStatus("preparing");
+        }
+    }, []);
+
+    // Sync status to localStorage whenever it changes
+    useEffect(() => {
+        if (downloadStatus) {
+            localStorage.setItem(DOWNLOAD_STATUS_KEY, downloadStatus);
+        } else {
+            localStorage.removeItem(DOWNLOAD_STATUS_KEY);
+        }
+    }, [downloadStatus]);
 
     const buildQueryString = (useCheckboxFilters = false) => {
         const params = new URLSearchParams();
@@ -135,8 +156,84 @@ function AudioStreamingRevenueReportsComponent() {
         fetchReports(true);
     };
 
-    const handlePageChange = (newPage) => {
-        setFilters(prev => ({ ...prev, page: newPage }));
+    const handleExcelDownload = async () => {
+        const params = new URLSearchParams();
+
+        if (filters.platform) params.append("platform", filters.platform);
+        if (filters.month) params.append("month", filters.month);
+        if (filters.quarter) params.append("quarter", filters.quarter);
+        if (filters.fromDate) params.append("fromDate", filters.fromDate);
+        if (filters.toDate) params.append("toDate", filters.toDate);
+
+        if (filters.releases) params.append("releases", "true");
+        if (filters.artist) params.append("artist", "true");
+        if (filters.track) params.append("track", "true");
+        if (filters.partner) params.append("partner", "true");
+        if (filters.contentType) params.append("contentType", "true");
+        if (filters.format) params.append("format", "true");
+        if (filters.territory) params.append("territory", "true");
+        if (filters.quarters) params.append("quarters", "true");
+
+        const queryString = params.toString();
+
+        let platformName = "All_Platforms";
+        if (filters.platform && filters.platform.trim() !== "") {
+            const platforms = filters.platform.split(",").map(p => p.trim());
+            if (platforms.length === 1) {
+                platformName = platforms[0].replace(/[^a-zA-Z0-9]/g, "_");
+            } else if (platforms.length > 1) {
+                platformName = `${platforms.length}_Platforms`;
+            }
+        }
+
+        const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const filename = `${platformName}_Revenue_Report_${today}.xlsx`;
+
+        try {
+            // Set status to preparing
+            setDownloadStatus("preparing");
+            localStorage.setItem(DOWNLOAD_STATUS_KEY, "preparing");
+
+            setLoading(true);
+
+            const response = await apiRequest(
+                `/revenueReports/export/audioStreamingExcel${queryString ? `?${queryString}` : ''}`,
+                "GET",
+                null,
+                true,
+                { responseType: 'blob' }
+            );
+
+            if (!response || response.size === 0) {
+                alert("No data found to export.");
+                setDownloadStatus("");
+                localStorage.removeItem(DOWNLOAD_STATUS_KEY);
+                return;
+            }
+
+            const blob = new Blob([response], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });
+
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+            // Success: Update status
+            setDownloadStatus("downloaded");
+            localStorage.setItem(DOWNLOAD_STATUS_KEY, "downloaded");
+
+        } catch (error) {
+            setDownloadStatus("");
+            localStorage.removeItem(DOWNLOAD_STATUS_KEY);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -146,14 +243,37 @@ function AudioStreamingRevenueReportsComponent() {
                     <div className="mian-sec-heading">
                         <h6>Revenue Reports</h6>
                         <div className="btn-right-sec">
-                            <button className="theme-btn green-cl white-cl me-1">
+                            <button
+                                className="theme-btn green-cl white-cl me-1 position-relative"
+                                onClick={handleExcelDownload}
+                                disabled={loading || downloadStatus === "preparing"}
+                            >
                                 <i className="fa-solid fa-file-excel" /> Excel
-                            </button>
-                            <button className="theme-btn purple-cl white-cl table-button">
-                                <i className="fa-regular fa-file-lines me-1" /> Pdf
                             </button>
                         </div>
                     </div>
+
+                    {downloadStatus === "preparing" && (
+                        <div className="alert alert-warning alert-sm mt-2 py-2">
+                            Data getting ready to export… Please wait
+                        </div>
+                    )}
+                    {downloadStatus === "downloaded" && (
+                        <div className="alert alert-success alert-sm mt-2 py-2 d-flex justify-content-between align-items-center">
+                            <span>File downloaded successfully!</span>
+                            <button
+                                type="button"
+                                className="btn btn-link text-success p-0 border-0"
+                                onClick={() => {
+                                    setDownloadStatus("");
+                                    localStorage.removeItem("audioStreamingExcelDownloadStatus");
+                                }}
+                                style={{ fontSize: "1.2rem", lineHeight: "1" }}
+                            >
+                                ×
+                            </button>
+                        </div>
+                    )}
 
                     {/* === YOUR ORIGINAL FILTERS === */}
                     <div className="revnue-filters">
@@ -232,22 +352,26 @@ function AudioStreamingRevenueReportsComponent() {
 
                                             {showDates && (
                                                 <div className="mt-2 dateRange">
-                                                    <label>From</label>
-                                                    <input
-                                                        type="date"
-                                                        name="fromDate"
-                                                        className="form-control mb-2"
-                                                        value={filters.fromDate}
-                                                        onChange={handleFilterChange}
-                                                    />
-                                                    <label>To</label>
-                                                    <input
-                                                        type="date"
-                                                        name="toDate"
-                                                        className="form-control"
-                                                        value={filters.toDate}
-                                                        onChange={handleFilterChange}
-                                                    />
+                                                    <div className="input-group-fx">
+                                                        <label>From</label>
+                                                        <input
+                                                            type="date"
+                                                            name="fromDate"
+                                                            className="form-control mb-2"
+                                                            value={filters.fromDate}
+                                                            onChange={handleFilterChange}
+                                                        />
+                                                    </div>
+                                                    <div className="input-group-fx">
+                                                        <label>To</label>
+                                                        <input
+                                                            type="date"
+                                                            name="toDate"
+                                                            className="form-control"
+                                                            value={filters.toDate}
+                                                            onChange={handleFilterChange}
+                                                        />
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>
@@ -255,7 +379,7 @@ function AudioStreamingRevenueReportsComponent() {
                                 </div>
                             </div>
 
-                            <div className={`rdc-checkbox ${showDates ? "p-4" : ""}`}>
+                            <div className={`rdc-checkbox ${showDates ? "pt-5" : ""}`}>
                                 {["releases", "artist", "track", "partner", "contentType", "format", "territory", "quarters"].map(key => (
                                     <div key={key} className="form-check">
                                         <input
@@ -279,7 +403,8 @@ function AudioStreamingRevenueReportsComponent() {
                                         disabled={loading}
                                     >
                                         <i className="fa-solid fa-filter me-2" />
-                                        {loading && filtersApplied ? "Filtering..." : "Apply Filters"}
+                                        {/* {loading && filtersApplied ? "Filtering..." : "Apply Filters"} */}
+                                        Filter
                                     </button>
                                 </div>
                             </div>
@@ -329,7 +454,22 @@ function AudioStreamingRevenueReportsComponent() {
                                 <div className="col-md-12 stem-col">
                                     <div className="dash-charts stem-child">
                                         <div className="chart-content-head">
-                                            <h5>Net Revenue By Month <p><i className="fa-solid fa-circle" /> By Channel</p><span>Sep 2024 - Aug 2025</span></h5>
+                                            <h5>Net Revenue By Month <p><i className="fa-solid fa-circle" /> By Channel</p><span>
+                                                {(() => {
+                                                    const now = new Date();
+                                                    const currentMonth = now.toLocaleString('default', { month: 'short' });
+                                                    const currentYear = now.getFullYear();
+
+                                                    // Go back 11 months from now
+                                                    const pastDate = new Date();
+                                                    pastDate.setMonth(pastDate.getMonth() - 11);
+
+                                                    const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
+                                                    const pastYear = pastDate.getFullYear();
+
+                                                    return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
+                                                })()}
+                                            </span></h5>
                                         </div>
                                         <div className="main-chartbox">
                                             <AudioStreamingRdcRevenueChart revenueByMonth={data?.revenueByMonth || {}} />
@@ -339,7 +479,22 @@ function AudioStreamingRevenueReportsComponent() {
                                 <div className="col-md-6 stem-col">
                                     <div className="dash-charts stem-child">
                                         <div className="chart-content-head">
-                                            <h5>Revenue By Channel <p><i className="fa-solid fa-circle" /></p><span>Sep 2024 - Aug 2025</span></h5>
+                                            <h5>Revenue By Channel <p><i className="fa-solid fa-circle" /></p><span>
+                                                {(() => {
+                                                    const now = new Date();
+                                                    const currentMonth = now.toLocaleString('default', { month: 'short' });
+                                                    const currentYear = now.getFullYear();
+
+                                                    // Go back 11 months from now
+                                                    const pastDate = new Date();
+                                                    pastDate.setMonth(pastDate.getMonth() - 11);
+
+                                                    const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
+                                                    const pastYear = pastDate.getFullYear();
+
+                                                    return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
+                                                })()}
+                                            </span></h5>
                                         </div>
                                         <div className="main-chartbox">
                                             <AudioStreamingRevenueBarChart revenueByChannel={data?.revenueByChannel || {}} />
@@ -349,7 +504,22 @@ function AudioStreamingRevenueReportsComponent() {
                                 <div className="col-md-6 stem-col">
                                     <div className="dash-charts stem-child">
                                         <div className="chart-content-head">
-                                            <h5>Revenue By Country <p><i className="fa-solid fa-circle" /></p><span>Sep 2024 - Aug 2025</span></h5>
+                                            <h5>Revenue By Country <p><i className="fa-solid fa-circle" /></p><span>
+                                                {(() => {
+                                                    const now = new Date();
+                                                    const currentMonth = now.toLocaleString('default', { month: 'short' });
+                                                    const currentYear = now.getFullYear();
+
+                                                    // Go back 11 months from now
+                                                    const pastDate = new Date();
+                                                    pastDate.setMonth(pastDate.getMonth() - 11);
+
+                                                    const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
+                                                    const pastYear = pastDate.getFullYear();
+
+                                                    return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
+                                                })()}
+                                            </span></h5>
                                         </div>
                                         <div className="main-chartbox">
                                             <AudioStreamingCountryRevenueChart revenueByCountry={data?.revenueByCountry || {}} />

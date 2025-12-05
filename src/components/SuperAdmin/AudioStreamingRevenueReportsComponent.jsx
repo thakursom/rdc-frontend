@@ -156,25 +156,7 @@ function AudioStreamingRevenueReportsComponent() {
         fetchReports(true);
     };
 
-    const handleExcelDownload = async () => {
-        const params = new URLSearchParams();
-
-        if (filters.platform) params.append("platform", filters.platform);
-        if (filters.month) params.append("month", filters.month);
-        if (filters.quarter) params.append("quarter", filters.quarter);
-        if (filters.fromDate) params.append("fromDate", filters.fromDate);
-        if (filters.toDate) params.append("toDate", filters.toDate);
-
-        if (filters.releases) params.append("releases", "true");
-        if (filters.artist) params.append("artist", "true");
-        if (filters.track) params.append("track", "true");
-        if (filters.partner) params.append("partner", "true");
-        if (filters.contentType) params.append("contentType", "true");
-        if (filters.format) params.append("format", "true");
-        if (filters.territory) params.append("territory", "true");
-        if (filters.quarters) params.append("quarters", "true");
-
-        const queryString = params.toString();
+    const handleExcelDownload = async (useCheckboxFilters = false) => {
 
         let platformName = "All_Platforms";
         if (filters.platform && filters.platform.trim() !== "") {
@@ -196,8 +178,10 @@ function AudioStreamingRevenueReportsComponent() {
 
             setLoading(true);
 
+            const query = buildQueryString(useCheckboxFilters);
+            console.log("query", query);
             const response = await apiRequest(
-                `/revenueReports/export/audioStreamingExcel${queryString ? `?${queryString}` : ''}`,
+                `/revenueReports/export/audioStreamingExcel?${query}`,
                 "GET",
                 null,
                 true,

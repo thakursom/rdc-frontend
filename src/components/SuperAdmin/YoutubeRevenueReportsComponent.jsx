@@ -243,7 +243,7 @@ function YoutubeRevenueReportsComponent() {
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
                     <div className="mian-sec-heading">
-                        <h6>Revenue Reports</h6>
+                        <h6>Youtube Revenue Reports</h6>
                         <div className="btn-right-sec">
                             <button
                                 className="theme-btn green-cl white-cl me-1 position-relative"

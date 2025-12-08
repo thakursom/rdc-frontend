@@ -1,15 +1,17 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
 import Login from "../pages/Auth/Login";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import ResetPassword from "../pages/Auth/ResetPassword";
+import ChangePassword from "../pages/Auth/ChangePassword";
 import NotFound from "../pages/NotFound/NotFound";
 import AuthLayout from "../layouts/AuthLayout";
 import DashboardLayout from "../layouts/DashboardLayout";
-import ProtectedRoute from "./ProtectedRoute";
-import PublicRoute from "./PublicRoute";
+
+// SuperAdmin pages
 import SuperAdminDashboard from "../pages/SuperAdmin/SuperAdminDashboard";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
-import ManagerDashboard from "../pages/Manager/ManagerDashboard";
 import Artist from "../pages/SuperAdmin/Artist";
 import UserManagement from "../pages/SuperAdmin/UserManagement";
 import Releases from "../pages/SuperAdmin/Releases";
@@ -24,10 +26,7 @@ import LabelUpload from "../pages/SuperAdmin/LabelUpload";
 import Conversion from "../pages/SuperAdmin/Conversion";
 import Logs from "../pages/SuperAdmin/Logs";
 import SubLabel from "../pages/SuperAdmin/SubLabel";
-import LabelDashboard from "../pages/Label/LabelDashboard";
-import SubLabelDashboard from "../pages/SubLabel/SubLabelDashboard";
 import ArtistDetail from "../pages/SuperAdmin/ArtistDetail";
-import ChangePassword from "../pages/Auth/ChangePassword";
 import AddUser from "../pages/SuperAdmin/AddUser";
 import BankDetail from "../pages/SuperAdmin/BankDetail";
 import BankDetailForm from "../pages/SuperAdmin/BankDetailForm";
@@ -35,6 +34,12 @@ import Contract from "../pages/SuperAdmin/Contract";
 import ContractForm from "../pages/SuperAdmin/ContractForm";
 import ContractLog from "../pages/SuperAdmin/ContractLog";
 import SubLabelSummary from "../pages/SuperAdmin/SubLabelSummary";
+import AllRevenue from "../pages/SuperAdmin/AllRevenue";
+import AddPayout from "../pages/SuperAdmin/AddPayout";
+import AudioStreamingRevenueReports from "../pages/SuperAdmin/AudioStreamingRevenueReports";
+
+// Label pages
+import LabelDashboard from "../pages/Label/LabelDashboard";
 import LabelSummaryLabel from "../pages/Label/LabelSummary";
 import ContractFormLabel from "../pages/Label/ContractForm";
 import ContractLogLabel from "../pages/Label/ContractLog";
@@ -42,7 +47,6 @@ import SubLabelSummaryLabel from "../pages/Label/SubLabelSummary";
 import ArtistLabel from "../pages/Label/Artist";
 import UserManagementLabel from "../pages/Label/UserManagement";
 import ReleasesLabel from "../pages/Label/Releases";
-import RevenueReportsLabel from "../pages/Label/RevenueReports";
 import SalesAndTrendsLabel from "../pages/Label/SalesAndTrends";
 import PayoutsLabel from "../pages/Label/Payouts";
 import StatementLabel from "../pages/Label/Statements";
@@ -53,6 +57,11 @@ import ConversionLabel from "../pages/Label/Conversion";
 import LogsLabel from "../pages/Label/Logs";
 import BankDetailLabel from "../pages/Label/BankDetail";
 import BankDetailFormLabel from "../pages/Label/BankDetailForm";
+import YoutubeRevenueReportsLabel from "../pages/Label/YoutubeRevenueReports";
+import AudioStreamingRevenueReportsLabel from "../pages/Label/AudioStreamingRevenueReports";
+
+// SubLabel pages
+import SubLabelDashboard from "../pages/SubLabel/SubLabelDashboard";
 import LabelSummarySubLabel from "../pages/SubLabel/LabelSummary";
 import ContractFormSubLabel from "../pages/SubLabel/ContractForm";
 import ContractLogSubLabel from "../pages/SubLabel/ContractLog";
@@ -60,7 +69,6 @@ import SubLabelSummarySubLabel from "../pages/SubLabel/SubLabelSummary";
 import ArtistSubLabel from "../pages/SubLabel/Artist";
 import UserManagementSubLabel from "../pages/SubLabel/UserManagement";
 import ReleasesSubLabel from "../pages/SubLabel/Releases";
-import RevenueReportsSubLabel from "../pages/SubLabel/RevenueReports";
 import SalesAndTrendsSubLabel from "../pages/SubLabel/SalesAndTrends";
 import PayoutsSubLabel from "../pages/SubLabel/Payouts";
 import StatementSubLabel from "../pages/SubLabel/Statements";
@@ -71,9 +79,36 @@ import ConversionSubLabel from "../pages/SubLabel/Conversion";
 import LogsSubLabel from "../pages/SubLabel/Logs";
 import BankDetailSubLabel from "../pages/SubLabel/BankDetail";
 import BankDetailFormSubLabel from "../pages/SubLabel/BankDetailForm";
-import AllRevenue from "../pages/SuperAdmin/AllRevenue";
-import AddPayout from "../pages/SuperAdmin/AddPayout";
-import AudioStreamingRevenueReports from "../pages/SuperAdmin/AudioStreamingRevenueReports";
+import YoutubeRevenueReportsSubLabel from "../pages/SubLabel/YoutubeRevenueReports";
+import AudioStreamingRevenueReportsSubLabel from "../pages/SubLabel/AudioStreamingRevenueReports";
+
+// Manager pages
+import ManagerDashboard from "../pages/Manager/ManagerDashboard";
+import ArtistManager from "../pages/Manager/Artist";
+import UserManagementManager from "../pages/Manager/UserManagement";
+import ReleasesManager from "../pages/Manager/Releases";
+import YoutubeRevenueReportsManager from "../pages/Manager/YoutubeRevenueReports";
+import SalesAndTrendsManager from "../pages/Manager/SalesAndTrends";
+import PayoutsManager from "../pages/Manager/Payouts";
+import StatementsManager from "../pages/Manager/Statements";
+import RevenueUploadManager from "../pages/Manager/RevenueUpload";
+import SettingManager from "../pages/Manager/Setting";
+import LabelSummaryManager from "../pages/Manager/LabelSummary";
+import LabelUploadManager from "../pages/Manager/LabelUpload";
+import ConversionManager from "../pages/Manager/Conversion";
+import LogsManager from "../pages/Manager/Logs";
+import SubLabelManager from "../pages/Manager/SubLabel";
+import ArtistDetailManager from "../pages/Manager/ArtistDetail";
+import AddUserManager from "../pages/Manager/AddUser";
+import BankDetailManager from "../pages/Manager/BankDetail";
+import BankDetailFormManager from "../pages/Manager/BankDetailForm";
+import ContractManager from "../pages/Manager/Contract";
+import ContractFormManager from "../pages/Manager/ContractForm";
+import ContractLogManager from "../pages/Manager/ContractLog";
+import SubLabelSummaryManager from "../pages/Manager/SubLabelSummary";
+import AllRevenueManager from "../pages/Manager/AllRevenue";
+import AddPayoutManager from "../pages/Manager/AddPayout";
+import AudioStreamingRevenueReportsManager from "../pages/Manager/AudioStreamingRevenueReports";
 
 function AppRouter() {
   return (
@@ -151,6 +186,33 @@ function AppRouter() {
           }
         >
           <Route path="/manager" element={<ManagerDashboard />} />
+          <Route path="/manager/artist" element={<ArtistManager />} />
+          <Route path="/manager/user-management" element={<UserManagementManager />} />
+          <Route path="/manager/releases" element={<ReleasesManager />} />
+          <Route path="/manager/youtube-revenue-reports" element={<YoutubeRevenueReportsManager />} />
+          <Route path="/manager/audio-streaming-revenue-reports" element={<AudioStreamingRevenueReportsManager />} />
+          <Route path="/manager/salesAndTrends" element={<SalesAndTrendsManager />} />
+          <Route path="/manager/payouts" element={<PayoutsManager />} />
+          <Route path="/manager/statements" element={<StatementsManager />} />
+          <Route path="/manager/revenue-upload" element={<RevenueUploadManager />} />
+          <Route path="/manager/setting" element={<SettingManager />} />
+          <Route path="/manager/label-summary" element={<LabelSummaryManager />} />
+          <Route path="/manager/sub-label-summary/:userId" element={<SubLabelSummaryManager />} />
+          <Route path="/manager/label-upload" element={<LabelUploadManager />} />
+          <Route path="/manager/conversion" element={<ConversionManager />} />
+          <Route path="/manager/logs" element={<LogsManager />} />
+          <Route path="/manager/sub-label/:userId" element={<SubLabelManager />} />
+          <Route path="/manager/artist-details/:userId" element={<ArtistDetailManager />} />
+          <Route path="/manager/add-user" element={<AddUserManager />} />
+          <Route path="/manager/bank-details" element={<BankDetailManager />} />
+          <Route path="/manager/bank-details-form" element={<BankDetailFormManager />} />
+          <Route path="/manager/bank-details-form/:id" element={<BankDetailFormManager />} />
+          <Route path="/manager/contract" element={<ContractManager />} />
+          <Route path="/manager/contract-from" element={<ContractFormManager />} />
+          <Route path="/manager/contract-from/:id" element={<ContractFormManager />} />
+          <Route path="/manager/contract-logs/:id" element={<ContractLogManager />} />
+          <Route path="/manager/revenues/:userId" element={<AllRevenueManager />} />
+          <Route path="/manager/payout-from" element={<AddPayoutManager />} />
         </Route>
 
 
@@ -171,7 +233,6 @@ function AppRouter() {
           <Route path="/label/artist" element={<ArtistLabel />} />
           <Route path="/label/user-management" element={<UserManagementLabel />} />
           <Route path="/label/releases" element={<ReleasesLabel />} />
-          <Route path="/label/youtube-revenue-reports" element={<RevenueReportsLabel />} />
           <Route path="/label/salesAndTrends" element={<SalesAndTrendsLabel />} />
           <Route path="/label/payouts" element={<PayoutsLabel />} />
           <Route path="/label/statements" element={<StatementLabel />} />
@@ -183,6 +244,8 @@ function AppRouter() {
           <Route path="/label/bank-details" element={<BankDetailLabel />} />
           <Route path="/label/bank-details-form" element={<BankDetailFormLabel />} />
           <Route path="/label/bank-details-form/:id" element={<BankDetailFormLabel />} />
+          <Route path="/label/youtube-revenue-reports" element={<YoutubeRevenueReportsLabel />} />
+          <Route path="/label/audio-streaming-revenue-reports" element={<AudioStreamingRevenueReportsLabel />} />
         </Route>
 
 
@@ -203,7 +266,6 @@ function AppRouter() {
           <Route path="/sub-label/artist" element={<ArtistSubLabel />} />
           <Route path="/sub-label/user-management" element={<UserManagementSubLabel />} />
           <Route path="/sub-label/releases" element={<ReleasesSubLabel />} />
-          <Route path="/sub-label/youtube-revenue-reports" element={<RevenueReportsSubLabel />} />
           <Route path="/sub-label/salesAndTrends" element={<SalesAndTrendsSubLabel />} />
           <Route path="/sub-label/payouts" element={<PayoutsSubLabel />} />
           <Route path="/sub-label/statements" element={<StatementSubLabel />} />
@@ -215,6 +277,8 @@ function AppRouter() {
           <Route path="/sub-label/bank-details" element={<BankDetailSubLabel />} />
           <Route path="/sub-label/bank-details-form" element={<BankDetailFormSubLabel />} />
           <Route path="/sub-label/bank-details-form/:id" element={<BankDetailFormSubLabel />} />
+          <Route path="/sub-label/youtube-revenue-reports" element={<YoutubeRevenueReportsSubLabel />} />
+          <Route path="/sub-label/audio-streaming-revenue-reports" element={<AudioStreamingRevenueReportsSubLabel />} />
         </Route>
 
 

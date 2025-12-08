@@ -1,0 +1,213 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom'
+import CustomPagination from "../Pagination/CustomPagination";
+import { apiRequest } from "../../../src/services/api";
+import Loader from "../Loader/Loader";
+
+function UserManagementComponent() {
+  const [users, setUsers] = useState([]);
+  const [filterRole, setFilterRole] = useState("label");
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
+  const [pageCount, setPageCount] = useState(1);
+  const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const fetchUsers = async () => {
+    setLoading(true);
+
+    const result = await apiRequest(`/fetchAllUser?page=${page}&limit=${perPage}&filterRole=${filterRole}&search=${search}`, "GET", null, true);
+
+    if (result.success) {
+      setUsers(result.data.users);
+      setPageCount(result.data.pagination.totalPages);
+    } else {
+      console.log("Error Fetching Users", result.message);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [filterRole, page, perPage, search]);
+
+
+  // Handle pagination click
+  const handlePageChange = (selectedObj) => {
+    setPage(selectedObj.selected + 1);
+  };
+
+  const handlePerPageChange = (value) => {
+    console.log("");
+
+    setPerPage(value);
+    setPage(1); // reset to first page
+  };
+
+  return (
+    <>
+      <section className="rdc-rightbar" id="right-sidebar">
+        <div className="main-content-dashboard">
+          <div className="mian-sec-heading">
+            <h6>User Managment</h6>
+          </div>
+
+          <div className="dashTabs mainDashboarTabs">
+            {/* Tabs Same */}
+            <ul className="nav nav-tabs" role="tablist" style={{ marginBottom: "15px" }}>
+              <li className="nav-item" role="presentation">
+                <a
+                  className={`nav-link ${filterRole === "label" ? "active" : ""}`}
+                  id="profile-tab"
+                  data-bs-toggle="tab"
+                  href="#profile"
+                  role="tab"
+                  aria-controls="profile"
+                  aria-selected="false"
+                  onClick={() => {
+                    setFilterRole("label");
+                    setPage(1);
+                  }}
+                >
+                  Label
+                </a>
+
+              </li>
+
+              <li className="nav-item" role="presentation">
+                <a
+                  className={`nav-link ${filterRole === "sub label" ? "active" : ""}`}
+                  id="profile-tab"
+                  data-bs-toggle="tab"
+                  href="#profile"
+                  role="tab"
+                  aria-controls="profile"
+                  aria-selected="false"
+                  onClick={() => {
+                    setFilterRole("sub label");
+                    setPage(1);
+                  }}
+                >
+                  Sub Label
+                </a>
+
+              </li>
+
+              <li className="nav-item" role="presentation">
+                <a
+                  className={`nav-link ${filterRole === "manager" ? "active" : ""}`}
+                  id="profile-tab"
+                  data-bs-toggle="tab"
+                  href="#profile"
+                  role="tab"
+                  aria-controls="profile"
+                  aria-selected="false"
+                  onClick={() => {
+                    setFilterRole("manager");
+                    setPage(1);
+                  }}
+                >
+                  Manager
+                </a>
+
+              </li>
+            </ul>
+
+            {/*Table */}
+
+            <div className="d-flex justify-content-between align-items-center flex-wrap">
+              <div className="form-sec" style={{ marginBottom: "15px", maxWidth: "400px" }}>
+                <i className="fa-solid fa-magnifying-glass" />
+                <input
+                  className="form-control"
+                  type="search"
+                  placeholder="search here"
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
+                />
+              </div>
+
+              <button className="theme-btn green-cl white-cl me-1"
+                onClick={() => navigate(`/manager/add-user`)}
+              >
+                <i className="fa-regular fa-circle-user me-1" />
+                Add User
+              </button>
+            </div>
+
+            <div className="table-sec">
+              {loading ? (
+                <Loader />
+              ) : (
+                <table className="rdc-table">
+                  <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Roles</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {users.length > 0 ? (
+                      users.map((u, i) => (
+                        <tr key={i}>
+                          <td>{u.name || "N/A"}</td>
+                          <td>{u.email || "N/A"}</td>
+                          <td>{u.role || "N/A"}</td>
+                          {/* <td>{u.third_party_username || "N/A"}</td> */}
+                          <td>
+                            {/* View Button (Always show) */}
+                            <button className="border-less border-purple color-purple table-button me-1">
+                              <a className="color-purple" href="#">
+                                View
+                              </a>{" "}
+                              <i className="fa-solid fa-chevron-right" />
+                            </button>
+
+                            {/* Sub Label Button (Hide when Sub Label tab is active) */}
+                            {filterRole !== "sub label" && (
+                              <button
+                                className="border-less border-green color-green table-button"
+                                onClick={() => navigate(`/manager/sub-label/${u.id}`)}
+                              >
+                                Sub Label <i className="fa-solid fa-chevron-right" />
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr><td colSpan="5" style={{ textAlign: "center" }}>No Users Found</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+
+            {/* Pagination */}
+            <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
+              <CustomPagination
+                pageCount={pageCount}
+                currentPage={page}
+                onPageChange={handlePageChange}
+                perPage={perPage}
+                onPerPageChange={handlePerPageChange}
+              />
+            </div>
+
+
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default UserManagementComponent;

@@ -444,7 +444,7 @@ function RevenueUploadComponent() {
                                                     {!item.isAccepted && (
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"
-                                                            onClick={() => navigate(`/superadmin/revenues/${item._id}`)}
+                                                            onClick={() => navigate(`/manager/revenues/${item._id}`)}
                                                         >
                                                             View <i className="fa-solid fa-chevron-right" />
                                                         </button>

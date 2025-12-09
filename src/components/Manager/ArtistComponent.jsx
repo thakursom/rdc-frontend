@@ -127,7 +127,7 @@ function ArtistComponent() {
                                             <td>$2,850.45</td>
                                             <td>
                                                 <button className="border-less border-green color-green table-button"
-                                                    onClick={() => navigate(`/superadmin/artist-details/${art.id}`)}
+                                                    onClick={() => navigate(`/manager/artist-details/${art.id}`)}
                                                 >
                                                     Open<i className="fa-solid fa-chevron-right" />
                                                 </button>

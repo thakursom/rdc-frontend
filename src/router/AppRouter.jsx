@@ -37,6 +37,7 @@ import SubLabelSummary from "../pages/SuperAdmin/SubLabelSummary";
 import AllRevenue from "../pages/SuperAdmin/AllRevenue";
 import AddPayout from "../pages/SuperAdmin/AddPayout";
 import AudioStreamingRevenueReports from "../pages/SuperAdmin/AudioStreamingRevenueReports";
+import SingleRelease from "../pages/SuperAdmin/SingleRelease";
 
 // Label pages
 import LabelDashboard from "../pages/Label/LabelDashboard";
@@ -59,6 +60,7 @@ import BankDetailLabel from "../pages/Label/BankDetail";
 import BankDetailFormLabel from "../pages/Label/BankDetailForm";
 import YoutubeRevenueReportsLabel from "../pages/Label/YoutubeRevenueReports";
 import AudioStreamingRevenueReportsLabel from "../pages/Label/AudioStreamingRevenueReports";
+import SingleReleaseLabel from "../pages/Label/SingleRelease";
 
 // SubLabel pages
 import SubLabelDashboard from "../pages/SubLabel/SubLabelDashboard";
@@ -81,6 +83,7 @@ import BankDetailSubLabel from "../pages/SubLabel/BankDetail";
 import BankDetailFormSubLabel from "../pages/SubLabel/BankDetailForm";
 import YoutubeRevenueReportsSubLabel from "../pages/SubLabel/YoutubeRevenueReports";
 import AudioStreamingRevenueReportsSubLabel from "../pages/SubLabel/AudioStreamingRevenueReports";
+import SingleReleaseSubLabel from "../pages/SubLabel/SingleRelease";
 
 // Manager pages
 import ManagerDashboard from "../pages/Manager/ManagerDashboard";
@@ -109,6 +112,7 @@ import SubLabelSummaryManager from "../pages/Manager/SubLabelSummary";
 import AllRevenueManager from "../pages/Manager/AllRevenue";
 import AddPayoutManager from "../pages/Manager/AddPayout";
 import AudioStreamingRevenueReportsManager from "../pages/Manager/AudioStreamingRevenueReports";
+import SingleReleaseManager from "../pages/Manager/SingleRelease";
 
 function AppRouter() {
   return (
@@ -164,6 +168,7 @@ function AppRouter() {
           <Route path="/superadmin/contract-logs/:id" element={<ContractLog />} />
           <Route path="/superadmin/revenues/:userId" element={<AllRevenue />} />
           <Route path="/superadmin/payout-from" element={<AddPayout />} />
+          <Route path="/superadmin/release-details" element={<SingleRelease />} />
         </Route>
 
         {/* ADMIN ROUTES */}
@@ -213,6 +218,7 @@ function AppRouter() {
           <Route path="/manager/contract-logs/:id" element={<ContractLogManager />} />
           <Route path="/manager/revenues/:userId" element={<AllRevenueManager />} />
           <Route path="/manager/payout-from" element={<AddPayoutManager />} />
+          <Route path="/manager/release-details" element={<SingleReleaseManager />} />
         </Route>
 
 
@@ -246,6 +252,7 @@ function AppRouter() {
           <Route path="/label/bank-details-form/:id" element={<BankDetailFormLabel />} />
           <Route path="/label/youtube-revenue-reports" element={<YoutubeRevenueReportsLabel />} />
           <Route path="/label/audio-streaming-revenue-reports" element={<AudioStreamingRevenueReportsLabel />} />
+          <Route path="/label/release-details" element={<SingleReleaseLabel />} />
         </Route>
 
 
@@ -279,6 +286,7 @@ function AppRouter() {
           <Route path="/sub-label/bank-details-form/:id" element={<BankDetailFormSubLabel />} />
           <Route path="/sub-label/youtube-revenue-reports" element={<YoutubeRevenueReportsSubLabel />} />
           <Route path="/sub-label/audio-streaming-revenue-reports" element={<AudioStreamingRevenueReportsSubLabel />} />
+          <Route path="/sub-label/release-details" element={<SingleReleaseSubLabel/>} />
         </Route>
 
 

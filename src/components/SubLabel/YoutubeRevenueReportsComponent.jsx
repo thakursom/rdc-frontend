@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import YoutubeRdcRevenueChart from "../Chart/YoutubeRdcRevenueChart";
 import YoutubeRevenueBarChart from "../Chart/YoutubeRevenueBarChart";
 import YoutubeCountryRevenueChart from "../Chart/YoutubeCountryRevenueChart";
+import CustomPagination from "../Pagination/CustomPagination";
 import { apiRequest } from "../../services/api";
 
 function YoutubeRevenueReportsComponent() {
@@ -26,6 +27,8 @@ function YoutubeRevenueReportsComponent() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showDates, setShowDates] = useState(false);
+    const [pageCount, setPageCount] = useState(1);
+    const [totalRecords, setTotalRecords] = useState(10);
 
     // Separate state for checkbox filters that require button click
     const [checkboxFilters, setCheckboxFilters] = useState({
@@ -101,6 +104,15 @@ function YoutubeRevenueReportsComponent() {
 
             if (result.success) {
                 setData(result.data.data);
+                setData(result.data.data);
+                if (result.data.data.pagination) {
+                    setTotalRecords(result.data.data.pagination.totalRecords);
+                    setPageCount(result.data.data.pagination.totalPages);
+                } else {
+                    setTotalRecords(result.data.data?.reports?.length || 0);
+                    setPageCount(Math.ceil((result.data.data?.reports?.length || 0) / filters.limit));
+                }
+
                 if (useCheckboxFilters) {
                     setFiltersApplied(true);
                 }
@@ -121,7 +133,23 @@ function YoutubeRevenueReportsComponent() {
             // Only fetch automatically if checkbox filters haven't been applied yet
             fetchReports(false);
         }
-    }, [filters.platform, filters.month, filters.quarter, filters.fromDate, filters.toDate, filters.page]);
+    }, [filters.platform, filters.month, filters.quarter, filters.fromDate, filters.toDate, filters.page, filters.limit]);
+
+    // Handle pagination click
+    const handlePageChange = (selectedObj) => {
+        setFilters(prev => ({
+            ...prev,
+            page: selectedObj.selected + 1
+        }));
+    };
+
+    const handlePerPageChange = (value) => {
+        setFilters(prev => ({
+            ...prev,
+            limit: parseInt(value),
+            page: 1 // reset to first page
+        }));
+    };
 
     // Handle checkbox filter changes separately
     const handleCheckboxChange = (e) => {
@@ -519,26 +547,17 @@ function YoutubeRevenueReportsComponent() {
                                     </tbody>
                                 </table>
 
-                                {/* Pagination - Your Style */}
-                                {/* <div className="d-flex justify-content-end mt-3">
-                                    <button
-                                        className="btn btn-sm btn-outline-primary me-2"
-                                        onClick={() => handlePageChange(filters.page - 1)}
-                                        disabled={filters.page === 1 || loading}
-                                    >
-                                        Previous
-                                    </button>
-                                    <span className="align-self-center mx-3">
-                                        Page {filters.page} of {data.pagination.totalPages || 1}
-                                    </span>
-                                    <button
-                                        className="btn btn-sm btn-outline-primary"
-                                        onClick={() => handlePageChange(filters.page + 1)}
-                                        disabled={filters.page === data.pagination.totalPages || loading}
-                                    >
-                                        Next
-                                    </button>
-                                </div> */}
+                                {/* Pagination - Added here */}
+                                <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
+                                    <CustomPagination
+                                        pageCount={pageCount}
+                                        currentPage={filters.page}
+                                        onPageChange={handlePageChange}
+                                        perPage={filters.limit}
+                                        onPerPageChange={handlePerPageChange}
+                                        totalRecords={totalRecords}
+                                    />
+                                </div>
                             </>
                         ) : (
                             <div className="text-center py-5 text-muted">No data found</div>

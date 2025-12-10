@@ -122,15 +122,30 @@ function ArtistComponent() {
                                     Artists.map((art, i) => (
                                         <tr key={i}>
                                             <td className="main-td">{art.name || null}</td>
-                                            <td>BS</td>
-                                            <td>185,000</td>
-                                            <td>$2,850.45</td>
                                             <td>
-                                                <button className="border-less border-green color-green table-button"
-                                                    onClick={() => navigate(`/superadmin/artist-details/${art.id}`)}
+                                                {Array.isArray(art.countries) && art.countries.length > 0
+                                                    ? art.countries.join(", ")
+                                                    : "N/A"}
+                                            </td>
+                                            <td>{art.totalStream || 0}</td>
+                                            <td>${(art.totalRevenue ?? 0).toFixed(2) || 0}</td>
+                                            <td>
+                                                <button
+                                                    className="border-less border-green color-green table-button"
+                                                    onClick={() =>
+                                                        navigate(`/superadmin/artist-details/${art.id}`, {
+                                                            state: {
+                                                                totalStream: art.totalStream,
+                                                                totalRevenue: art.totalRevenue,
+                                                                artistName: art.name,
+                                                                countries: art.countries
+                                                            }
+                                                        })
+                                                    }
                                                 >
                                                     Open<i className="fa-solid fa-chevron-right" />
                                                 </button>
+
                                             </td>
                                         </tr>
                                     ))

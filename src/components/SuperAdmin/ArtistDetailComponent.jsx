@@ -1,13 +1,12 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiRequest } from "../../services/api";
 
 function ArtistDetailComponent() {
     const { userId } = useParams();
-
+    const { state } = useLocation();
     const [ArtistDetails, setArtistDetails] = useState([]);
     const navigate = useNavigate();
-    console.log("ArtistDetails", ArtistDetails);
 
 
     const fetchSubLabels = async () => {
@@ -40,8 +39,8 @@ function ArtistDetailComponent() {
                     </div>
                     <div className="heading-content">
                         <div className="inner-content">
-                            <p>AYO</p>
-                            <span>Country:&nbsp;BS</span>
+                            <p>{state?.artistName}</p>
+                            <span>Country:{state?.countries?.join(", ")}</span>
                         </div>
                         <div className="top-button">
                             <button
@@ -164,7 +163,7 @@ function ArtistDetailComponent() {
                                     </div>
                                     <div className="dash-content">
                                         <p>30d Streams</p>
-                                        <h6>185,000</h6>
+                                        <h6>{state?.totalStream}</h6>
                                         <span>+5%</span>
                                     </div>
                                 </div>

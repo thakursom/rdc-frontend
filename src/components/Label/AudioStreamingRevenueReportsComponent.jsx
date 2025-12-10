@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import AudioStreamingRdcRevenueChart from "../Chart/AudioStreamingRdcRevenueChart";
 import AudioStreamingRevenueBarChart from "../Chart/AudioStreamingRevenueBarChart";
 import AudioStreamingCountryRevenueChart from "../Chart/AudioStreamingCountryRevenueChart";
+import CustomPagination from "../Pagination/CustomPagination";
 import { apiRequest } from "../../services/api";
 
 function AudioStreamingRevenueReportsComponent() {
@@ -26,6 +27,8 @@ function AudioStreamingRevenueReportsComponent() {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showDates, setShowDates] = useState(false);
+    const [pageCount, setPageCount] = useState(1);
+    const [totalRecords, setTotalRecords] = useState(10);
 
     // Separate state for checkbox filters that require button click
     const [checkboxFilters, setCheckboxFilters] = useState({
@@ -101,6 +104,14 @@ function AudioStreamingRevenueReportsComponent() {
 
             if (result.success) {
                 setData(result.data.data);
+                if (result.data.data.pagination) {
+                    setTotalRecords(result.data.data.pagination.totalRecords);
+                    setPageCount(result.data.data.pagination.totalPages);
+                } else {
+                    setTotalRecords(result.data.data?.reports?.length || 0);
+                    setPageCount(Math.ceil((result.data.data?.reports?.length || 0) / filters.limit));
+                }
+
                 if (useCheckboxFilters) {
                     setFiltersApplied(true);
                 }
@@ -122,7 +133,23 @@ function AudioStreamingRevenueReportsComponent() {
             // Only fetch automatically if checkbox filters haven't been applied yet
             fetchReports(false);
         }
-    }, [filters.platform, filters.month, filters.quarter, filters.fromDate, filters.toDate, filters.page]);
+    }, [filters.platform, filters.month, filters.quarter, filters.fromDate, filters.toDate, filters.page, filters.limit]);
+
+    // Handle pagination click
+    const handlePageChange = (selectedObj) => {
+        setFilters(prev => ({
+            ...prev,
+            page: selectedObj.selected + 1
+        }));
+    };
+
+    const handlePerPageChange = (value) => {
+        setFilters(prev => ({
+            ...prev,
+            limit: parseInt(value),
+            page: 1 // reset to first page
+        }));
+    };
 
     // Handle checkbox filter changes separately
     const handleCheckboxChange = (e) => {
@@ -157,7 +184,6 @@ function AudioStreamingRevenueReportsComponent() {
     };
 
     const handleExcelDownload = async (useCheckboxFilters = false) => {
-
         let platformName = "All_Platforms";
         if (filters.platform && filters.platform.trim() !== "") {
             const platforms = filters.platform.split(",").map(p => p.trim());
@@ -243,7 +269,7 @@ function AudioStreamingRevenueReportsComponent() {
                         <div className="btn-right-sec">
                             <button
                                 className="theme-btn green-cl white-cl me-1 position-relative"
-                                onClick={handleExcelDownload}
+                                onClick={() => handleExcelDownload(filtersApplied)}
                                 disabled={loading || downloadStatus === "preparing"}
                             >
                                 <i className="fa-solid fa-file-excel" /> Excel
@@ -347,7 +373,6 @@ function AudioStreamingRevenueReportsComponent() {
                                                 <option value="custom">Custom</option>
                                             </select>
 
-
                                             {showDates && (
                                                 <div className="mt-2 dateRange">
                                                     <div className="input-group-fx">
@@ -401,7 +426,6 @@ function AudioStreamingRevenueReportsComponent() {
                                         disabled={loading}
                                     >
                                         <i className="fa-solid fa-filter me-2" />
-                                        {/* {loading && filtersApplied ? "Filtering..." : "Apply Filters"} */}
                                         Filter
                                     </button>
                                 </div>
@@ -488,6 +512,7 @@ function AudioStreamingRevenueReportsComponent() {
                             </div>
                         </div>
                     )}
+
                     {/* === YOUR ORIGINAL TABLE === */}
                     <div className="table-sec">
                         {loading ? (
@@ -501,7 +526,6 @@ function AudioStreamingRevenueReportsComponent() {
                                             <th>Platform</th>
                                             <th>Artist</th>
                                             <th>Release</th>
-                                            {/* <th>Streams</th> */}
                                             <th className="last">Revenue</th>
                                         </tr>
                                     </thead>
@@ -512,33 +536,23 @@ function AudioStreamingRevenueReportsComponent() {
                                                 <td>{row.platform}</td>
                                                 <td>{row.artist}</td>
                                                 <td>{row.release}</td>
-                                                {/* <td>{row.streams.toLocaleString()}</td> */}
                                                 <td>${row.revenue.toFixed(2)}</td>
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
 
-                                {/* Pagination - Your Style */}
-                                {/* <div className="d-flex justify-content-end mt-3">
-                                    <button
-                                        className="btn btn-sm btn-outline-primary me-2"
-                                        onClick={() => handlePageChange(filters.page - 1)}
-                                        disabled={filters.page === 1 || loading}
-                                    >
-                                        Previous
-                                    </button>
-                                    <span className="align-self-center mx-3">
-                                        Page {filters.page} of {data.pagination.totalPages || 1}
-                                    </span>
-                                    <button
-                                        className="btn btn-sm btn-outline-primary"
-                                        onClick={() => handlePageChange(filters.page + 1)}
-                                        disabled={filters.page === data.pagination.totalPages || loading}
-                                    >
-                                        Next
-                                    </button>
-                                </div> */}
+                                {/* Pagination - Added here */}
+                                <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
+                                    <CustomPagination
+                                        pageCount={pageCount}
+                                        currentPage={filters.page}
+                                        onPageChange={handlePageChange}
+                                        perPage={filters.limit}
+                                        onPerPageChange={handlePerPageChange}
+                                        totalRecords={totalRecords}
+                                    />
+                                </div>
                             </>
                         ) : (
                             <div className="text-center py-5 text-muted">No data found</div>
@@ -550,4 +564,4 @@ function AudioStreamingRevenueReportsComponent() {
     );
 }
 
-export default AudioStreamingRevenueReportsComponent
+export default AudioStreamingRevenueReportsComponent;

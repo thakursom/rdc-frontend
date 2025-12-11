@@ -133,7 +133,7 @@ function ArtistComponent() {
                                                 <button
                                                     className="border-less border-green color-green table-button"
                                                     onClick={() =>
-                                                        navigate(`/manager/artist-details/${art.id}`, {
+                                                        navigate(`/manager/artist-details`, {
                                                             state: {
                                                                 totalStream: art.totalStream,
                                                                 totalRevenue: art.totalRevenue,

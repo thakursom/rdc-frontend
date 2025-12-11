@@ -72,7 +72,6 @@ function ArtistDetailComponent() {
                             <p>{state?.artistName || "N/A"}</p>
                             {/* <span>Country: {state?.countries?.join(", ") || "N/A"}</span> */}
                         </div>
-                        
                     </div>
 
                     {/* --- DASH CARDS SECTION --- */}

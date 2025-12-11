@@ -46,6 +46,7 @@ import ContractFormLabel from "../pages/Label/ContractForm";
 import ContractLogLabel from "../pages/Label/ContractLog";
 import SubLabelSummaryLabel from "../pages/Label/SubLabelSummary";
 import ArtistLabel from "../pages/Label/Artist";
+import ArtistDetailLabel from "../pages/Label/ArtistDetail";
 import UserManagementLabel from "../pages/Label/UserManagement";
 import ReleasesLabel from "../pages/Label/Releases";
 import SalesAndTrendsLabel from "../pages/Label/SalesAndTrends";
@@ -69,6 +70,7 @@ import ContractFormSubLabel from "../pages/SubLabel/ContractForm";
 import ContractLogSubLabel from "../pages/SubLabel/ContractLog";
 import SubLabelSummarySubLabel from "../pages/SubLabel/SubLabelSummary";
 import ArtistSubLabel from "../pages/SubLabel/Artist";
+import ArtistDetailSubLabel from "../pages/SubLabel/ArtistDetail";
 import UserManagementSubLabel from "../pages/SubLabel/UserManagement";
 import ReleasesSubLabel from "../pages/SubLabel/Releases";
 import SalesAndTrendsSubLabel from "../pages/SubLabel/SalesAndTrends";
@@ -157,7 +159,7 @@ function AppRouter() {
           <Route path="/superadmin/conversion" element={<Conversion />} />
           <Route path="/superadmin/logs" element={<Logs />} />
           <Route path="/superadmin/sub-label/:userId" element={<SubLabel />} />
-          <Route path="/superadmin/artist-details/:userId" element={<ArtistDetail />} />
+          <Route path="/superadmin/artist-details" element={<ArtistDetail />} />
           <Route path="/superadmin/add-user" element={<AddUser />} />
           <Route path="/superadmin/bank-details" element={<BankDetail />} />
           <Route path="/superadmin/bank-details-form" element={<BankDetailForm />} />
@@ -207,7 +209,7 @@ function AppRouter() {
           <Route path="/manager/conversion" element={<ConversionManager />} />
           <Route path="/manager/logs" element={<LogsManager />} />
           <Route path="/manager/sub-label/:userId" element={<SubLabelManager />} />
-          <Route path="/manager/artist-details/:userId" element={<ArtistDetailManager />} />
+          <Route path="/manager/artist-details" element={<ArtistDetailManager />} />
           <Route path="/manager/add-user" element={<AddUserManager />} />
           <Route path="/manager/bank-details" element={<BankDetailManager />} />
           <Route path="/manager/bank-details-form" element={<BankDetailFormManager />} />
@@ -237,6 +239,7 @@ function AppRouter() {
           <Route path="/label/contract-logs/:id" element={<ContractLogLabel />} />
           <Route path="/label/sub-label-summary/:userId" element={<SubLabelSummaryLabel />} />
           <Route path="/label/artist" element={<ArtistLabel />} />
+          <Route path="/label/artist-details" element={<ArtistDetailLabel />} />
           <Route path="/label/user-management" element={<UserManagementLabel />} />
           <Route path="/label/releases" element={<ReleasesLabel />} />
           <Route path="/label/salesAndTrends" element={<SalesAndTrendsLabel />} />
@@ -271,6 +274,7 @@ function AppRouter() {
           <Route path="/sub-label/contract-logs/:id" element={<ContractLogSubLabel />} />
           <Route path="/sub-label/sub-label-summary/:userId" element={<SubLabelSummarySubLabel />} />
           <Route path="/sub-label/artist" element={<ArtistSubLabel />} />
+          <Route path="/sub-label/artist-details" element={<ArtistDetailSubLabel />} />
           <Route path="/sub-label/user-management" element={<UserManagementSubLabel />} />
           <Route path="/sub-label/releases" element={<ReleasesSubLabel />} />
           <Route path="/sub-label/salesAndTrends" element={<SalesAndTrendsSubLabel />} />
@@ -286,7 +290,7 @@ function AppRouter() {
           <Route path="/sub-label/bank-details-form/:id" element={<BankDetailFormSubLabel />} />
           <Route path="/sub-label/youtube-revenue-reports" element={<YoutubeRevenueReportsSubLabel />} />
           <Route path="/sub-label/audio-streaming-revenue-reports" element={<AudioStreamingRevenueReportsSubLabel />} />
-          <Route path="/sub-label/release-details" element={<SingleReleaseSubLabel/>} />
+          <Route path="/sub-label/release-details" element={<SingleReleaseSubLabel />} />
         </Route>
 
 

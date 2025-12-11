@@ -171,32 +171,33 @@ function SingleReleaseComponent() {
                     </div>
 
                     {/* TABLE */}
-                    <table className="rdc-table rdc-shadow">
-                        <thead>
-                            <tr>
-                                <th className="main-th start">Artist Name</th>
-                                <th>Label</th>
-                                <th>DSP</th>
-                                <th>Release Date</th>
-                                <th>Revenue</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {/* Static rows */}
-                            {[...Array(10)].map((_, idx) => (
-                                <tr key={idx}>
-                                    <td className="main-td">Bruno Mars</td>
-                                    <td>XYZ Records</td>
-                                    <td>Spotify</td>
-                                    <td>2025-05-22</td>
-                                    <td>$56.78</td>
+                    <div className="table-sec">
+                        <table className="rdc-table rdc-shadow">
+                            <thead>
+                                <tr>
+                                    <th className="main-th start">Artist Name</th>
+                                    <th>Label</th>
+                                    <th>DSP</th>
+                                    <th>Release Date</th>
+                                    <th>Revenue</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
+                            </thead>
+                            <tbody>
+                                {/* Static rows */}
+                                {[...Array(10)].map((_, idx) => (
+                                    <tr key={idx}>
+                                        <td className="main-td">Bruno Mars</td>
+                                        <td>XYZ Records</td>
+                                        <td>Spotify</td>
+                                        <td>2025-05-22</td>
+                                        <td>$56.78</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </section>
+            </section >
         </>
     );
 }

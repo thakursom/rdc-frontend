@@ -87,21 +87,20 @@ function ArtistComponent() {
 
                         </div>
                     </form>
-
+                    <div className="form-sec" style={{ marginBottom: "15px", width: "400px" }}>
+                        <i className="fa-solid fa-magnifying-glass" />
+                        <input
+                            className="form-control"
+                            type="search"
+                            placeholder="search here"
+                            value={search}
+                            onChange={(e) => {
+                                setSearch(e.target.value);
+                                setPage(1);
+                            }}
+                        />
+                    </div>
                     <div className="table-sec">
-                        <div className="form-sec" style={{ marginBottom: "15px", width: "400px" }}>
-                            <i className="fa-solid fa-magnifying-glass" />
-                            <input
-                                className="form-control"
-                                type="search"
-                                placeholder="search here"
-                                value={search}
-                                onChange={(e) => {
-                                    setSearch(e.target.value);
-                                    setPage(1);
-                                }}
-                            />
-                        </div>
                         <table className="rdc-table">
                             <thead>
                                 <tr>

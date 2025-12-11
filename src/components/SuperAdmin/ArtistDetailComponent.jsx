@@ -72,7 +72,7 @@ function ArtistDetailComponent() {
                             <p>{state?.artistName || "N/A"}</p>
                             {/* <span>Country: {state?.countries?.join(", ") || "N/A"}</span> */}
                         </div>
-                        
+
                     </div>
 
                     {/* --- DASH CARDS SECTION --- */}
@@ -248,28 +248,31 @@ function ArtistDetailComponent() {
                         </div>
                     </div>
                     {/* --- RECORD TABLE --- */}
-                    <table className="rdc-table rdc-shadow">
-                        <thead>
-                            <tr>
-                                <th className="main-th start">Platform</th>
-                                <th>Releases</th>
-                                <th>Date</th>
-                                <th>Streams</th>
-                                <th>Revenue</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {records.map((item, idx) => (
-                                <tr key={idx}>
-                                    <td>{item.retailer}</td>
-                                    <td>{item.release}</td>
-                                    <td>{item.date}</td>
-                                    <td>{item.track_count}</td>
-                                    <td>${Number(item.net_total || 0).toFixed(2)}</td>
+                    <div className="table-sec">
+                        <table className="rdc-table rdc-shadow">
+                            <thead>
+                                <tr>
+                                    <th className="main-th start">Platform</th>
+                                    <th>Releases</th>
+                                    <th>Date</th>
+                                    <th>Streams</th>
+                                    <th>Revenue</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {records.map((item, idx) => (
+                                    <tr key={idx}>
+                                        <td>{item.retailer}</td>
+                                        <td>{item.release}</td>
+                                        <td>{item.date}</td>
+                                        <td>{item.track_count}</td>
+                                        <td>${Number(item.net_total || 0).toFixed(2)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+
 
                     {/* --- PAGINATION BELOW TABLE --- */}
                     <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>

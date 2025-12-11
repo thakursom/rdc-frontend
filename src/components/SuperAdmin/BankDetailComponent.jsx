@@ -26,7 +26,6 @@ function BankDetailComponent() {
             null,
             true
         );
-        console.log("pagination", res);
 
         if (res.success) {
             setBankDetails(res.data.data);

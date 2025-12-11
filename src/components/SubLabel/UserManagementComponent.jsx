@@ -103,20 +103,23 @@ function UserManagementComponent() {
             </div>
 
             <div className="table-sec">
-              {loading ? (
-                <Loader />
-              ) : (
-                <table className="rdc-table">
-                  <thead>
-                    <tr>
-                      <th>Username</th>
-                      <th>Email</th>
-                      <th>Roles</th>
-                      <th>Action</th>
-                      {/* <th>ThirdPartyUsername</th> */}
-                    </tr>
-                  </thead>
-
+              <table className="rdc-table">
+                <thead>
+                  <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Roles</th>
+                    <th>Action</th>
+                    {/* <th>ThirdPartyUsername</th> */}
+                  </tr>
+                </thead>
+                {loading ? (
+                  <tr>
+                    <td colSpan={6} className="text-center">
+                      <Loader small={true} />
+                    </td>
+                  </tr>
+                ) : (
                   <tbody>
                     {users.length > 0 ? (
                       users.map((u, i) => (
@@ -144,8 +147,8 @@ function UserManagementComponent() {
                       <tr><td colSpan="5" style={{ textAlign: "center" }}>No Users Found</td></tr>
                     )}
                   </tbody>
-                </table>
-              )}
+                )}
+              </table>
             </div>
 
 

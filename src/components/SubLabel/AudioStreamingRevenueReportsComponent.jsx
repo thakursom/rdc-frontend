@@ -205,7 +205,6 @@ function AudioStreamingRevenueReportsComponent() {
             setLoading(true);
 
             const query = buildQueryString(useCheckboxFilters);
-            console.log("query", query);
             const response = await apiRequest(
                 `/revenueReports/export/audioStreamingExcel?${query}`,
                 "GET",

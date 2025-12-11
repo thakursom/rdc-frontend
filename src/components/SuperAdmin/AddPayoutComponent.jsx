@@ -49,8 +49,6 @@ function AddPayoutComponent() {
                 paymentDetails: bankDetail,
             };
 
-            console.log("payload", payload);
-
             try {
                 const res = await apiRequest("/createPayout", "POST", payload, true);
 

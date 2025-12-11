@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom'
 import CustomPagination from "../Pagination/CustomPagination";
 import { apiRequest } from "../../../src/services/api";
+import Loader from "../Loader/Loader";
 import AsyncSelect from 'react-select/async';
 
 function ArtistComponent() {
@@ -11,6 +12,7 @@ function ArtistComponent() {
     const [pageCount, setPageCount] = useState(1);
     const [search, setSearch] = useState("");
     const [labelFilter, setLabelFilter] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
 
@@ -34,6 +36,8 @@ function ArtistComponent() {
 
 
     const fetchArtists = async () => {
+        setLoading(true)
+
         let url = `/fetchAllArtist?page=${page}&limit=${perPage}&search=${search}`;
         if (labelFilter) {
             url = `/fetchUserAndSubUsersArtist?id=${labelFilter}&page=${page}&limit=${perPage}&search=${search}`;
@@ -45,6 +49,7 @@ function ArtistComponent() {
             setArtists(result?.data?.artists || result.data.artists);
             setPageCount(result?.data?.pagination?.totalPages || 1);
         }
+        setLoading(false)
     };
 
 
@@ -115,42 +120,50 @@ function ArtistComponent() {
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {Artists.length > 0 ? (
-                                    Artists.map((art, i) => (
-                                        <tr key={i}>
-                                            <td className="main-td">{art.name || null}</td>
-                                            <td>
-                                                {Array.isArray(art.countries) && art.countries.length > 0
-                                                    ? art.countries.join(", ")
-                                                    : "N/A"}
-                                            </td>
-                                            <td>{art.totalStream || 0}</td>
-                                            <td>${(art.totalRevenue ?? 0).toFixed(2) || 0}</td>
-                                            <td>
-                                                <button
-                                                    className="border-less border-green color-green table-button"
-                                                    onClick={() =>
-                                                        navigate(`/sub-label/artist-details`, {
-                                                            state: {
-                                                                totalStream: art.totalStream,
-                                                                totalRevenue: art.totalRevenue,
-                                                                artistName: art.name,
-                                                                countries: art.countries
-                                                            }
-                                                        })
-                                                    }
-                                                >
-                                                    Open<i className="fa-solid fa-chevron-right" />
-                                                </button>
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={6} className="text-center">
+                                        <Loader small={true} />
+                                    </td>
+                                </tr>
+                            ) : (
+                                <tbody>
+                                    {Artists.length > 0 ? (
+                                        Artists.map((art, i) => (
+                                            <tr key={i}>
+                                                <td className="main-td">{art.name || null}</td>
+                                                <td>
+                                                    {Array.isArray(art.countries) && art.countries.length > 0
+                                                        ? art.countries.join(", ")
+                                                        : "N/A"}
+                                                </td>
+                                                <td>{art.totalStream || 0}</td>
+                                                <td>${(art.totalRevenue ?? 0).toFixed(2) || 0}</td>
+                                                <td>
+                                                    <button
+                                                        className="border-less border-green color-green table-button"
+                                                        onClick={() =>
+                                                            navigate(`/sub-label/artist-details`, {
+                                                                state: {
+                                                                    totalStream: art.totalStream,
+                                                                    totalRevenue: art.totalRevenue,
+                                                                    artistName: art.name,
+                                                                    countries: art.countries
+                                                                }
+                                                            })
+                                                        }
+                                                    >
+                                                        Open<i className="fa-solid fa-chevron-right" />
+                                                    </button>
 
-                                            </td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr><td colSpan="5" style={{ textAlign: "center" }}>No Users Found</td></tr>
-                                )}
-                            </tbody>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr><td colSpan="5" style={{ textAlign: "center" }}>No Artists Found</td></tr>
+                                    )}
+                                </tbody>
+                            )}
                         </table>
                     </div>
                     {/* ✅ Pagination */}

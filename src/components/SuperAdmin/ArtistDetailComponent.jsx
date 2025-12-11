@@ -260,15 +260,19 @@ function ArtistDetailComponent() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {records.map((item, idx) => (
-                                    <tr key={idx}>
-                                        <td>{item.retailer}</td>
-                                        <td>{item.release}</td>
-                                        <td>{item.date}</td>
-                                        <td>{item.track_count}</td>
-                                        <td>${Number(item.net_total || 0).toFixed(2)}</td>
-                                    </tr>
-                                ))}
+                                {records.length > 0 ? (
+                                    records.map((item, idx) => (
+                                        <tr key={idx}>
+                                            <td>{item.retailer}</td>
+                                            <td>{item.release}</td>
+                                            <td>{item.date}</td>
+                                            <td>{item.track_count}</td>
+                                            <td>${Number(item.net_total || 0).toFixed(2)}</td>
+                                        </tr>
+                                    ))
+                                ) : (
+                                    <tr><td colSpan="5" style={{ textAlign: "center" }}>No Data Found</td></tr>
+                                )}
                             </tbody>
                         </table>
                     </div>

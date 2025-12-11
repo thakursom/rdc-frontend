@@ -74,7 +74,6 @@ function BankDetailFormComponent() {
         if (id) {
             const fetchData = async () => {
                 const res = await apiRequest(`/getBankDetailById?id=${id}`, "GET", null, true);
-                console.log(res);
 
                 if (res.success) {
                     const detail = res.data?.data;

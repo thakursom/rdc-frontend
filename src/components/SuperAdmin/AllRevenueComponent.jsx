@@ -56,8 +56,6 @@ function AllRevenueComponent() {
     };
 
     const handlePerPageChange = (value) => {
-        console.log("");
-
         setPerPage(value);
         setPage(1); // reset to first page
     };

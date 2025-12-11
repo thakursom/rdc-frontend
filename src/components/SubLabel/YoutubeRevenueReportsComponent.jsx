@@ -207,7 +207,6 @@ function YoutubeRevenueReportsComponent() {
             setLoading(true);
 
             const query = buildQueryString(useCheckboxFilters);
-            console.log("query", query);
             const response = await apiRequest(
                 `/revenueReports/export/youtubeExcel?${query}`,
                 "GET",

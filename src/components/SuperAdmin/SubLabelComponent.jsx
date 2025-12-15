@@ -122,7 +122,7 @@ function SubLabelComponent() {
                                         </tr>
                                     ))
                                 ) : (
-                                    <tr><td colSpan="5" style={{ textAlign: "center" }}>No Users Found</td></tr>
+                                    <tr><td colSpan="6" style={{ textAlign: "center" }}>No Users Found</td></tr>
                                 )}
                             </tbody>
                         </table>

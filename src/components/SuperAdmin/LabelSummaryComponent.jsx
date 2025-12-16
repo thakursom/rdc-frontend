@@ -219,6 +219,7 @@ function LabelSummaryComponent() {
                                         <tr>
                                             {/* <th>Contract Name</th> */}
                                             <th>Label Name</th>
+                                            <th>Percentage</th>
                                             <th>Start Date</th>
                                             <th>End Date</th>
                                             <th>Description</th>
@@ -232,6 +233,7 @@ function LabelSummaryComponent() {
                                                 <tr key={i}>
                                                     {/* <td>{contract.contractName}</td> */}
                                                     <td>{contract.userName}</td>
+                                                    <td>{contract.labelPercentage}</td>
                                                     <td>{new Date(contract.startDate).toISOString().split("T")[0]}</td>
                                                     <td>{new Date(contract.endDate).toISOString().split("T")[0]}</td>
                                                     <td>{contract.description || 'N/A'}</td>
@@ -250,14 +252,21 @@ function LabelSummaryComponent() {
                                                     <td>
                                                         <button className="border-less border-green color-green table-button me-1"
                                                             onClick={() =>
+                                                                navigate(`/superadmin/all-contracts/${contract.user_id}`)
+                                                            }
+                                                        >
+                                                            All Contracts
+                                                        </button>
+                                                        <button className="border-less border-purple color-purple table-button me-1"
+                                                            onClick={() =>
                                                                 navigate(`/superadmin/sub-label-summary/${contract.user_id}`)
                                                             }
                                                         >
                                                             Sub Label
                                                         </button>
-                                                        <button className="border-less border-purple color-purple table-button me-1">
+                                                        {/* <button className="border-less border-purple color-purple table-button me-1">
                                                             NOC
-                                                        </button>
+                                                        </button> */}
                                                         <button
                                                             className="border-less border-green color-green table-button me-1"
                                                             onClick={() =>
@@ -267,12 +276,12 @@ function LabelSummaryComponent() {
                                                             Edit <i className="fa-solid fa-chevron-right" />
                                                         </button>
 
-                                                        <button
+                                                        {/* <button
                                                             className="border-less border-red dark-red table-button me-1"
                                                             onClick={() => handleDeleteClick(contract)}
                                                         >
                                                             Delete <i className="fa-solid fa-trash" />
-                                                        </button>
+                                                        </button> */}
 
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"

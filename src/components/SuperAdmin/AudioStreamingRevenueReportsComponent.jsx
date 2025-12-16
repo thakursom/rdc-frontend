@@ -49,6 +49,17 @@ function AudioStreamingRevenueReportsComponent() {
     const [downloadStatus, setDownloadStatus] = useState("");
     const DOWNLOAD_STATUS_KEY = "audioStreamingExcelDownloadStatus";
 
+    const generateYears = () => {
+        const currentYear = new Date().getFullYear();
+        const years = [];
+        for (let i = currentYear; i >= currentYear - 10; i--) {
+            years.push(i);
+        }
+        return years;
+    };
+
+    const years = generateYears();
+
     // Check localStorage on mount
     useEffect(() => {
         const saved = localStorage.getItem(DOWNLOAD_STATUS_KEY);
@@ -73,8 +84,9 @@ function AudioStreamingRevenueReportsComponent() {
 
         // Always include these filters
         if (filters.platform) params.append("platform", filters.platform);
+        if (filters.year) params.append("year", filters.year);
         if (filters.month) params.append("month", filters.month);
-        if (filters.quarter) params.append("quarter", filters.quarter);
+        // if (filters.quarter) params.append("quarter", filters.quarter);
         if (filters.fromDate) params.append("fromDate", filters.fromDate);
         if (filters.toDate) params.append("toDate", filters.toDate);
 
@@ -132,7 +144,7 @@ function AudioStreamingRevenueReportsComponent() {
             // Only fetch automatically if checkbox filters haven't been applied yet
             fetchReports(false);
         }
-    }, [filters.platform, filters.month, filters.quarter, filters.fromDate, filters.toDate, filters.page, filters.limit]);
+    }, [filters.platform, filters.year, filters.month, filters.fromDate, filters.toDate, filters.page, filters.limit]);
 
     // Handle pagination click
     const handlePageChange = (selectedObj) => {
@@ -318,6 +330,22 @@ function AudioStreamingRevenueReportsComponent() {
                                     </div>
                                 </div>
 
+                                {/* Year Filter - Added here */}
+                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
+                                    <div className="form-group">
+                                        <div className="form-sec">
+                                            <select className="form-select" name="year" value={filters.year} onChange={handleFilterChange}>
+                                                <option value="">Select Year</option>
+                                                {years.map(year => (
+                                                    <option key={year} value={year}>
+                                                        {year}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
                                     <div className="form-group">
                                         <div className="form-sec">
@@ -333,7 +361,7 @@ function AudioStreamingRevenueReportsComponent() {
                                     </div>
                                 </div>
 
-                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
+                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
                                     <div className="form-group">
                                         <div className="form-sec">
                                             <select className="form-select" name="quarter" value={filters.quarter} onChange={handleFilterChange}>
@@ -345,7 +373,7 @@ function AudioStreamingRevenueReportsComponent() {
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
                                     <div className="form-group">
@@ -376,7 +404,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                     <div className="input-group-fx">
                                                         <label>From</label>
                                                         <input
-                                                            type="date"
+                                                            type="month"
                                                             name="fromDate"
                                                             className="form-control mb-2"
                                                             value={filters.fromDate}
@@ -386,7 +414,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                     <div className="input-group-fx">
                                                         <label>To</label>
                                                         <input
-                                                            type="date"
+                                                            type="month"
                                                             name="toDate"
                                                             className="form-control"
                                                             value={filters.toDate}

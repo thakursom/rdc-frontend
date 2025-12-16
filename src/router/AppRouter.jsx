@@ -38,6 +38,8 @@ import AllRevenue from "../pages/SuperAdmin/AllRevenue";
 import AddPayout from "../pages/SuperAdmin/AddPayout";
 import AudioStreamingRevenueReports from "../pages/SuperAdmin/AudioStreamingRevenueReports";
 import SingleRelease from "../pages/SuperAdmin/SingleRelease";
+import AllContract from "../pages/SuperAdmin/AllContract";
+import AddBulkPayout from "../pages/SuperAdmin/AddBulkPayout";
 
 // Label pages
 import LabelDashboard from "../pages/Label/LabelDashboard";
@@ -171,6 +173,8 @@ function AppRouter() {
           <Route path="/superadmin/revenues/:userId" element={<AllRevenue />} />
           <Route path="/superadmin/payout-from" element={<AddPayout />} />
           <Route path="/superadmin/release-details" element={<SingleRelease />} />
+          <Route path="/superadmin/all-contracts/:userId" element={<AllContract />} />
+          <Route path="/superadmin/bulk-payout" element={<AddBulkPayout />} />
         </Route>
 
         {/* ADMIN ROUTES */}

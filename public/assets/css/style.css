@@ -1793,6 +1793,43 @@ select.rows-select {
     margin: 0 !important;
 }
 
+.table-sec {
+    width: 100%;
+    overflow: scroll;
+}
+.tooltip-wrapper {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.tooltip-content {
+    position: absolute;
+    bottom: 130%;
+    left: 0;
+    z-index: 9999;
+
+    background-color: #222;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+
+    font-size: 12px;
+    max-width: 300px;
+    white-space: normal;
+    word-break: break-word;
+
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+}
+
+.tooltip-wrapper:hover .tooltip-content {
+    opacity: 1;
+    visibility: visible;
+}
+
+
 
 /* ############## Media Query ############## */
 

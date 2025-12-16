@@ -18,7 +18,7 @@ const validationSchema = Yup.object({
 
 function AddPayoutComponent() {
     const [selectedUserLabel, setSelectedUserLabel] = useState("");
-    const [selectedUserAmount, setSelectedUserAmount] = useState(0);
+    // const [selectedUserAmount, setSelectedUserAmount] = useState(0);
     const [bankDetail, setBankDetail] = useState({});
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -43,7 +43,7 @@ function AddPayoutComponent() {
             const payload = {
                 user_id: values.selectedUser,
                 paymentMethod: bankDetail.paymentMethod,
-                totalAmount: selectedUserAmount,
+                // totalAmount: selectedUserAmount,
                 amount: values.amount,
                 description: values.description,
                 paymentDetails: bankDetail,
@@ -57,7 +57,7 @@ function AddPayoutComponent() {
                     formik.resetForm();
                     setBankDetail({});
                     setSelectedUserLabel("");
-                    setSelectedUserAmount(0);
+                    // setSelectedUserAmount(0);
                     navigate("/superadmin/payouts");
                 } else {
                     toast.error(res.message || "Failed to save payout");
@@ -114,7 +114,7 @@ function AddPayoutComponent() {
                     formik.setFieldValue("amount", "");
                     formik.setFieldValue("description", "");
                     setSelectedUserLabel("");
-                    setSelectedUserAmount(0);
+                    // setSelectedUserAmount(0);
                     setBankDetail({});
                     return;
                 }
@@ -127,7 +127,7 @@ function AddPayoutComponent() {
                 setBankDetail({});
                 formik.setFieldValue("selectedUser", "");
                 setSelectedUserLabel("");
-                setSelectedUserAmount(0);
+                // setSelectedUserAmount(0);
             }
         };
 
@@ -139,14 +139,14 @@ function AddPayoutComponent() {
         if (sel) {
             formik.setFieldValue("selectedUser", sel.value);
             setSelectedUserLabel(sel.label);
-            setSelectedUserAmount(sel.amount);
+            // setSelectedUserAmount(sel.amount);
         } else {
             // FULL RESET
             formik.setFieldValue("selectedUser", "");
             formik.setFieldValue("amount", "");
             formik.setFieldValue("description", "");
             setSelectedUserLabel("");
-            setSelectedUserAmount(0);
+            // setSelectedUserAmount(0);
             setBankDetail({});
         }
     };
@@ -327,7 +327,7 @@ function AddPayoutComponent() {
                                     )}
 
                                     {/* Total Amount */}
-                                    <div className="col-md-6 mb-3">
+                                    {/* <div className="col-md-6 mb-3">
                                         <label>Total Amount *</label>
                                         <input
                                             className="form-control"
@@ -335,7 +335,7 @@ function AddPayoutComponent() {
                                             value={selectedUserAmount || ""}
                                             disabled={true}
                                         />
-                                    </div>
+                                    </div> */}
 
                                     {/* Amount */}
                                     <div className="col-md-6 mb-3">
@@ -360,16 +360,18 @@ function AddPayoutComponent() {
 
                                     {/* Description */}
                                     <div className="col-md-6 mb-3">
-                                        <label>Description</label>
-                                        <input
-                                            type="text"
-                                            className={`form-control ${formik.touched.description && formik.errors.description ? 'is-invalid' : ''
+                                        <label>Comment</label>
+                                        <textarea
+                                            className={`form-control ${formik.touched.description && formik.errors.description
+                                                    ? 'is-invalid'
+                                                    : ''
                                                 }`}
                                             name="description"
                                             value={formik.values.description}
                                             onChange={formik.handleChange}
                                             onBlur={formik.handleBlur}
-                                            placeholder="Description"
+                                            placeholder="Comment"
+                                            rows={4}
                                             disabled={!formik.values.selectedUser}
                                         />
                                         {formik.touched.description && formik.errors.description && (
@@ -378,6 +380,7 @@ function AddPayoutComponent() {
                                             </div>
                                         )}
                                     </div>
+
 
                                     <div className="col-md-12 text-end mt-3">
                                         <button

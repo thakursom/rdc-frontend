@@ -47,6 +47,7 @@ function YoutubeRevenueReportsComponent() {
     // Track if filters have been applied via button
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [downloadStatus, setDownloadStatus] = useState("");
+    const [downloadHistory, setDownloadHistory] = useState([]);
     const DOWNLOAD_STATUS_KEY = "youtubeExcelDownloadStatus";
 
     const generateYears = () => {
@@ -233,22 +234,23 @@ function YoutubeRevenueReportsComponent() {
                 return;
             }
 
-            const blob = new Blob([response], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            });
+            // const blob = new Blob([response], {
+            //     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            // });
 
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
+            // const url = window.URL.createObjectURL(blob);
+            // const a = document.createElement('a');
+            // a.href = url;
+            // a.download = filename;
+            // document.body.appendChild(a);
+            // a.click();
+            // a.remove();
+            // window.URL.revokeObjectURL(url);
 
             // Success: Update status
             setDownloadStatus("downloaded");
             localStorage.setItem(DOWNLOAD_STATUS_KEY, "downloaded");
+            await fetchHistory();
 
         } catch (error) {
             console.error("Excel download error:", error);
@@ -274,6 +276,24 @@ function YoutubeRevenueReportsComponent() {
         return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
     };
 
+    const fetchHistory = async () => {
+        try {
+            const result = await apiRequest('/youtube-report-history', "GET", null, true);
+            console.log("result", result);
+
+            if (result.success) {
+                setDownloadHistory(result?.data?.data || []);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+
+        fetchHistory();
+    }, []);
+
     return (
         <>
             <section className="rdc-rightbar" id="right-sidebar">
@@ -286,7 +306,7 @@ function YoutubeRevenueReportsComponent() {
                                 onClick={handleExcelDownload}
                                 disabled={loading || downloadStatus === "preparing"}
                             >
-                                <i className="fa-solid fa-file-excel" /> Excel
+                                <i className="fa-solid fa-file-excel" /> Generate Excel Report
                             </button>
                         </div>
                     </div>
@@ -296,7 +316,7 @@ function YoutubeRevenueReportsComponent() {
                             Data getting ready to export… Please wait
                         </div>
                     )}
-                    {downloadStatus === "downloaded" && (
+                    {/* {downloadStatus === "downloaded" && (
                         <div className="alert alert-success alert-sm mt-2 py-2 d-flex justify-content-between align-items-center">
                             <span>File downloaded successfully!</span>
                             <button
@@ -311,7 +331,81 @@ function YoutubeRevenueReportsComponent() {
                                 ×
                             </button>
                         </div>
-                    )}
+                    )} */}
+
+                    <div className="mt-4">
+                        <h6 className="mb-3">
+                            <i className="fa-solid fa-history me-2"></i>
+                            Generated Reports (Ready to Download)
+                        </h6>
+
+                        {!downloadHistory || downloadHistory.length === 0 ? (
+                            <div className="text-muted text-center py-4 border rounded">
+                                No reports generated yet. Click "Generate Excel Report" to create one.
+                            </div>
+                        ) : (
+                            <div className="table-responsive">
+                                <table className="table table-sm table-bordered align-middle">
+                                    <thead className="table-light">
+                                        <tr>
+                                            <th>File Name</th>
+                                            <th>Generated On</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {downloadHistory.map((item) => (
+                                            <tr key={item._id}>
+                                                <td>
+                                                    <i className="fa-solid fa-file-excel text-success me-2"></i>
+                                                    {item.filename}
+                                                </td>
+                                                <td>
+                                                    {new Date(item.generatedAt).toLocaleString()}
+                                                </td>
+                                                <td>
+                                                    {item.status === "preparing" && (
+                                                        <span className="badge bg-warning text-dark">
+                                                            <i className="fa-solid fa-spinner fa-spin me-1"></i>
+                                                            Preparing...
+                                                        </span>
+                                                    )}
+                                                    {item.status === "ready" && (
+                                                        <span className="badge bg-success">Ready</span>
+                                                    )}
+                                                    {item.status === "failed" && (
+                                                        <span className="badge bg-danger">Failed</span>
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    {item.status === "ready" && item.fileURL && (
+                                                        <a
+                                                            href={item.fileURL}
+                                                            download={item.filename}
+                                                            className="btn btn-sm btn-success"
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                        >
+                                                            <i className="fa-solid fa-download"></i> Download
+                                                        </a>
+                                                    )}
+                                                    {item.status === "preparing" && (
+                                                        <span className="text-muted">
+                                                            <i className="fa-solid fa-spinner fa-spin me-1"></i> Preparing...
+                                                        </span>
+                                                    )}
+                                                    {item.status === "failed" && (
+                                                        <span className="text-danger">Failed</span>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
 
                     {/* === YOUR ORIGINAL FILTERS === */}
                     <div className="revnue-filters">
@@ -333,7 +427,7 @@ function YoutubeRevenueReportsComponent() {
                                     </div>
                                 </div>
                                 {/* Year Filter - Added here */}
-                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
+                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
                                     <div className="form-group">
                                         <div className="form-sec">
                                             <select className="form-select" name="year" value={filters.year} onChange={handleFilterChange}>
@@ -346,8 +440,8 @@ function YoutubeRevenueReportsComponent() {
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
+                                </div> */}
+                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
                                     <div className="form-group">
                                         <div className="form-sec">
                                             <select className="form-select" name="month" value={filters.month} onChange={handleFilterChange}>
@@ -360,7 +454,7 @@ function YoutubeRevenueReportsComponent() {
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
 
                                 {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
                                     <div className="form-group">

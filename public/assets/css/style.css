@@ -1781,6 +1781,7 @@ select.rows-select {
     align-items: center;
     gap: 10px;
 }
+
 .input-group-fx {
     display: flex;
     flex-direction: column;
@@ -1788,6 +1789,7 @@ select.rows-select {
     align-items: flex-start;
     gap: 6px;
 }
+
 .input-group-fx input {
     height: 25px !important;
     margin: 0 !important;
@@ -1797,6 +1799,7 @@ select.rows-select {
     width: 100%;
     overflow: scroll;
 }
+
 .tooltip-wrapper {
     position: relative;
     cursor: pointer;
@@ -1829,7 +1832,20 @@ select.rows-select {
     visibility: visible;
 }
 
+.generate-report {
+    overflow: hidden !important;
+}
 
+.audio-stram-td button {
+    padding: 0px 0px !important;
+}
+
+.report-delete {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
 
 /* ############## Media Query ############## */
 

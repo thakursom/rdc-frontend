@@ -326,9 +326,9 @@ function AudioStreamingRevenueReportsComponent() {
         let intervalId;
 
         if (showReportsTable && downloadHistory.length > 0) {
-            // Check if any reports are still preparing
+            // Check if any reports are still pending
             const hasPreparingReports = downloadHistory.some(
-                item => item.status === 'preparing'
+                item => item.status === 'pending'
             );
 
             if (hasPreparingReports) {
@@ -409,16 +409,13 @@ function AudioStreamingRevenueReportsComponent() {
                                     </thead>
                                     <tbody>
                                         {downloadHistory.map((item) => (
-                                            <tr key={item._id} className={item.status === 'preparing' ? 'table-warning' : item === downloadHistory[0] ? 'table-primary' : ''}>
+                                            <tr key={item._id} className={item.status === 'pending' ? 'table-warning' : item === downloadHistory[0] ? 'table-primary' : ''}>
                                                 <td>
                                                     <i className="fa-solid fa-file-excel text-success me-2"></i>
                                                     <strong>
-                                                        {item.status === 'preparing' ? 'Generating...' : item.filename}
+                                                        {item.status === 'pending' ? 'Generating...' : item.filename}
                                                     </strong>
-                                                    {item.status === 'preparing' &&
-                                                        <span className="badge bg-warning ms-2 small">Processing</span>
-                                                    }
-                                                    {item === downloadHistory[0] && item.status !== 'preparing' &&
+                                                    {item === downloadHistory[0] && item.status !== 'pending' &&
                                                         <span className="badge bg-primary ms-2 small">Latest</span>
                                                     }
                                                 </td>
@@ -432,10 +429,10 @@ function AudioStreamingRevenueReportsComponent() {
                                                     })}
                                                 </td>
                                                 <td>
-                                                    {item.status === "preparing" && (
+                                                    {item.status === "pending" && (
                                                         <span className="badge bg-warning text-dark">
                                                             <i className="fa-solid fa-spinner fa-spin me-1"></i>
-                                                            Preparing...
+                                                            Pending...
                                                         </span>
                                                     )}
                                                     {item.status === "ready" && (
@@ -476,11 +473,20 @@ function AudioStreamingRevenueReportsComponent() {
                                                                 )}
                                                             </button>
                                                         </>
-                                                    ) : item.status === "preparing" ? (
-                                                        <span className="text-muted small">
-                                                            <i className="fa-solid fa-spinner fa-spin me-2"></i>
-                                                            Preparing...
-                                                        </span>
+                                                    ) : item.status === "pending" ? (
+                                                        <>
+                                                            <button
+                                                                className="border-less border-red dark-red table-button me-2"
+                                                                onClick={() => handleDeleteClick(item)}
+                                                                disabled={deletingId === item._id}
+                                                            >
+                                                                {deletingId === item._id ? (
+                                                                    <span><i className="fa-solid fa-spinner fa-spin"></i> Deleting...</span>
+                                                                ) : (
+                                                                    <>Delete <i className="fa-solid fa-trash" /></>
+                                                                )}
+                                                            </button>
+                                                        </>
                                                     ) : (
                                                         <>
                                                             <span className="text-danger small">

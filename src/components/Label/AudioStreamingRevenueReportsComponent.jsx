@@ -55,7 +55,8 @@ function AudioStreamingRevenueReportsComponent() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     const [deletingId, setDeletingId] = useState(null);
-    const [activeCheckboxFilters, setActiveCheckboxFilters] = useState({});
+    const [role, setRole] = useState("");
+    const [userId, setUserId] = useState(null);
     const DOWNLOAD_STATUS_KEY = "audioStreamingExcelDownloadStatus";
 
     const generateYears = () => {
@@ -94,6 +95,9 @@ function AudioStreamingRevenueReportsComponent() {
         } else if (saved === "preparing") {
             setDownloadStatus("preparing");
         }
+        const user = JSON.parse(localStorage.getItem("user"));
+        setRole(user?.role);
+        setUserId(user?.userId)
     }, []);
 
     // Sync status to localStorage whenever it changes
@@ -115,6 +119,8 @@ function AudioStreamingRevenueReportsComponent() {
         if (filters.fromDate) params.append("fromDate", filters.fromDate);
         if (filters.toDate) params.append("toDate", filters.toDate);
         if (labelFilter) params.append("labelId", labelFilter);
+        if (role) params.append("role", role);
+        if (userId) params.append("userId", userId);
 
         // Include checkbox filters based on parameter
         if (includeCheckboxFilters) {

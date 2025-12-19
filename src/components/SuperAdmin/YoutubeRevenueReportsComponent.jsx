@@ -791,21 +791,21 @@ function YoutubeRevenueReportsComponent() {
                                     </tbody>
                                 </table>
 
-                                {/* Pagination - Added here */}
-                                <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
-                                    <CustomPagination
-                                        pageCount={pageCount}
-                                        currentPage={filters.page}
-                                        onPageChange={handlePageChange}
-                                        perPage={filters.limit}
-                                        onPerPageChange={handlePerPageChange}
-                                        totalRecords={totalRecords}
-                                    />
-                                </div>
                             </>
                         ) : (
                             <div className="text-center py-5 text-muted">No data found</div>
                         )}
+                    </div>
+                    {/* Pagination - Added here */}
+                    <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
+                        <CustomPagination
+                            pageCount={pageCount}
+                            currentPage={filters.page}
+                            onPageChange={handlePageChange}
+                            perPage={filters.limit}
+                            onPerPageChange={handlePerPageChange}
+                            totalRecords={totalRecords}
+                        />
                     </div>
                 </div>
             </section>

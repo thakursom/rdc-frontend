@@ -1859,7 +1859,7 @@ select.rows-select {
 @media(max-width:1599px) {
     .table-sec {
         width: 100%;
-        overflow: scroll;
+        overflow: scroll !important;
     }
 
     .converter-content {
@@ -2207,7 +2207,7 @@ select.rows-select {
 
     .table-sec {
         width: 100%;
-        overflow: auto;
+        overflow: auto !important;
     }
 
     table.rdc-table th {

@@ -56,6 +56,13 @@ function PayoutComponent() {
                     <div className="d-flex justify-content-end w-100 mb-2">
                         <button
                             className="theme-btn green-cl white-cl me-1"
+                            onClick={() => navigate(`/manager/bulk-payout`)}
+                        >
+                            <i className="fa-solid fa-cloud-arrow-up"></i>
+                            Upload Bulk
+                        </button>
+                        <button
+                            className="theme-btn green-cl white-cl me-1"
                             onClick={() => navigate(`/manager/payout-from`)}
                         >
                             <i className="fa-solid fa-sack-dollar me-1"></i>
@@ -70,7 +77,7 @@ function PayoutComponent() {
                                     <th className="main-th start">Payee</th>
                                     <th>Method</th>
                                     <th>Amount Paid</th>
-                                    <th>Description</th>
+                                    <th>Comment</th>
                                     <th>Date of Payment</th>
                                 </tr>
                             </thead>
@@ -94,7 +101,15 @@ function PayoutComponent() {
                                             <td className="main-td">{p.userName || "N/A"}</td>
                                             <td>{p.paymentMethod || "N/A"}</td>
                                             <td>{p.amount || "N/A"}</td>
-                                            <td>{p.description || "N/A"}</td>
+                                            <td>
+                                                <span title={p.description}>
+                                                    {p.description
+                                                        ? p.description.length > 30
+                                                            ? p.description.slice(0, 30) + "..."
+                                                            : p.description
+                                                        : "N/A"}
+                                                </span>
+                                            </td>
                                             <td>{p.createdAt ? new Date(p.createdAt).toISOString().split("T")[0] : "N/A"}</td>
                                         </tr>
                                     ))

@@ -10,12 +10,12 @@ import { useNavigate } from "react-router-dom";
 // Validation schema - Updated for Excel files
 const validationSchema = Yup.object({
     platform: Yup.string().required("Platform is required"),
-    periodFrom: Yup.string()
-        .required("Start Date required")
-        .matches(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
-    periodTo: Yup.string()
-        .required("End Date required")
-        .matches(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
+    // periodFrom: Yup.string()
+    //     .required("Start Date required")
+    //     .matches(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
+    // periodTo: Yup.string()
+    //     .required("End Date required")
+    //     .matches(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
     file: Yup.mixed()
         .required("Please upload a file")
         .test("fileType", "Only Excel files allowed", (value) =>
@@ -34,8 +34,11 @@ function RevenueUploadComponent() {
     const [perPage, setPerPage] = useState(10);
     const [pageCount, setPageCount] = useState(1);
     const [acceptingId, setAcceptingId] = useState(null);
+    const [deletingId, setDeletingId] = useState(null);
     const [showAcceptModal, setShowAcceptModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [itemToAccept, setItemToAccept] = useState(null);
+    const [itemToDelete, setItemToDelete] = useState(null);
 
     const navigate = useNavigate();
     const fileInputRef = useRef(null);
@@ -43,8 +46,8 @@ function RevenueUploadComponent() {
     const formik = useFormik({
         initialValues: {
             platform: "",
-            periodFrom: "",
-            periodTo: "",
+            // periodFrom: "",
+            // periodTo: "",
             file: null,
         },
 
@@ -56,8 +59,8 @@ function RevenueUploadComponent() {
             const formData = new FormData();
             formData.append("file", values.file);
             formData.append("platform", values.platform);
-            formData.append("periodFrom", values.periodFrom);
-            formData.append("periodTo", values.periodTo);
+            // formData.append("periodFrom", values.periodFrom);
+            // formData.append("periodTo", values.periodTo);
 
             try {
                 const result = await apiRequest(
@@ -153,6 +156,46 @@ function RevenueUploadComponent() {
         }
     };
 
+
+    // DELETE FUNCTIONS
+    const handleDeleteClick = (item) => {
+        setItemToDelete(item);
+        setShowDeleteModal(true);
+    };
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+        setItemToDelete(null);
+        setDeletingId(null);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!itemToDelete) return;
+
+        setDeletingId(itemToDelete._id);
+        try {
+            const res = await apiRequest(
+                `/deleteRevenueByUserId?userId=${itemToDelete._id}`,
+                "DELETE",
+                null,
+                true
+            );
+
+            if (res.success) {
+                toast.success("Revenue upload deleted successfully!");
+                fetchRevenueUploads();
+                handleCloseDeleteModal();
+            } else {
+                toast.error(res.message || "Failed to delete revenue upload");
+            }
+        } catch (error) {
+            console.error("Error deleting revenue upload:", error);
+            toast.error("Error deleting revenue upload");
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
     // Handle pagination click
     const handlePageChange = (selectedObj) => {
         setPage(selectedObj.selected + 1);
@@ -170,8 +213,6 @@ function RevenueUploadComponent() {
             } else {
                 formik.setTouched({
                     platform: true,
-                    periodFrom: true,
-                    periodTo: true,
                     file: true,
                 });
                 toast.error("Please fill all the required fields before proceeding!");
@@ -183,8 +224,8 @@ function RevenueUploadComponent() {
         formik.validateForm().then(errors => {
             formik.setTouched({
                 platform: true,
-                periodFrom: true,
-                periodTo: true,
+                // periodFrom: true,
+                // periodTo: true,
                 file: true,
             });
 
@@ -267,7 +308,7 @@ function RevenueUploadComponent() {
                                             </div>
 
                                             {/* Period From */}
-                                            <div className="col-md-4">
+                                            {/* <div className="col-md-4">
                                                 <div className="form-group">
                                                     <label className="form-label">Period From</label>
                                                     <input
@@ -285,10 +326,10 @@ function RevenueUploadComponent() {
                                                         </div>
                                                     )}
                                                 </div>
-                                            </div>
+                                            </div> */}
 
                                             {/* Period To */}
-                                            <div className="col-md-4">
+                                            {/* <div className="col-md-4">
                                                 <div className="form-group">
                                                     <label className="form-label">Period To</label>
                                                     <input
@@ -306,7 +347,7 @@ function RevenueUploadComponent() {
                                                         </div>
                                                     )}
                                                 </div>
-                                            </div>
+                                            </div> */}
 
                                         </div>
                                     </form>
@@ -425,8 +466,8 @@ function RevenueUploadComponent() {
                                     <tr>
                                         <th>Platform</th>
                                         <th>FileName</th>
-                                        <th>From</th>
-                                        <th>To</th>
+                                        {/* <th>From</th>
+                                        <th>To</th> */}
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -437,14 +478,14 @@ function RevenueUploadComponent() {
                                             <tr key={i}>
                                                 <td>{item.platform}</td>
                                                 <td>{item.fileName}</td>
-                                                <td>{item.periodFrom}</td>
-                                                <td>{item.periodTo}</td>
+                                                {/* <td>{item.periodFrom}</td>
+                                                <td>{item.periodTo}</td> */}
                                                 <td>
                                                     {/* Show View button only if NOT accepted */}
                                                     {!item.isAccepted && (
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"
-                                                            onClick={() => navigate(`/manager/revenues/${item._id}`)}
+                                                            onClick={() => navigate(`/superadmin/revenues/${item._id}`)}
                                                         >
                                                             View <i className="fa-solid fa-chevron-right" />
                                                         </button>
@@ -472,12 +513,21 @@ function RevenueUploadComponent() {
                                                             Accepted
                                                         </span>
                                                     )}
+
+                                                    {!item.isAccepted && (
+                                                        <button
+                                                            className="border-less border-red dark-red table-button me-1"
+                                                            onClick={() => handleDeleteClick(item)}
+                                                        >
+                                                            Delete <i className="fa-solid fa-trash" />
+                                                        </button>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="5" style={{ textAlign: "center" }}>
+                                            <td colSpan="3" style={{ textAlign: "center" }}>
                                                 No Revenue Uploads Found
                                             </td>
                                         </tr>
@@ -556,6 +606,110 @@ function RevenueUploadComponent() {
                                             </>
                                         ) : (
                                             "Accept"
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
+                <div className="modal-backdrop show">
+                    <div className="modal d-block" tabIndex="-1">
+                        <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title text-danger">
+                                        <i className="fa-solid fa-trash-can me-2"></i>
+                                        Confirm Delete
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={handleCloseDeleteModal}
+                                        disabled={deletingId}
+                                    >
+                                        <i className="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    <div className="delete-warning mb-3">
+                                        <div className="alert alert-warning d-flex align-items-center" role="alert">
+                                            <i className="fa-solid fa-triangle-exclamation me-2"></i>
+                                            <div>
+                                                Warning: This action will permanently delete the revenue upload!
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p className="mb-3">
+                                        Are you sure you want to delete the revenue upload for{" "}
+                                        <strong>{itemToDelete?.platform}</strong>?
+                                    </p>
+
+                                    <div className="delete-details bg-light p-3 rounded">
+                                        <h6 className="mb-2">Upload Details:</h6>
+                                        <div className="row small">
+                                            <div className="col-md-6">
+                                                <p className="mb-1">
+                                                    <strong>Platform:</strong> {itemToDelete?.platform}
+                                                </p>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <p className="mb-1">
+                                                    <strong>File Name:</strong> {itemToDelete?.fileName}
+                                                </p>
+                                            </div>
+                                            {itemToDelete?.periodFrom && itemToDelete?.periodTo && (
+                                                <>
+                                                    <div className="col-md-6">
+                                                        <p className="mb-1">
+                                                            <strong>Period From:</strong> {itemToDelete?.periodFrom}
+                                                        </p>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <p className="mb-1">
+                                                            <strong>Period To:</strong> {itemToDelete?.periodTo}
+                                                        </p>
+                                                    </div>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* <p className="text-danger small mt-3">
+                                        <i className="fa-solid fa-circle-exclamation me-1" />
+                                        This action cannot be undone. All data will be permanently removed.
+                                    </p> */}
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="theme-btn border-btn"
+                                        onClick={handleCloseDeleteModal}
+                                        disabled={deletingId}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="theme-btn bg-red white-cl"
+                                        onClick={handleConfirmDelete}
+                                        disabled={deletingId}
+                                    >
+                                        {deletingId ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-2" />
+                                                Deleting...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="fa-solid fa-trash-can me-2"></i>
+                                                Delete Permanently
+                                            </>
                                         )}
                                     </button>
                                 </div>

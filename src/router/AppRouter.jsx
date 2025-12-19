@@ -117,6 +117,8 @@ import AllRevenueManager from "../pages/Manager/AllRevenue";
 import AddPayoutManager from "../pages/Manager/AddPayout";
 import AudioStreamingRevenueReportsManager from "../pages/Manager/AudioStreamingRevenueReports";
 import SingleReleaseManager from "../pages/Manager/SingleRelease";
+import AddBulkPayoutManager from "../pages/Manager/AddBulkPayout";
+import AllContractManager from "../pages/Manager/AllContract";
 
 function AppRouter() {
   return (
@@ -225,6 +227,8 @@ function AppRouter() {
           <Route path="/manager/revenues/:userId" element={<AllRevenueManager />} />
           <Route path="/manager/payout-from" element={<AddPayoutManager />} />
           <Route path="/manager/release-details" element={<SingleReleaseManager />} />
+          <Route path="/manager/bulk-payout" element={<AddBulkPayoutManager />} />
+          <Route path="/manager/all-contracts/:userId" element={<AllContractManager />} />
         </Route>
 
 

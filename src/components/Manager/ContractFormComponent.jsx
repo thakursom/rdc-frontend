@@ -31,11 +31,9 @@ function ContractFormComponent() {
             .required("Contract Name is required")
             .min(3, "Contract Name must be at least 3 characters"),
         startDate: Yup.date()
-            .required("Start Date is required")
-            .min(new Date(), "Start Date cannot be in the past"),
+            .required("Start Date is required"),
         endDate: Yup.date()
-            .required("End Date is required")
-            .min(Yup.ref("startDate"), "End Date must be after Start Date"),
+            .required("End Date is required"),
         labelPercentage: Yup.number()
             .typeError("Label Percentage must be a number")
             .min(0, "Label Percentage cannot be negative")
@@ -105,7 +103,7 @@ function ContractFormComponent() {
         }
     };
 
-    const getTodayDate = () => new Date().toISOString().split("T")[0];
+    // const getTodayDate = () => new Date().toISOString().split("T")[0];
 
     // Handle save/update with manual PDF validation
     const handleSubmit = async (values, { setSubmitting }) => {
@@ -113,17 +111,6 @@ function ContractFormComponent() {
             // Manual PDF validation
             if (!id && !values.pdf) {
                 toast.error("PDF file is required for new contracts");
-                return;
-            }
-
-            if (id && !values.pdf && !existingPdf) {
-                toast.error("PDF file is required");
-                return;
-            }
-
-            // File type validation
-            if (values.pdf && values.pdf.type !== "application/pdf") {
-                toast.error("Only PDF files are allowed");
                 return;
             }
 
@@ -149,7 +136,7 @@ function ContractFormComponent() {
 
             if (res.success) {
                 toast.success(id ? "Contract Updated Successfully!" : "Contract Uploaded Successfully!");
-                navigate("/superadmin/label-summary");
+                navigate("/manager/label-summary");
             } else {
                 toast.error(res.message || "Something went wrong");
             }
@@ -277,7 +264,7 @@ function ContractFormComponent() {
                                                         type="date"
                                                         name="startDate"
                                                         className={`form-control ${touched.startDate && errors.startDate ? "is-invalid" : ""}`}
-                                                        min={getTodayDate()}
+                                                    // min={getTodayDate()}
                                                     />
                                                     <ErrorMessage
                                                         name="startDate"
@@ -293,7 +280,7 @@ function ContractFormComponent() {
                                                         type="date"
                                                         name="endDate"
                                                         className={`form-control ${touched.endDate && errors.endDate ? "is-invalid" : ""}`}
-                                                        min={values.startDate || getTodayDate()}
+                                                    // min={values.startDate || getTodayDate()}
                                                     />
                                                     <ErrorMessage
                                                         name="endDate"

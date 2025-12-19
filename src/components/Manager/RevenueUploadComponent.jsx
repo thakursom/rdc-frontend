@@ -466,6 +466,7 @@ function RevenueUploadComponent() {
                                     <tr>
                                         <th>Platform</th>
                                         <th>FileName</th>
+                                        <th>Date of upload</th>
                                         {/* <th>From</th>
                                         <th>To</th> */}
                                         <th>Action</th>
@@ -478,6 +479,7 @@ function RevenueUploadComponent() {
                                             <tr key={i}>
                                                 <td>{item.platform}</td>
                                                 <td>{item.fileName}</td>
+                                                <td>{item.createdAt ? new Date(item.createdAt).toISOString().split("T")[0] : "N/A"}</td>
                                                 {/* <td>{item.periodFrom}</td>
                                                 <td>{item.periodTo}</td> */}
                                                 <td>
@@ -485,7 +487,7 @@ function RevenueUploadComponent() {
                                                     {!item.isAccepted && (
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"
-                                                            onClick={() => navigate(`/superadmin/revenues/${item._id}`)}
+                                                            onClick={() => navigate(`/manager/revenues/${item._id}`)}
                                                         >
                                                             View <i className="fa-solid fa-chevron-right" />
                                                         </button>

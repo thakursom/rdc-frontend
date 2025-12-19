@@ -257,7 +257,7 @@ function LabelSummaryComponent() {
                                                         >
                                                             All Contracts
                                                         </button>
-                                                        <button className="border-less border-green color-green table-button me-1"
+                                                        <button className="border-less border-purple color-purple table-button me-1"
                                                             onClick={() =>
                                                                 navigate(`/label/sub-label-summary/${contract.user_id}`)
                                                             }

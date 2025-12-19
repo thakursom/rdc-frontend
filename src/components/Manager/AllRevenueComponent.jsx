@@ -100,7 +100,15 @@ function AllRevenueComponent() {
                                     {revenues?.length > 0 ? (
                                         revenues.map((item, index) => (
                                             <tr key={index}>
-                                                <td>{item.track_title || item.release || "N/A"}</td>
+                                                <td>
+                                                    <span title={item.track_title}>
+                                                        {item.track_title
+                                                            ? item.track_title.length > 30
+                                                                ? item.track_title.slice(0, 30) + "..."
+                                                                : item.track_title
+                                                            : "N/A"}
+                                                    </span>
+                                                </td>
                                                 <td>{item.track_artist || "N/A"}</td>
                                                 <td>{item.track_count || "N/A"}</td>
                                                 {/* <td>{item.date || "N/A"}</td> */}

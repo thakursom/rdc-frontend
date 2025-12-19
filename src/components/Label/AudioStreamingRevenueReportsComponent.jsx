@@ -4,6 +4,8 @@ import AudioStreamingRevenueBarChart from "../Chart/AudioStreamingRevenueBarChar
 import AudioStreamingCountryRevenueChart from "../Chart/AudioStreamingCountryRevenueChart";
 import CustomPagination from "../Pagination/CustomPagination";
 import { apiRequest } from "../../services/api";
+import { toast } from "react-toastify";
+import AsyncSelect from 'react-select/async';
 
 function AudioStreamingRevenueReportsComponent() {
     const [filters, setFilters] = useState({
@@ -47,7 +49,42 @@ function AudioStreamingRevenueReportsComponent() {
     // Track if filters have been applied via button
     const [filtersApplied, setFiltersApplied] = useState(false);
     const [downloadStatus, setDownloadStatus] = useState("");
+    const [downloadHistory, setDownloadHistory] = useState([]);
+    const [labelFilter, setLabelFilter] = useState("");
+    const [showReportsTable, setShowReportsTable] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
+    const [deletingId, setDeletingId] = useState(null);
+    const [activeCheckboxFilters, setActiveCheckboxFilters] = useState({});
     const DOWNLOAD_STATUS_KEY = "audioStreamingExcelDownloadStatus";
+
+    const generateYears = () => {
+        const currentYear = new Date().getFullYear();
+        const years = [];
+        for (let i = currentYear; i >= currentYear - 10; i--) {
+            years.push(i);
+        }
+        return years;
+    };
+
+    const years = generateYears();
+
+    const loadOptions = async (inputValue) => {
+        try {
+            const res = await apiRequest(`/fetchAllSubLabel?search=${inputValue}`, "GET", null, true);
+
+            if (res.success) {
+                return res.data?.labels.map(item => ({
+                    value: item.id,
+                    label: `${item.name}`
+                }));
+            }
+            return [];
+        } catch (err) {
+            console.log("Dropdown Fetch Error", err);
+            return [];
+        }
+    };
 
     // Check localStorage on mount
     useEffect(() => {
@@ -68,18 +105,19 @@ function AudioStreamingRevenueReportsComponent() {
         }
     }, [downloadStatus]);
 
-    const buildQueryString = (useCheckboxFilters = false) => {
+    const buildQueryString = (includeCheckboxFilters = false) => {
         const params = new URLSearchParams();
 
         // Always include these filters
         if (filters.platform) params.append("platform", filters.platform);
+        if (filters.year) params.append("year", filters.year);
         if (filters.month) params.append("month", filters.month);
-        if (filters.quarter) params.append("quarter", filters.quarter);
         if (filters.fromDate) params.append("fromDate", filters.fromDate);
         if (filters.toDate) params.append("toDate", filters.toDate);
+        if (labelFilter) params.append("labelId", labelFilter);
 
-        // Only include checkbox filters when filter button is clicked
-        if (useCheckboxFilters) {
+        // Include checkbox filters based on parameter
+        if (includeCheckboxFilters) {
             if (checkboxFilters.releases) params.append("releases", "true");
             if (checkboxFilters.artist) params.append("artist", "true");
             if (checkboxFilters.track) params.append("track", "true");
@@ -95,10 +133,10 @@ function AudioStreamingRevenueReportsComponent() {
         return params.toString();
     };
 
-    const fetchReports = async (useCheckboxFilters = false) => {
+    const fetchReports = async (includeCheckboxFilters = false) => {
         setLoading(true);
         try {
-            const query = buildQueryString(useCheckboxFilters);
+            const query = buildQueryString(includeCheckboxFilters);
             const result = await apiRequest(`/audioStreamingRevenueReport?${query}`, "GET", null, true);
 
             if (result.success) {
@@ -106,13 +144,6 @@ function AudioStreamingRevenueReportsComponent() {
                 if (result.data.data.pagination) {
                     setTotalRecords(result.data.data.pagination.totalRecords);
                     setPageCount(result.data.data.pagination.totalPages);
-                } else {
-                    setTotalRecords(result.data.data?.reports?.length || 0);
-                    setPageCount(Math.ceil((result.data.data?.reports?.length || 0) / filters.limit));
-                }
-
-                if (useCheckboxFilters) {
-                    setFiltersApplied(true);
                 }
             }
         } catch (error) {
@@ -124,15 +155,15 @@ function AudioStreamingRevenueReportsComponent() {
 
     // Fetch data on initial render and when regular filters change
     useEffect(() => {
-        // Skip initial render if it's not the first time and checkbox filters haven't been applied
         if (initialRender.current) {
             initialRender.current = false;
             fetchReports(false);
-        } else if (!filtersApplied) {
-            // Only fetch automatically if checkbox filters haven't been applied yet
-            fetchReports(false);
+        } else {
+            // Always fetch, but check if we have any active checkbox filters
+            const hasActiveCheckboxFilters = Object.values(checkboxFilters).some(value => value);
+            fetchReports(hasActiveCheckboxFilters);
         }
-    }, [filters.platform, filters.month, filters.quarter, filters.fromDate, filters.toDate, filters.page, filters.limit]);
+    }, [filters.platform, filters.year, filters.month, filters.fromDate, filters.toDate, filters.page, filters.limit, labelFilter]);
 
     // Handle pagination click
     const handlePageChange = (selectedObj) => {
@@ -157,8 +188,8 @@ function AudioStreamingRevenueReportsComponent() {
             ...prev,
             [name]: checked
         }));
-        // Reset filters applied flag when checkboxes change
-        setFiltersApplied(false);
+        // Reset to page 1 when checkbox changes
+        setFilters(prev => ({ ...prev, page: 1 }));
     };
 
     const handleFilterChange = (e) => {
@@ -178,67 +209,43 @@ function AudioStreamingRevenueReportsComponent() {
 
     const handleApplyFilters = (e) => {
         e.preventDefault();
-        // Merge checkbox filters into main filters for the API call
-        fetchReports(true);
+        // Apply filters and reset to page 1
+        setFilters(prev => ({ ...prev, page: 1 }));
+        fetchReports(true); // Always pass true for checkbox filters when button is clicked
     };
 
     const handleExcelDownload = async (useCheckboxFilters = false) => {
-        let platformName = "All_Platforms";
-        if (filters.platform && filters.platform.trim() !== "") {
-            const platforms = filters.platform.split(",").map(p => p.trim());
-            if (platforms.length === 1) {
-                platformName = platforms[0].replace(/[^a-zA-Z0-9]/g, "_");
-            } else if (platforms.length > 1) {
-                platformName = `${platforms.length}_Platforms`;
-            }
-        }
-
-        const today = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-        const filename = `${platformName}_Revenue_Report_${today}.xlsx`;
-
         try {
-            // Set status to preparing
-            setDownloadStatus("preparing");
-            localStorage.setItem(DOWNLOAD_STATUS_KEY, "preparing");
-
             setLoading(true);
 
+            // First, trigger report generation
             const query = buildQueryString(useCheckboxFilters);
-            const response = await apiRequest(
-                `/revenueReports/export/audioStreamingExcel?${query}`,
+
+            const triggerResponse = await apiRequest(
+                `/trigger-audio-streaming-excel?${query}`,
                 "GET",
                 null,
-                true,
-                { responseType: 'blob' }
+                true
             );
 
-            if (!response || response.size === 0) {
-                alert("No data found to export.");
-                setDownloadStatus("");
-                localStorage.removeItem(DOWNLOAD_STATUS_KEY);
-                return;
+            if (triggerResponse.success) {
+                // Show success message
+                toast.success(triggerResponse?.data?.message);
+
+                // Fetch updated history to show preparing status
+                await fetchHistory();
+
+                // Auto-show the reports table if not already shown
+                if (!showReportsTable) {
+                    setShowReportsTable(true);
+                }
+            } else {
+                toast.error("Failed to start report generation");
             }
 
-            const blob = new Blob([response], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            });
-
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-
-            // Success: Update status
-            setDownloadStatus("downloaded");
-            localStorage.setItem(DOWNLOAD_STATUS_KEY, "downloaded");
-
         } catch (error) {
-            setDownloadStatus("");
-            localStorage.removeItem(DOWNLOAD_STATUS_KEY);
+            console.error("Error triggering report:", error);
+            toast.error("Error starting report generation");
         } finally {
             setLoading(false);
         }
@@ -258,6 +265,87 @@ function AudioStreamingRevenueReportsComponent() {
         return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
     };
 
+    const fetchHistory = async () => {
+        try {
+            const result = await apiRequest('/report-history', "GET", null, true);
+
+            if (result.success) {
+                setDownloadHistory(result?.data?.data || []);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+
+        fetchHistory();
+    }, []);
+
+    const handleDeleteClick = (item) => {
+        setItemToDelete(item);
+        setShowDeleteModal(true);
+    };
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+        setItemToDelete(null);
+        setDeletingId(null);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!itemToDelete?._id) return;
+
+        setDeletingId(itemToDelete._id);
+
+        try {
+            const res = await apiRequest(
+                `/delete-audio-report?id=${itemToDelete._id}`,
+                "DELETE",
+                null,
+                true
+            );
+
+            if (res.success) {
+                toast.success("Report deleted successfully!");
+                await fetchHistory();
+                handleCloseDeleteModal();
+            } else {
+                toast.error(res.message || "Failed to delete report");
+            }
+        } catch (error) {
+            console.error("Error deleting report:", error);
+            toast.error("Error deleting report");
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
+    // Polling effect for report status
+    useEffect(() => {
+        let intervalId;
+
+        if (showReportsTable && downloadHistory.length > 0) {
+            // Check if any reports are still pending
+            const hasPreparingReports = downloadHistory.some(
+                item => item.status === 'pending'
+            );
+
+            if (hasPreparingReports) {
+                // Poll every 5 seconds for status updates
+                intervalId = setInterval(() => {
+                    fetchHistory();
+                }, 5000);
+            }
+        }
+
+        return () => {
+            if (intervalId) {
+                clearInterval(intervalId);
+            }
+        };
+    }, [showReportsTable, downloadHistory]);
+
     return (
         <>
             <section className="rdc-rightbar" id="right-sidebar">
@@ -265,12 +353,22 @@ function AudioStreamingRevenueReportsComponent() {
                     <div className="mian-sec-heading">
                         <h6>Audio Streaming Revenue Reports</h6>
                         <div className="btn-right-sec">
+                            {downloadHistory.length >= 1 && (
+                                <button
+                                    className="theme-btn green-cl white-cl me-1 position-relative"
+                                    onClick={() => setShowReportsTable(!showReportsTable)}
+                                >
+                                    <i className={`fa-solid me-2 ${showReportsTable ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                                    {showReportsTable ? 'Hide' : 'Show'} reports ({downloadHistory.length})
+                                </button>
+                            )}
+
                             <button
                                 className="theme-btn green-cl white-cl me-1 position-relative"
                                 onClick={() => handleExcelDownload(filtersApplied)}
-                                disabled={loading || downloadStatus === "preparing"}
+                                disabled={loading}
                             >
-                                <i className="fa-solid fa-file-excel" /> Excel
+                                <i className="fa-solid fa-file-excel" /> Generate Excel Report
                             </button>
                         </div>
                     </div>
@@ -280,7 +378,7 @@ function AudioStreamingRevenueReportsComponent() {
                             Data getting ready to export… Please wait
                         </div>
                     )}
-                    {downloadStatus === "downloaded" && (
+                    {/* {downloadStatus === "downloaded" && (
                         <div className="alert alert-success alert-sm mt-2 py-2 d-flex justify-content-between align-items-center">
                             <span>File downloaded successfully!</span>
                             <button
@@ -295,13 +393,153 @@ function AudioStreamingRevenueReportsComponent() {
                                 ×
                             </button>
                         </div>
-                    )}
+                    )} */}
+
+                    <div className="mt-4">
+                        {showReportsTable && downloadHistory && downloadHistory.length > 0 && (
+                            <div className="table-sec generate-report mt-3">
+                                <table className="rdc-table rdc-shadow">
+                                    <thead>
+                                        <tr>
+                                            <th>File Name</th>
+                                            <th>Generated On</th>
+                                            <th>Status</th>
+                                            <th className="text-center">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {downloadHistory.map((item) => (
+                                            <tr key={item._id} className={item.status === 'pending' ? 'table-warning' : item === downloadHistory[0] ? 'table-primary' : ''}>
+                                                <td>
+                                                    <i className="fa-solid fa-file-excel text-success me-2"></i>
+                                                    <strong>
+                                                        {item.status === 'pending' ? 'Generating...' : item.filename}
+                                                    </strong>
+                                                    {item === downloadHistory[0] && item.status !== 'pending' &&
+                                                        <span className="badge bg-primary ms-2 small">Latest</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    {new Date(item.generatedAt).toLocaleDateString('en-US', {
+                                                        day: '2-digit',
+                                                        month: 'short',
+                                                        year: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit'
+                                                    })}
+                                                </td>
+                                                <td>
+                                                    {item.status === "pending" && (
+                                                        <span className="badge bg-warning text-dark">
+                                                            <i className="fa-solid fa-spinner fa-spin me-1"></i>
+                                                            Pending...
+                                                        </span>
+                                                    )}
+                                                    {item.status === "ready" && (
+                                                        <span className="badge bg-success">
+                                                            <i className="fa-solid fa-check me-1"></i>
+                                                            Ready
+                                                        </span>
+                                                    )}
+                                                    {item.status === "failed" && (
+                                                        <span className="badge bg-danger">
+                                                            <i className="fa-solid fa-times me-1"></i>
+                                                            Failed
+                                                        </span>
+                                                    )}
+                                                </td>
+                                                <td className="text-center report-delete">
+                                                    {item.status === "ready" && item.fileURL ? (
+                                                        <>
+                                                            <a
+                                                                href={item.fileURL}
+                                                                download={item.filename}
+                                                                className="theme-btn green-cl white-cl small px-3 py-2"
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                            >
+                                                                <i className="fa-solid fa-download me-2"></i>
+                                                                Download
+                                                            </a>
+                                                            <button
+                                                                className="border-less border-red dark-red table-button me-2"
+                                                                onClick={() => handleDeleteClick(item)}
+                                                                disabled={deletingId === item._id}
+                                                            >
+                                                                {deletingId === item._id ? (
+                                                                    <span><i className="fa-solid fa-spinner fa-spin"></i> Deleting...</span>
+                                                                ) : (
+                                                                    <>Delete <i className="fa-solid fa-trash" /></>
+                                                                )}
+                                                            </button>
+                                                        </>
+                                                    ) : item.status === "pending" ? (
+                                                        <>
+                                                            <button
+                                                                className="border-less border-red dark-red table-button me-2"
+                                                                onClick={() => handleDeleteClick(item)}
+                                                                disabled={deletingId === item._id}
+                                                            >
+                                                                {deletingId === item._id ? (
+                                                                    <span><i className="fa-solid fa-spinner fa-spin"></i> Deleting...</span>
+                                                                ) : (
+                                                                    <>Delete <i className="fa-solid fa-trash" /></>
+                                                                )}
+                                                            </button>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <span className="text-danger small">
+                                                                <i className="fa-solid fa-exclamation-triangle me-2"></i>
+                                                                Failed
+                                                            </span>
+                                                            <button
+                                                                className="border-less border-red dark-red table-button me-2"
+                                                                onClick={() => handleDeleteClick(item)}
+                                                                disabled={deletingId === item._id}
+                                                            >
+                                                                {deletingId === item._id ? (
+                                                                    <span><i className="fa-solid fa-spinner fa-spin"></i> Deleting...</span>
+                                                                ) : (
+                                                                    <>Delete <i className="fa-solid fa-trash" /></>
+                                                                )}
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
 
                     {/* === YOUR ORIGINAL FILTERS === */}
-                    <div className="revnue-filters">
+                    <div className="revnue-filters mt-3">
                         <form className="revenue-filter-fx" onSubmit={handleApplyFilters}>
                             <div className="row g-3 mb-4">
-                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
+                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
+                                    <div className="form-group" style={{ maxWidth: "400px" }}>
+                                        <AsyncSelect
+                                            cacheOptions
+                                            loadOptions={loadOptions}
+                                            defaultOptions
+                                            placeholder="Search Sub Label"
+                                            isClearable
+                                            onChange={(selected) => {
+                                                if (selected) {
+                                                    setLabelFilter(selected.value);
+                                                } else {
+                                                    setLabelFilter("");
+                                                }
+                                                setFilters(prev => ({ ...prev, page: 1 }));
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
                                     <div className="form-group">
                                         <div className="form-sec">
                                             <select className="form-select" name="platform" value={filters.platform} onChange={handleFilterChange}>
@@ -318,7 +556,23 @@ function AudioStreamingRevenueReportsComponent() {
                                     </div>
                                 </div>
 
-                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
+                                {/* Year Filter - Added here */}
+                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
+                                    <div className="form-group">
+                                        <div className="form-sec">
+                                            <select className="form-select" name="year" value={filters.year} onChange={handleFilterChange}>
+                                                <option value="">Select Year</option>
+                                                {years.map(year => (
+                                                    <option key={year} value={year}>
+                                                        {year}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div> */}
+
+                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
                                     <div className="form-group">
                                         <div className="form-sec">
                                             <select className="form-select" name="month" value={filters.month} onChange={handleFilterChange}>
@@ -331,9 +585,9 @@ function AudioStreamingRevenueReportsComponent() {
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
 
-                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
+                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
                                     <div className="form-group">
                                         <div className="form-sec">
                                             <select className="form-select" name="quarter" value={filters.quarter} onChange={handleFilterChange}>
@@ -345,9 +599,9 @@ function AudioStreamingRevenueReportsComponent() {
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
 
-                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
+                                <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
                                     <div className="form-group">
                                         <div className="form-sec">
                                             <select
@@ -376,7 +630,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                     <div className="input-group-fx">
                                                         <label>From</label>
                                                         <input
-                                                            type="date"
+                                                            type="month"
                                                             name="fromDate"
                                                             className="form-control mb-2"
                                                             value={filters.fromDate}
@@ -386,7 +640,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                     <div className="input-group-fx">
                                                         <label>To</label>
                                                         <input
-                                                            type="date"
+                                                            type="month"
                                                             name="toDate"
                                                             className="form-control"
                                                             value={filters.toDate}
@@ -540,24 +794,129 @@ function AudioStreamingRevenueReportsComponent() {
                                     </tbody>
                                 </table>
 
-                                {/* Pagination - Added here */}
-                                <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
-                                    <CustomPagination
-                                        pageCount={pageCount}
-                                        currentPage={filters.page}
-                                        onPageChange={handlePageChange}
-                                        perPage={filters.limit}
-                                        onPerPageChange={handlePerPageChange}
-                                        totalRecords={totalRecords}
-                                    />
-                                </div>
+
                             </>
                         ) : (
                             <div className="text-center py-5 text-muted">No data found</div>
                         )}
                     </div>
+                    {/* Pagination - Added here */}
+                    <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
+                        <CustomPagination
+                            pageCount={pageCount}
+                            currentPage={filters.page}
+                            onPageChange={handlePageChange}
+                            perPage={filters.limit}
+                            onPerPageChange={handlePerPageChange}
+                            totalRecords={totalRecords}
+                        />
+                    </div>
                 </div>
             </section>
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
+                <div className="modal-backdrop show">
+                    <div className="modal d-block" tabIndex="-1">
+                        <div className="modal-dialog modal-dialog-centered">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h5 className="modal-title text-danger">
+                                        <i className="fa-solid fa-trash-can me-2"></i>
+                                        Confirm Delete
+                                    </h5>
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        onClick={handleCloseDeleteModal}
+                                        disabled={deletingId}
+                                    >
+                                        <i className="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                                <div className="modal-body">
+                                    <div className="delete-warning mb-3">
+                                        <div className="alert alert-warning d-flex align-items-center" role="alert">
+                                            <i className="fa-solid fa-triangle-exclamation me-2"></i>
+                                            <div>
+                                                Warning: This action will permanently delete the revenue upload!
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p className="mb-3">
+                                        Are you sure you want to delete this generated report?
+                                    </p>
+
+                                    <div className="delete-details bg-light p-3 rounded">
+                                        <h6 className="mb-2">Report Details:</h6>
+                                        <div className="row small">
+                                            <div className="col-md-6">
+                                                <p className="mb-1">
+                                                    <strong>File Name:</strong> {itemToDelete?.filename
+                                                        ? itemToDelete?.filename.length > 20
+                                                            ? itemToDelete?.filename.slice(0, 20) + "..."
+                                                            : itemToDelete?.filename
+                                                        : "N/A"}
+
+                                                </p>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <p className="mb-1">
+                                                    <strong>Generated On:</strong>
+                                                    {new Date(itemToDelete?.generatedAt).toLocaleDateString('en-US', {
+                                                        day: '2-digit',
+                                                        month: 'short',
+                                                        year: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit'
+                                                    })}
+                                                </p>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <p className="mb-1">
+                                                    <strong>Status:</strong>
+                                                    <span className={`badge ${itemToDelete?.status === 'ready' ? 'bg-success' : itemToDelete?.status === 'preparing' ? 'bg-warning' : 'bg-danger'}`}>
+                                                        {itemToDelete?.status}
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button
+                                        type="button"
+                                        className="theme-btn border-btn"
+                                        onClick={handleCloseDeleteModal}
+                                        disabled={deletingId}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="theme-btn bg-red white-cl"
+                                        onClick={handleConfirmDelete}
+                                        disabled={deletingId}
+                                    >
+                                        {deletingId ? (
+                                            <>
+                                                <span className="spinner-border spinner-border-sm me-2" />
+                                                Deleting...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="fa-solid fa-trash-can me-2"></i>
+                                                Delete Permanently
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

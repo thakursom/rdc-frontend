@@ -3,7 +3,14 @@ import Highcharts from "highcharts";
 
 function YoutubeRdcRevenueChart({ revenueByMonth = {} }) {
   useEffect(() => {
-    if (!Object.keys(revenueByMonth).length) return;
+    // Clear the container first to prevent duplicate charts
+    const container = document.getElementById("yt-rdc-revenue-container");
+    if (container) container.innerHTML = "";
+
+    // More strict check - ensure revenueByMonth is not empty object
+    if (!revenueByMonth || Object.keys(revenueByMonth).length === 0) {
+      return; // Don't render chart if no data
+    }
 
     const years = Object.keys(revenueByMonth).map(key =>
       Number(key.split(" ")[1])

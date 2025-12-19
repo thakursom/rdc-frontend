@@ -64,6 +64,8 @@ import BankDetailFormLabel from "../pages/Label/BankDetailForm";
 import YoutubeRevenueReportsLabel from "../pages/Label/YoutubeRevenueReports";
 import AudioStreamingRevenueReportsLabel from "../pages/Label/AudioStreamingRevenueReports";
 import SingleReleaseLabel from "../pages/Label/SingleRelease";
+import AddPayoutLabel from "../pages/Label/AddPayout";
+import AllContractLabel from "../pages/Label/AllContract";
 
 // SubLabel pages
 import SubLabelDashboard from "../pages/SubLabel/SubLabelDashboard";
@@ -264,6 +266,8 @@ function AppRouter() {
           <Route path="/label/youtube-revenue-reports" element={<YoutubeRevenueReportsLabel />} />
           <Route path="/label/audio-streaming-revenue-reports" element={<AudioStreamingRevenueReportsLabel />} />
           <Route path="/label/release-details" element={<SingleReleaseLabel />} />
+          <Route path="/label/payout-from" element={<AddPayoutLabel />} />
+          <Route path="/label/all-contracts/:userId" element={<AllContractLabel />} />
         </Route>
 
 

@@ -328,7 +328,7 @@ function AudioStreamingRevenueReportsComponent() {
         if (showReportsTable && downloadHistory.length > 0) {
             // Check if any reports are still pending
             const hasPreparingReports = downloadHistory.some(
-                item => item.status === 'pending'
+                item => item.status === "pending" || item.status === "generating"
             );
 
             if (hasPreparingReports) {
@@ -429,12 +429,13 @@ function AudioStreamingRevenueReportsComponent() {
                                                     })}
                                                 </td>
                                                 <td>
-                                                    {item.status === "pending" && (
+                                                    {["pending", "generating"].includes(item.status) && (
                                                         <span className="badge bg-warning text-dark">
                                                             <i className="fa-solid fa-spinner fa-spin me-1"></i>
                                                             Pending...
                                                         </span>
                                                     )}
+
                                                     {item.status === "ready" && (
                                                         <span className="badge bg-success">
                                                             <i className="fa-solid fa-check me-1"></i>
@@ -489,10 +490,6 @@ function AudioStreamingRevenueReportsComponent() {
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <span className="text-danger small">
-                                                                <i className="fa-solid fa-exclamation-triangle me-2"></i>
-                                                                Failed
-                                                            </span>
                                                             <button
                                                                 className="border-less border-red dark-red table-button me-2"
                                                                 onClick={() => handleDeleteClick(item)}

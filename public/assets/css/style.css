@@ -1847,6 +1847,10 @@ select.rows-select {
     gap: 10px;
 }
 
+.stop-button {
+    margin-left: 112px;
+}
+
 /* ############## Media Query ############## */
 
 @media(max-width:1799px) {

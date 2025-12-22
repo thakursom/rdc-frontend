@@ -313,7 +313,7 @@ function AudioStreamingRevenueReportsComponent() {
             );
 
             if (res.success) {
-                toast.success("Report deleted successfully!");
+                itemToDelete.status == 'ready' ? toast.success("Report deleted successfully!") : toast.success("Report stoped successfully!");
                 await fetchHistory();
                 handleCloseDeleteModal();
             } else {
@@ -365,7 +365,7 @@ function AudioStreamingRevenueReportsComponent() {
                                     onClick={() => setShowReportsTable(!showReportsTable)}
                                 >
                                     <i className={`fa-solid me-2 ${showReportsTable ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
-                                    {showReportsTable ? 'Hide' : 'Show'} reports ({downloadHistory.length})
+                                    {showReportsTable ? 'Hide' : 'Show'} downloads ({downloadHistory.length})
                                 </button>
                             )}
 
@@ -482,14 +482,14 @@ function AudioStreamingRevenueReportsComponent() {
                                                     ) : item.status === "pending" ? (
                                                         <>
                                                             <button
-                                                                className="border-less border-red dark-red table-button me-2"
+                                                                className="border-less border-red dark-red table-button me-2 stop-button"
                                                                 onClick={() => handleDeleteClick(item)}
                                                                 disabled={deletingId === item._id}
                                                             >
                                                                 {deletingId === item._id ? (
-                                                                    <span><i className="fa-solid fa-spinner fa-spin"></i> Deleting...</span>
+                                                                    <span><i className="fa-solid fa-spinner fa-spin"></i> Stoping...</span>
                                                                 ) : (
-                                                                    <>Delete <i className="fa-solid fa-trash" /></>
+                                                                    <>Stop <i className="fa-solid fa-trash" /></>
                                                                 )}
                                                             </button>
                                                         </>
@@ -827,9 +827,9 @@ function AudioStreamingRevenueReportsComponent() {
                         <div className="modal-dialog modal-dialog-centered">
                             <div className="modal-content">
                                 <div className="modal-header">
-                                    <h5 className="modal-title text-danger">
-                                        <i className="fa-solid fa-trash-can me-2"></i>
-                                        Confirm Delete
+                                    <h5 className={`modal-title ${itemToDelete?.status === 'ready' ? 'text-danger' : 'text-warning'}`}>
+                                        <i className={`fa-solid ${itemToDelete?.status === 'ready' ? 'fa-trash-can' : 'fa-circle-stop'} me-2`}></i>
+                                        {itemToDelete?.status === 'ready' ? 'Confirm Delete' : 'Confirm Stop'}
                                     </h5>
                                     <button
                                         type="button"
@@ -845,13 +845,17 @@ function AudioStreamingRevenueReportsComponent() {
                                         <div className="alert alert-warning d-flex align-items-center" role="alert">
                                             <i className="fa-solid fa-triangle-exclamation me-2"></i>
                                             <div>
-                                                Warning: This action will permanently delete the revenue upload!
+                                                {itemToDelete?.status === 'ready'
+                                                    ? 'Warning: This action will permanently delete the revenue upload!'
+                                                    : 'Warning: This action will stop the report generation process!'}
                                             </div>
                                         </div>
                                     </div>
 
                                     <p className="mb-3">
-                                        Are you sure you want to delete this generated report?
+                                        {itemToDelete?.status === 'ready'
+                                            ? 'Are you sure you want to delete this generated report?'
+                                            : 'Are you sure you want to stop this report generation?'}
                                     </p>
 
                                     <div className="delete-details bg-light p-3 rounded">
@@ -908,12 +912,12 @@ function AudioStreamingRevenueReportsComponent() {
                                         {deletingId ? (
                                             <>
                                                 <span className="spinner-border spinner-border-sm me-2" />
-                                                Deleting...
+                                                {itemToDelete?.status === 'ready' ? 'Deleting...' : 'Stopping...'}
                                             </>
                                         ) : (
                                             <>
                                                 <i className="fa-solid fa-trash-can me-2"></i>
-                                                Delete Permanently
+                                                {itemToDelete?.status === 'ready' ? 'Delete Permanently' : 'Stop'}
                                             </>
                                         )}
                                     </button>

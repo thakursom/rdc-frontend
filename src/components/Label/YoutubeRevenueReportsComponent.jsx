@@ -6,6 +6,7 @@ import CustomPagination from "../Pagination/CustomPagination";
 import { apiRequest } from "../../services/api";
 import { toast } from "react-toastify";
 import AsyncSelect from 'react-select/async';
+import Loader from "../Loader/Loader";
 
 function YoutubeRevenueReportsComponent() {
     const [filters, setFilters] = useState({
@@ -27,6 +28,7 @@ function YoutubeRevenueReportsComponent() {
     });
 
     const [data, setData] = useState(null);
+    const [reportData, setReportData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showDates, setShowDates] = useState(false);
     const [pageCount, setPageCount] = useState(1);
@@ -140,18 +142,16 @@ function YoutubeRevenueReportsComponent() {
         return params.toString();
     };
 
-    const fetchReports = async (includeCheckboxFilters = false) => {
+    const fetchSummarys = async (includeCheckboxFilters = false) => {
         setLoading(true);
         try {
             const query = buildQueryString(includeCheckboxFilters);
-            const result = await apiRequest(`/youtubeRevenueReport?${query}`, "GET", null, true);
+            const result = await apiRequest(`/youtube-revenue/summary?${query}`, "GET", null, true);
 
             if (result.success) {
                 setData(result.data.data);
-                if (result.data.data.pagination) {
-                    setTotalRecords(result.data.data.pagination.totalRecords);
-                    setPageCount(result.data.data.pagination.totalPages);
-                }
+                // After summary is loaded, fetch reports
+                await fetchReports(includeCheckboxFilters);
             }
         } catch (error) {
             console.error(error);
@@ -160,16 +160,36 @@ function YoutubeRevenueReportsComponent() {
         }
     };
 
-    useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false;
-            fetchReports(false);
-        } else {
-            // Always fetch, but check if we have any active checkbox filters
-            const hasActiveCheckboxFilters = Object.values(checkboxFilters).some(value => value);
-            fetchReports(hasActiveCheckboxFilters);
+    const fetchReports = async (includeCheckboxFilters = false) => {
+        try {
+            const query = buildQueryString(includeCheckboxFilters);
+            const result = await apiRequest(`/youtube-revenue/reports?${query}`, "GET", null, true);
+
+            if (result.success) {
+                setReportData(result.data.data);
+                if (result.data.data.pagination) {
+                    setTotalRecords(result.data.data.pagination.totalRecords);
+                    setPageCount(result.data.data.pagination.totalPages);
+                }
+            }
+        } catch (error) {
+            console.error(error);
         }
-    }, [filters.platform, filters.year, filters.month, filters.fromDate, filters.toDate, filters.page, filters.limit, labelFilter]);
+    };
+
+    useEffect(() => {
+        const fetchInitialData = async () => {
+            if (initialRender.current) {
+                initialRender.current = false;
+                await fetchSummarys(false);
+            } else {
+                const hasActiveCheckboxFilters = Object.values(checkboxFilters).some(value => value);
+                await fetchSummarys(hasActiveCheckboxFilters);
+            }
+        };
+
+        fetchInitialData();
+    }, [filters.platform, filters.year, filters.month, filters.fromDate, filters.toDate, filters.page, filters.limit, labelFilter])
 
     // Handle pagination click
     const handlePageChange = (selectedObj) => {
@@ -201,7 +221,7 @@ function YoutubeRevenueReportsComponent() {
     const handleFilterChange = (e) => {
         const { name, value, type, checked } = e.target;
 
-        if (["releases", "artist", "track", "partner", "contentType", "format", "territory", "quarters"].includes(name)) {
+        if (["releases", "artist", "track", "territory"].includes(name)) {
             // These are now handled by handleCheckboxChange
             return;
         }
@@ -215,9 +235,8 @@ function YoutubeRevenueReportsComponent() {
 
     const handleApplyFilters = (e) => {
         e.preventDefault();
-        // Apply filters and reset to page 1
         setFilters(prev => ({ ...prev, page: 1 }));
-        fetchReports(true); // Always pass true for checkbox filters when button is clicked
+        fetchSummarys(true); // This will automatically call fetchReports after
     };
 
 
@@ -335,7 +354,7 @@ function YoutubeRevenueReportsComponent() {
         if (showReportsTable && downloadHistory.length > 0) {
             // Check if any reports are still pending
             const hasPreparingReports = downloadHistory.some(
-                item => item.status === 'pending'
+                item => item.status === "pending" || item.status === "generating"
             );
 
             if (hasPreparingReports) {
@@ -436,7 +455,7 @@ function YoutubeRevenueReportsComponent() {
                                                     })}
                                                 </td>
                                                 <td>
-                                                    {item.status === "pending" && (
+                                                    {["pending", "generating"].includes(item.status) && (
                                                         <span className="badge bg-warning text-dark">
                                                             <i className="fa-solid fa-spinner fa-spin me-1"></i>
                                                             Pending...
@@ -496,10 +515,6 @@ function YoutubeRevenueReportsComponent() {
                                                         </>
                                                     ) : (
                                                         <>
-                                                            <span className="text-danger small">
-                                                                <i className="fa-solid fa-exclamation-triangle me-2"></i>
-                                                                Failed
-                                                            </span>
                                                             <button
                                                                 className="border-less border-red dark-red table-button me-2"
                                                                 onClick={() => handleDeleteClick(item)}
@@ -658,7 +673,7 @@ function YoutubeRevenueReportsComponent() {
                             </div>
 
                             <div className={`rdc-checkbox ${showDates ? "pt-5" : ""}`}>
-                                {["releases", "artist", "track", "partner", "contentType", "format", "territory", "quarters"].map(key => (
+                                {["releases", "artist", "track", "territory"].map(key => (
                                     <div key={key} className="form-check">
                                         <input
                                             className="form-check-input"
@@ -771,8 +786,8 @@ function YoutubeRevenueReportsComponent() {
                     {/* === YOUR ORIGINAL TABLE === */}
                     <div className="table-sec">
                         {loading ? (
-                            <div className="text-center py-5">Loading...</div>
-                        ) : data?.reports?.length > 0 ? (
+                            <div className="text-center py-5"><Loader small={true} /></div>
+                        ) : reportData?.reports?.length > 0 ? (
                             <>
                                 <table className="rdc-table">
                                     <thead>
@@ -786,7 +801,7 @@ function YoutubeRevenueReportsComponent() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data.reports.map((row, i) => (
+                                        {reportData.reports.map((row, i) => (
                                             <tr key={i}>
                                                 <td className="main-td">{row.date}</td>
                                                 <td>{row.platform}</td>

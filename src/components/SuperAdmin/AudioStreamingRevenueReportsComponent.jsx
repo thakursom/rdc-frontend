@@ -6,6 +6,7 @@ import CustomPagination from "../Pagination/CustomPagination";
 import { apiRequest } from "../../services/api";
 import { toast } from "react-toastify";
 import AsyncSelect from 'react-select/async';
+import Loader from "../Loader/Loader";
 
 function AudioStreamingRevenueReportsComponent() {
     const [filters, setFilters] = useState({
@@ -27,6 +28,7 @@ function AudioStreamingRevenueReportsComponent() {
     });
 
     const [data, setData] = useState(null);
+    const [reportData, setReportData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showDates, setShowDates] = useState(false);
     const [pageCount, setPageCount] = useState(1);
@@ -133,18 +135,16 @@ function AudioStreamingRevenueReportsComponent() {
         return params.toString();
     };
 
-    const fetchReports = async (includeCheckboxFilters = false) => {
+    const fetchSummarys = async (includeCheckboxFilters = false) => {
         setLoading(true);
         try {
             const query = buildQueryString(includeCheckboxFilters);
-            const result = await apiRequest(`/audioStreamingRevenueReport?${query}`, "GET", null, true);
+            const result = await apiRequest(`/audio-streaming-revenue/summary?${query}`, "GET", null, true);
 
             if (result.success) {
                 setData(result.data.data);
-                if (result.data.data.pagination) {
-                    setTotalRecords(result.data.data.pagination.totalRecords);
-                    setPageCount(result.data.data.pagination.totalPages);
-                }
+                // After summary is loaded, fetch reports
+                await fetchReports(includeCheckboxFilters);
             }
         } catch (error) {
             console.error(error);
@@ -153,16 +153,37 @@ function AudioStreamingRevenueReportsComponent() {
         }
     };
 
+    const fetchReports = async (includeCheckboxFilters = false) => {
+        try {
+            const query = buildQueryString(includeCheckboxFilters);
+            const result = await apiRequest(`/audio-streaming-revenue/reports?${query}`, "GET", null, true);
+
+            if (result.success) {
+                setReportData(result.data.data);
+                if (result.data.data.pagination) {
+                    setTotalRecords(result.data.data.pagination.totalRecords);
+                    setPageCount(result.data.data.pagination.totalPages);
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
     // Fetch data on initial render and when regular filters change
     useEffect(() => {
-        if (initialRender.current) {
-            initialRender.current = false;
-            fetchReports(false);
-        } else {
-            // Always fetch, but check if we have any active checkbox filters
-            const hasActiveCheckboxFilters = Object.values(checkboxFilters).some(value => value);
-            fetchReports(hasActiveCheckboxFilters);
-        }
+        const fetchInitialData = async () => {
+            if (initialRender.current) {
+                initialRender.current = false;
+                await fetchSummarys(false);
+            } else {
+                const hasActiveCheckboxFilters = Object.values(checkboxFilters).some(value => value);
+                await fetchSummarys(hasActiveCheckboxFilters);
+            }
+        };
+
+        fetchInitialData();
     }, [filters.platform, filters.year, filters.month, filters.fromDate, filters.toDate, filters.page, filters.limit, labelFilter]);
 
     // Handle pagination click
@@ -195,7 +216,7 @@ function AudioStreamingRevenueReportsComponent() {
     const handleFilterChange = (e) => {
         const { name, value, type, checked } = e.target;
 
-        if (["releases", "artist", "track", "partner", "contentType", "format", "territory", "quarters"].includes(name)) {
+        if (["releases", "artist", "track", "territory"].includes(name)) {
             // These are now handled by handleCheckboxChange
             return;
         }
@@ -209,9 +230,8 @@ function AudioStreamingRevenueReportsComponent() {
 
     const handleApplyFilters = (e) => {
         e.preventDefault();
-        // Apply filters and reset to page 1
         setFilters(prev => ({ ...prev, page: 1 }));
-        fetchReports(true); // Always pass true for checkbox filters when button is clicked
+        fetchSummarys(true); // This will automatically call fetchReports after
     };
 
     const handleExcelDownload = async (useCheckboxFilters = false) => {
@@ -652,7 +672,7 @@ function AudioStreamingRevenueReportsComponent() {
                             </div>
 
                             <div className={`rdc-checkbox ${showDates ? "pt-5" : ""}`}>
-                                {["releases", "artist", "track", "partner", "contentType", "format", "territory", "quarters"].map(key => (
+                                {["releases", "artist", "track", "territory"].map(key => (
                                     <div key={key} className="form-check">
                                         <input
                                             className="form-check-input"
@@ -765,8 +785,8 @@ function AudioStreamingRevenueReportsComponent() {
                     {/* === YOUR ORIGINAL TABLE === */}
                     <div className="table-sec">
                         {loading ? (
-                            <div className="text-center py-5">Loading...</div>
-                        ) : data?.reports?.length > 0 ? (
+                            <div className="text-center py-5"><Loader small={true} /></div>
+                        ) : reportData?.reports?.length > 0 ? (
                             <>
                                 <table className="rdc-table">
                                     <thead>
@@ -779,7 +799,7 @@ function AudioStreamingRevenueReportsComponent() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data.reports.map((row, i) => (
+                                        {reportData.reports.map((row, i) => (
                                             <tr key={i}>
                                                 <td className="main-td">{row.date}</td>
                                                 <td>{row.platform}</td>

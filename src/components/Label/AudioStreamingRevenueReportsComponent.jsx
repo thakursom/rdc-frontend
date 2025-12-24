@@ -277,17 +277,31 @@ function AudioStreamingRevenueReportsComponent() {
     };
 
     const getLast12MonthsRange = () => {
-        const now = new Date();
-        const currentMonth = now.toLocaleString('default', { month: 'short' });
-        const currentYear = now.getFullYear();
+        const revenueByMonth = data?.revenueByMonth;
 
-        const pastDate = new Date();
-        pastDate.setMonth(pastDate.getMonth() - 11);
+        if (!revenueByMonth || Object.keys(revenueByMonth).length === 0) return "";
 
-        const pastMonth = pastDate.toLocaleString('default', { month: 'short' });
-        const pastYear = pastDate.getFullYear();
+        const dates = Object.keys(revenueByMonth)
+            .map(key => {
+                const [month, year] = key.split(" ");
+                const date = new Date(`${month} 1, ${year}`);
+                return isNaN(date) ? null : date;
+            })
+            .filter(Boolean)
+            .sort((a, b) => a - b);
 
-        return `${pastMonth} ${pastYear} - ${currentMonth} ${currentYear}`;
+        if (!dates.length) return "";
+
+        const startDate = dates[0];
+        const endDate = dates[dates.length - 1];
+
+        const format = (date) =>
+            date.toLocaleString("default", {
+                month: "short",
+                year: "numeric",
+            });
+
+        return `${format(startDate)} - ${format(endDate)}`;
     };
 
     const fetchHistory = async () => {

@@ -132,9 +132,7 @@ function ArtistComponent() {
                                             <tr key={i}>
                                                 <td className="main-td">{art.name || null}</td>
                                                 <td>
-                                                    {Array.isArray(art.countries) && art.countries.length > 0
-                                                        ? art.countries.join(", ")
-                                                        : "N/A"}
+                                                    {art.countries?.[0] || "N/A"}
                                                 </td>
                                                 <td>{art.totalStream || 0}</td>
                                                 <td>${(art.totalRevenue ?? 0).toFixed(2) || 0}</td>

@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiRequest } from "../../services/api";
 import CustomPagination from "../Pagination/CustomPagination";
+import Loader from "../Loader/Loader";
 
 function ArtistDetailComponent() {
     const { state } = useLocation();
@@ -18,9 +19,11 @@ function ArtistDetailComponent() {
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
     const [applyFilter, setApplyFilter] = useState(false);
+    const [loading, setLoading] = useState(false);
 
 
     const fetchArtistReport = async () => {
+        setLoading(true);
         const result = await apiRequest(
             `/fetchArtistByName?artistName=${state?.artistName}&page=${page}&limit=${perPage}&search=${search}&fromDate=${fromDate}&toDate=${toDate}`,
             "GET",
@@ -37,6 +40,7 @@ function ArtistDetailComponent() {
             setTopCountry(api?.topCountry || null);
             setPageCount(api?.pagination?.totalPages || 1);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -259,21 +263,29 @@ function ArtistDetailComponent() {
                                     <th>Revenue</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {records.length > 0 ? (
-                                    records.map((item, idx) => (
-                                        <tr key={idx}>
-                                            <td>{item.retailer}</td>
-                                            <td>{item.release}</td>
-                                            <td>{item.date}</td>
-                                            <td>{item.track_count}</td>
-                                            <td>${Number(item.net_total || 0).toFixed(2)}</td>
-                                        </tr>
-                                    ))
-                                ) : (
-                                    <tr><td colSpan="5" style={{ textAlign: "center" }}>No Data Found</td></tr>
-                                )}
-                            </tbody>
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={6} className="text-center">
+                                        <Loader small={true} />
+                                    </td>
+                                </tr>
+                            ) : (
+                                <tbody>
+                                    {records.length > 0 ? (
+                                        records.map((item, idx) => (
+                                            <tr key={idx}>
+                                                <td>{item.retailer}</td>
+                                                <td>{item.release}</td>
+                                                <td>{item.date}</td>
+                                                <td>{item.track_count}</td>
+                                                <td>${Number(item.net_total || 0).toFixed(2)}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr><td colSpan="5" style={{ textAlign: "center" }}>No Data Found</td></tr>
+                                    )}
+                                </tbody>
+                            )}
                         </table>
                     </div>
 

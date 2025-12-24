@@ -20,11 +20,19 @@ function YoutubeRdcRevenueChart({ revenueByMonth = {} }) {
 
     const allMonths = Array.from({ length: 12 }, (_, i) => {
       const date = new Date(selectedYear, i, 1);
-      return date.toLocaleString("default", {
+
+      let monthLabel = date.toLocaleString("default", {
         month: "short",
         year: "numeric"
       });
+      // Fix for September mismatch
+      if (monthLabel.startsWith("Sep")) {
+        monthLabel = monthLabel.replace("Sept", "Sep");
+      }
+
+      return monthLabel;
     });
+
 
     const barData = allMonths.map(m => revenueByMonth[m] || 0);
 

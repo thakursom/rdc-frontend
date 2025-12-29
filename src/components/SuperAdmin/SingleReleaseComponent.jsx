@@ -16,7 +16,7 @@ function SingleReleaseComponent() {
 
                     {/* Heading */}
                     <div className="mian-sec-heading artistHeading">
-                        <h6>Single Release Details</h6>
+                        <h6>Release Details</h6>
                         <button
                             className="theme-btn green-cl white-cl"
                             onClick={() => navigate(-1)}
@@ -32,7 +32,7 @@ function SingleReleaseComponent() {
                         </div>
                     </div>
 
-                    {/* 🔥 DASH CARDS SECTION */}
+                    {/* DASH CARDS SECTION */}
                     <div className="artist-details">
                         <div className="row g-4">
 
@@ -105,7 +105,7 @@ function SingleReleaseComponent() {
                         </div>
                     </div>
 
-                    {/* 🔍 FILTER UI SAME AS ARTIST DETAIL */}
+                    {/* FILTER UI SAME AS ARTIST DETAIL */}
                     <div className="filter-section mb-4">
                         <div className="row g-3 align-items-end">
 

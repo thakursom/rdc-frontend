@@ -648,7 +648,7 @@ function AudioStreamingRevenueReportsComponent() {
                                     {selectedFilter && (
                                         <button
                                             type="button"
-                                            className="theme-btn border-btn ms-2"
+                                            className="theme-btn bg-red white-cl"
                                             onClick={() => {
                                                 setSelectedFilter("");
                                                 setFilters(prev => ({ ...prev, page: 1 }));

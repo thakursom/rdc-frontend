@@ -83,83 +83,91 @@ function ArtistDetailComponent() {
                         <div className="row g-4">
 
                             {/* Total Streams */}
-                            <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                <div className="dash-card navy-cl">
-                                    <div className="dash-icon">
-                                        <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-                                            <path
-                                                d="M16 7H22V13"
-                                                stroke="#4D4E8E"
-                                                strokeWidth={2}
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                            <path
-                                                d="M22 7L13.5 15.5L8.5 10.5L2 17"
-                                                stroke="#4D4E8E"
-                                                strokeWidth={2}
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="dash-content">
-                                        <p>Total Streams</p>
-                                        <h6>{state?.totalStream || "N/A"}</h6>
+                            <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3 col-stem">
+                                <div className="navy-cl stem-child">
+                                    <div className="dash-card ">
+                                        <div className="dash-icon">
+                                            <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+                                                <path
+                                                    d="M16 7H22V13"
+                                                    stroke="#4D4E8E"
+                                                    strokeWidth={2}
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                                <path
+                                                    d="M22 7L13.5 15.5L8.5 10.5L2 17"
+                                                    stroke="#4D4E8E"
+                                                    strokeWidth={2}
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <div className="dash-content">
+                                            <p>Total Streams</p>
+                                            <h6>{state?.totalStream || "N/A"}</h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Top Releases */}
-                            <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                <div className="dash-card parot-cl">
-                                    <div className="dash-icon">
-                                        <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-                                            <path d="M16 6L20 20" stroke="#3ED08E" strokeWidth={2} />
-                                            <path d="M12 6V20" stroke="#3ED08E" strokeWidth={2} />
-                                            <path d="M8 8V20" stroke="#3ED08E" strokeWidth={2} />
-                                            <path d="M4 4V20" stroke="#3ED08E" strokeWidth={2} />
-                                        </svg>
-                                    </div>
-                                    <div className="dash-content">
-                                        <p>Top Releases</p>
-                                        <h6>{topReleases?._id || "N/A"}</h6>
+                            <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3 col-stem">
+                                <div className="parot-cl stem-child">
+                                    <div className="dash-card">
+                                        <div className="dash-icon">
+                                            <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+                                                <path d="M16 6L20 20" stroke="#3ED08E" strokeWidth={2} />
+                                                <path d="M12 6V20" stroke="#3ED08E" strokeWidth={2} />
+                                                <path d="M8 8V20" stroke="#3ED08E" strokeWidth={2} />
+                                                <path d="M4 4V20" stroke="#3ED08E" strokeWidth={2} />
+                                            </svg>
+                                        </div>
+                                        <div className="dash-content">
+                                            <p>Top Releases</p>
+                                            <h6>{topReleases?._id || "N/A"}</h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Top DSP */}
-                            <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                <div className="dash-card yellow-dark">
-                                    <div className="dash-icon">
-                                        <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-                                            <path
-                                                d="M23.4 0.348032C23.78 0.653057 24 1.1131 24 1.59814V16.7994C24 19.0096 21.85 20.7997 19.2 20.7997C16.55 20.7997 14.4 19.0096 14.4 16.7994C14.4 14.5892 16.55 12.7991 19.2 12.7991C19.76 12.7991 20.3 12.8791 20.8 13.0291V7.1936L9.6 9.68381V19.9997C9.6 22.2099 7.45 24 4.8 24C2.15 24 0 22.2099 0 19.9997C0 17.7895 2.15 15.9993 4.8 15.9993C5.36 15.9993 5.9 16.0793 6.4 16.2294V4.7984C6.4 4.04834 6.92 3.39829 7.655 3.23827L22.055 0.0380064C22.53 -0.0670023 23.025 0.048007 23.405 0.353032Z"
-                                                fill="#F59E0B"
-                                            />
-                                        </svg>
-                                    </div>
-                                    <div className="dash-content">
-                                        <p>Top DSP</p>
-                                        <h6>{topDSP?._id || "N/A"}</h6>
+                            <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3 col-stem">
+                                <div className="yellow-dark stem-child">
+                                    <div className="dash-card ">
+                                        <div className="dash-icon">
+                                            <svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+                                                <path
+                                                    d="M23.4 0.348032C23.78 0.653057 24 1.1131 24 1.59814V16.7994C24 19.0096 21.85 20.7997 19.2 20.7997C16.55 20.7997 14.4 19.0096 14.4 16.7994C14.4 14.5892 16.55 12.7991 19.2 12.7991C19.76 12.7991 20.3 12.8791 20.8 13.0291V7.1936L9.6 9.68381V19.9997C9.6 22.2099 7.45 24 4.8 24C2.15 24 0 22.2099 0 19.9997C0 17.7895 2.15 15.9993 4.8 15.9993C5.36 15.9993 5.9 16.0793 6.4 16.2294V4.7984C6.4 4.04834 6.92 3.39829 7.655 3.23827L22.055 0.0380064C22.53 -0.0670023 23.025 0.048007 23.405 0.353032Z"
+                                                    fill="#F59E0B"
+                                                />
+                                            </svg>
+                                        </div>
+                                        <div className="dash-content">
+                                            <p>Top DSP</p>
+                                            <h6>{topDSP?._id || "N/A"}</h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Top Country */}
-                            <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                <div className="dash-card orange-dark">
-                                    <div className="dash-icon">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                                            <circle cx="12" cy="12" r="10" stroke="#FF5F51" strokeWidth="2" />
-                                            <path d="M2 12H22" stroke="#FF5F51" strokeWidth="2" />
-                                            <path d="M12 2C15 5.5 15 18.5 12 22C9 18.5 9 5.5 12 2Z"
-                                                stroke="#FF5F51" strokeWidth="2" />
-                                        </svg>
-                                    </div>
-                                    <div className="dash-content">
-                                        <p>Top Country</p>
-                                        <h6>{topCountry?._id || "N/A"}</h6>
+                            <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3 col-stem">
+                                <div className=" orange-dark stem-child">
+                                    <div className="dash-card ">
+                                        <div className="dash-icon">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                <circle cx="12" cy="12" r="10" stroke="#FF5F51" strokeWidth="2" />
+                                                <path d="M2 12H22" stroke="#FF5F51" strokeWidth="2" />
+                                                <path d="M12 2C15 5.5 15 18.5 12 22C9 18.5 9 5.5 12 2Z"
+                                                    stroke="#FF5F51" strokeWidth="2" />
+                                            </svg>
+                                        </div>
+                                        <div className="dash-content">
+                                            <p>Top Country</p>
+                                            <h6>{topCountry?._id || "N/A"}</h6>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

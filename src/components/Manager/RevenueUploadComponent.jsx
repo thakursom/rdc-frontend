@@ -291,12 +291,12 @@ function RevenueUploadComponent() {
                                                         <option value="Facebook">Facebook</option>
                                                         <option value="Amazon">Amazon</option>
                                                         <option value="TikTok">TikTok</option>
-                                                        <option value="SoundRecording">Sound Recording</option>
-                                                        <option value="YouTubeArtTrack">YouTube Art Track</option>
-                                                        <option value="YouTubePartnerChannel">YouTube Partner Channel</option>
-                                                        <option value="YouTubeRDCChannel">YouTube RDC Channel</option>
-                                                        <option value="YouTubeVideoClaim">YouTube Video Claim(UGC)</option>
-                                                        <option value="YTPremiumRevenue">YT Premium Revenue</option>
+                                                        <option value="SoundRecording">Sound Recording (Audio Claim)</option>
+                                                        <option value="YouTubeArtTrack">Art Track (YouTube Music)</option>
+                                                        <option value="YouTubePartnerChannel">YouTubePartnerChannel</option>
+                                                        <option value="YouTubeRDCChannel">YouTubeRDCChannel</option>
+                                                        <option value="YouTubeVideoClaim">YouTubeVideoClaim</option>
+                                                        <option value="YTPremiumRevenue">YTPremiumRevenue</option>
                                                     </select>
 
                                                     {formik.touched.platform && formik.errors.platform && (
@@ -487,7 +487,7 @@ function RevenueUploadComponent() {
                                                     {!item.isAccepted && (
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"
-                                                            onClick={() => navigate(`/manager/revenues/${item._id}`)}
+                                                            onClick={() => navigate(`/superadmin/revenues/${item._id}`)}
                                                         >
                                                             View <i className="fa-solid fa-chevron-right" />
                                                         </button>

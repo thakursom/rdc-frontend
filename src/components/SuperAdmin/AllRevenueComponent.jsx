@@ -90,7 +90,7 @@ function AllRevenueComponent() {
                                         <th>ISRC</th>
                                         <th>Retailer</th>
                                         <th>Territory</th>
-                                        <th>Delivery</th>
+                                        {/* <th>Delivery</th> */}
                                         <th>Net Total</th>
                                         <th>Upload Date</th>
                                     </tr>
@@ -101,24 +101,24 @@ function AllRevenueComponent() {
                                         revenues.map((item, index) => (
                                             <tr key={index}>
                                                 <td>
-                                                    <span title={item.track_title}>
-                                                        {item.track_title
-                                                            ? item.track_title.length > 30
-                                                                ? item.track_title.slice(0, 30) + "..."
-                                                                : item.track_title
-                                                            : "N/A"}
-                                                    </span>
+                                                    {(() => {
+                                                        const title = item.track_title || item.asset_title || "N/A";
+                                                        return (
+                                                            <span title={title}>
+                                                                {title.length > 30 ? title.slice(0, 30) + "..." : title}
+                                                            </span>
+                                                        );
+                                                    })()}
                                                 </td>
-
                                                 <td>{item.track_artist || "N/A"}</td>
                                                 <td>{item.track_count || "N/A"}</td>
                                                 {/* <td>{item.date || "N/A"}</td> */}
-                                                <td>{item.label || "N/A"}</td>
+                                                <td>{item.label || item.label_name || "N/A"}</td>
                                                 <td>{item.isrc_code || "N/A"}</td>
                                                 <td>{item.retailer || "N/A"}</td>
-                                                <td>{item.territory || "N/A"}</td>
-                                                <td>{item.delivery || "N/A"}</td>
-                                                <td>{item.net_total || "N/A"}</td>
+                                                <td>{item.territory || item.country || "N/A"}</td>
+                                                {/* <td>{item.delivery || "N/A"}</td> */}
+                                                <td>{item.net_total || item.total_revenue || "N/A"}</td>
                                                 <td>{item.uploading_date || "N/A"}</td>
                                             </tr>
                                         ))

@@ -33,11 +33,11 @@ function DashboardLayout() {
                 </div>
 
                 <ul className="header-nav-menu">
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                         <button className="theme-btn green-cl white-cl">
                             Login + Master Demo Mode
                         </button>
-                    </li>
+                    </li> */}
 
                     <li className="nav-item dropdown">
                         <button className="rdc-transpairent nav-link" id="bellDrop" data-bs-toggle="dropdown">

@@ -510,7 +510,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                 <option value="Apple Music">Apple Music</option>
                                                 <option value="Spotify">Spotify</option>
                                                 <option value="Gaana">Gaana</option>
-                                                <option value="jio_savan">Jio Saavn</option>
+                                                <option value="Jio Saavn">Jio Saavn</option>
                                                 <option value="Facebook">Facebook</option>
                                                 <option value="Amazon">Amazon</option>
                                                 <option value="TikTok">Tik Tok</option>

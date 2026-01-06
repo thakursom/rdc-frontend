@@ -348,46 +348,42 @@ a.sidebar-links {
     color: var(--white-cl);
 }
 
-ul.sidebar-menu li:nth-child(1) svg {
-    stroke: var(--green-cl);
-}
-
-ul.sidebar-menu li:nth-child(2) svg {
+/* ul.sidebar-menu li:nth-child(2) svg {
     stroke: var(--purple-cl);
-}
+} */
 
-ul.sidebar-menu li:nth-child(3) svg {
+/* ul.sidebar-menu li:nth-child(3) svg {
     stroke: var(--orange-cl);
-}
+} */
 
-ul.sidebar-menu li:nth-child(3) svg path {
+/* ul.sidebar-menu li:nth-child(3) svg path {
     stroke: var(--orange-cl);
-}
+} */
 
-ul.sidebar-menu li:nth-child(4) svg {
+/* ul.sidebar-menu li:nth-child(4) svg {
     stroke: var(--blue-cl);
-}
+} */
 
-ul.sidebar-menu li:nth-child(5) svg path {
+/* ul.sidebar-menu li:nth-child(5) svg path {
     stroke: var(--yellow-cl);
     fill: var(--yellow-cl);
-}
+} */
 
-ul.sidebar-menu li:nth-child(6) svg path {
+/* ul.sidebar-menu li:nth-child(6) svg path {
     stroke: var(--green-cl);
-}
+} */
 
-ul.sidebar-menu li:nth-child(7) svg path {
+/* ul.sidebar-menu li:nth-child(7) svg path {
     stroke: var(--purple-cl);
-}
+} */
 
-ul.sidebar-menu li:nth-child(8) svg path {
+/* ul.sidebar-menu li:nth-child(8) svg path {
     stroke: var(--orange-cl);
-}
+} */
 
-ul.sidebar-menu li:nth-child(9) svg {
+/* ul.sidebar-menu li:nth-child(9) svg {
     stroke: var(--blue-cl);
-}
+} */
 
 ul.sidebar-menu li:nth-child(10).active svg {
     stroke: var(--white-cl);

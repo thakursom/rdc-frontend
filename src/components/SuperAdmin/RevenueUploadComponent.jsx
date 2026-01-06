@@ -464,6 +464,7 @@ function RevenueUploadComponent() {
                             <table className="rdc-table">
                                 <thead>
                                     <tr>
+                                        <th>Label Name</th>
                                         <th>Platform</th>
                                         <th>FileName</th>
                                         <th>Date of upload</th>
@@ -477,6 +478,7 @@ function RevenueUploadComponent() {
                                     {revenueList.length > 0 ? (
                                         revenueList.map((item, i) => (
                                             <tr key={i}>
+                                                <td>{item.username}</td>
                                                 <td>{item.platform}</td>
                                                 <td>{item.fileName}</td>
                                                 <td>{item.createdAt ? new Date(item.createdAt).toISOString().split("T")[0] : "N/A"}</td>
@@ -577,9 +579,6 @@ function RevenueUploadComponent() {
                                         <p className="text-muted small mb-1">
                                             <strong>File:</strong> {itemToAccept?.fileName}
                                         </p>
-                                        <p className="text-muted small mb-1">
-                                            <strong>Period:</strong> {itemToAccept?.periodFrom} to {itemToAccept?.periodTo}
-                                        </p>
                                     </div>
                                     <p className="text-warning small mt-2">
                                         <i className="fa-solid fa-exclamation-triangle me-1" />
@@ -665,20 +664,6 @@ function RevenueUploadComponent() {
                                                     <strong>File Name:</strong> {itemToDelete?.fileName}
                                                 </p>
                                             </div>
-                                            {itemToDelete?.periodFrom && itemToDelete?.periodTo && (
-                                                <>
-                                                    <div className="col-md-6">
-                                                        <p className="mb-1">
-                                                            <strong>Period From:</strong> {itemToDelete?.periodFrom}
-                                                        </p>
-                                                    </div>
-                                                    <div className="col-md-6">
-                                                        <p className="mb-1">
-                                                            <strong>Period To:</strong> {itemToDelete?.periodTo}
-                                                        </p>
-                                                    </div>
-                                                </>
-                                            )}
                                         </div>
                                     </div>
 

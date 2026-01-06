@@ -38,6 +38,7 @@ function AudioStreamingRevenueReportsComponent() {
     const [itemToDelete, setItemToDelete] = useState(null);
     const [deletingId, setDeletingId] = useState(null);
     const [selectedFilter, setSelectedFilter] = useState("");
+    const [initialData, setInitialData] = useState(null);
 
     const reports = reportData?.reports || [];
 
@@ -52,7 +53,6 @@ function AudioStreamingRevenueReportsComponent() {
     ];
 
     columns = columns.filter(col => reports.some(r => r[col.key] !== undefined && r[col.key] !== null));
-
 
     const generateYears = () => {
         const currentYear = new Date().getFullYear();
@@ -82,7 +82,6 @@ function AudioStreamingRevenueReportsComponent() {
         }
     };
 
-
     const buildQueryString = (includeCheckboxFilters = false) => {
         const params = new URLSearchParams();
 
@@ -103,9 +102,50 @@ function AudioStreamingRevenueReportsComponent() {
         return params.toString();
     };
 
+    // Function to fetch initial summary data (no filters)
+    const fetchInitialSummary = async () => {
+        try {
+            const result = await apiRequest(`/revenue-summary`, "GET", null, true);
+            console.log("result", result);
+
+            if (result.success) {
+                // Transform the initial API response to match your component's expected format
+                const transformedData = {
+                    summary: {
+                        totalStreams: result.data.data.total_stream || 0,
+                        totalRevenue: result.data.data.total_revenue || 0
+                    },
+                    revenueByMonth: result.data.data.netRevenueByMonth || {},
+                    revenueByChannel: result.data.data.revenueByChannel || {},
+                    revenueByCountry: result.data.data.revenueByCountry || {}
+                };
+                setInitialData(transformedData);
+                setData(transformedData); // Set as current data as well
+            }
+        } catch (error) {
+            console.error("Error fetching initial summary:", error);
+        }
+    };
+
     const fetchSummarys = async (includeCheckboxFilters = false) => {
         setLoading(true);
         try {
+            // Don't fetch filtered summary if no filters are applied
+            const hasFilters = filters.platform || filters.year || filters.month || filters.fromDate ||
+                filters.toDate || labelFilter || (includeCheckboxFilters && selectedFilter);
+
+            if (!hasFilters) {
+                // If no filters, use the initial data
+                if (initialData) {
+                    setData(initialData);
+                } else {
+                    await fetchInitialSummary();
+                }
+                // Still fetch reports even when no filters (to get paginated data)
+                await fetchReports(includeCheckboxFilters);
+                return;
+            }
+
             const query = buildQueryString(includeCheckboxFilters);
             const result = await apiRequest(`/audio-streaming-revenue/summary?${query}`, "GET", null, true);
 
@@ -137,19 +177,30 @@ function AudioStreamingRevenueReportsComponent() {
         }
     };
 
-
-    // Fetch data on initial render and when regular filters change
+    // Fetch initial data on first render
     useEffect(() => {
         const fetchInitialData = async () => {
             if (initialRender.current) {
                 initialRender.current = false;
-                await fetchSummarys(false);
-            } else {
-                await fetchSummarys(selectedFilter);
+                // Fetch initial summary data first
+                await fetchInitialSummary();
+                // Then fetch reports (first page)
+                await fetchReports(false);
+                setLoading(false);
             }
         };
 
         fetchInitialData();
+    }, []);
+
+    // Fetch data when regular filters change
+    useEffect(() => {
+        if (!initialRender.current) {
+            const fetchFilteredData = async () => {
+                await fetchSummarys(selectedFilter);
+            };
+            fetchFilteredData();
+        }
     }, [filters.platform, filters.year, filters.month, filters.fromDate, filters.toDate, filters.page, filters.limit, labelFilter]);
 
     const handlePageChange = (selectedObj) => {
@@ -166,7 +217,6 @@ function AudioStreamingRevenueReportsComponent() {
             page: 1
         }));
     };
-
 
     const handleCheckboxChange = (e) => {
         const { name, checked } = e.target;
@@ -193,7 +243,36 @@ function AudioStreamingRevenueReportsComponent() {
     const handleApplyFilters = (e) => {
         e.preventDefault();
         setFilters(prev => ({ ...prev, page: 1 }));
+        setFiltersApplied(true);
         fetchSummarys(true);
+    };
+
+    const handleClearFilters = () => {
+        setFilters({
+            platform: "",
+            month: "",
+            quarter: "",
+            fromDate: "",
+            toDate: "",
+            releases: false,
+            artist: false,
+            format: false,
+            territory: false,
+            page: 1,
+            limit: 10,
+        });
+        setSelectedFilter("");
+        setLabelFilter("");
+        setShowDates(false);
+        setFiltersApplied(false);
+
+        // When clearing filters, revert to initial data
+        if (initialData) {
+            setData(initialData);
+        } else {
+            fetchInitialSummary();
+        }
+        fetchReports(false);
     };
 
     const handleExcelDownload = async (useCheckboxFilters = false) => {
@@ -228,15 +307,22 @@ function AudioStreamingRevenueReportsComponent() {
     };
 
     const getLast12MonthsRange = () => {
-        const revenueByMonth = data?.revenueByMonth;
+        const revenueByMonth = data?.revenueByMonth || {};
 
         if (!revenueByMonth || Object.keys(revenueByMonth).length === 0) return "";
 
         const dates = Object.keys(revenueByMonth)
             .map(key => {
-                const [month, year] = key.split(" ");
-                const date = new Date(`${month} 1, ${year}`);
-                return isNaN(date) ? null : date;
+                // Handle different date formats
+                if (key.includes('-')) {
+                    const [year, month] = key.split('-');
+                    const date = new Date(year, month - 1);
+                    return isNaN(date.getTime()) ? null : date;
+                } else {
+                    const [month, year] = key.split(" ");
+                    const date = new Date(`${month} 1, ${year}`);
+                    return isNaN(date.getTime()) ? null : date;
+                }
             })
             .filter(Boolean)
             .sort((a, b) => a - b);
@@ -268,7 +354,6 @@ function AudioStreamingRevenueReportsComponent() {
     };
 
     useEffect(() => {
-
         fetchHistory();
     }, []);
 
@@ -360,7 +445,6 @@ function AudioStreamingRevenueReportsComponent() {
                         </div>
                     </div>
 
-
                     <div className="mt-4">
                         {showReportsTable && downloadHistory && downloadHistory.length > 0 && (
                             <div className="table-sec generate-report mt-3">
@@ -440,7 +524,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                                 )}
                                                             </button>
                                                         </>
-                                                    ) : item.status === "pending" ? (
+                                                    ) : (item.status === "pending" || item.status === "generating") ? (
                                                         <>
                                                             <button
                                                                 className="border-less border-red dark-red table-button me-2 stop-button"
@@ -457,7 +541,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                     ) : (
                                                         <>
                                                             <button
-                                                                className="border-less border-red dark-red table-button me-2"
+                                                                 className="border-less border-red dark-red table-button me-2 stop-button"
                                                                 onClick={() => handleDeleteClick(item)}
                                                                 disabled={deletingId === item._id}
                                                             >
@@ -478,7 +562,7 @@ function AudioStreamingRevenueReportsComponent() {
                         )}
                     </div>
 
-                    {/* === YOUR ORIGINAL FILTERS === */}
+                    {/* === FILTERS === */}
                     <div className="revnue-filters mt-3">
                         <form className="revenue-filter-fx" onSubmit={handleApplyFilters}>
                             <div className="row g-3 mb-4">
@@ -519,51 +603,6 @@ function AudioStreamingRevenueReportsComponent() {
                                     </div>
                                 </div>
 
-                                {/* Year Filter - Added here */}
-                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
-                                    <div className="form-group">
-                                        <div className="form-sec">
-                                            <select className="form-select" name="year" value={filters.year} onChange={handleFilterChange}>
-                                                <option value="">Select Year</option>
-                                                {years.map(year => (
-                                                    <option key={year} value={year}>
-                                                        {year}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div> */}
-
-                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
-                                    <div className="form-group">
-                                        <div className="form-sec">
-                                            <select className="form-select" name="month" value={filters.month} onChange={handleFilterChange}>
-                                                <option value="">Month</option>
-                                                {[...Array(12)].map((_, i) => (
-                                                    <option key={i + 1} value={i + 1}>
-                                                        {new Date(0, i).toLocaleString("default", { month: "long" })}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div> */}
-
-                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
-                                    <div className="form-group">
-                                        <div className="form-sec">
-                                            <select className="form-select" name="quarter" value={filters.quarter} onChange={handleFilterChange}>
-                                                <option value="">Quarter</option>
-                                                <option value="1">Q1 (Jan-Mar)</option>
-                                                <option value="2">Q2 (Apr-Jun)</option>
-                                                <option value="3">Q3 (Jul-Sep)</option>
-                                                <option value="4">Q4 (Oct-Dec)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div> */}
-
                                 <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
                                     <div className="form-group">
                                         <div className="form-sec">
@@ -574,7 +613,6 @@ function AudioStreamingRevenueReportsComponent() {
                                                     if (e.target.value === "custom") {
                                                         setShowDates(true);
                                                     } else {
-                                                        // When selecting "Date Range" (default)
                                                         setShowDates(false);
                                                         setFilters(prev => ({
                                                             ...prev,
@@ -624,7 +662,7 @@ function AudioStreamingRevenueReportsComponent() {
                                             className="form-check-input"
                                             type="checkbox"
                                             name={key}
-                                            checked={selectedFilter === key} // Use single value comparison
+                                            checked={selectedFilter === key}
                                             onChange={handleCheckboxChange}
                                             id={key}
                                         />
@@ -634,7 +672,7 @@ function AudioStreamingRevenueReportsComponent() {
                                     </div>
                                 ))}
 
-                                <div className="form-check">
+                                <div className="form-check d-flex gap-2">
                                     <button
                                         type="submit"
                                         className="theme-btn green-cl white-cl"
@@ -644,26 +682,21 @@ function AudioStreamingRevenueReportsComponent() {
                                         Filter
                                     </button>
 
-                                    {/* Optional: Add clear filter button */}
-                                    {selectedFilter && (
-                                        <button
-                                            type="button"
-                                            className="theme-btn bg-red white-cl"
-                                            onClick={() => {
-                                                setSelectedFilter("");
-                                                setFilters(prev => ({ ...prev, page: 1 }));
-                                                fetchSummarys(false);
-                                            }}
-                                        >
-                                            Clear
-                                        </button>
-                                    )}
+                                    <button
+                                        type="button"
+                                        className="theme-btn bg-red white-cl"
+                                        onClick={handleClearFilters}
+                                        disabled={loading}
+                                    >
+                                        {/* <i className="fa-solid fa-times me-2" /> */}
+                                        Clear
+                                    </button>
                                 </div>
                             </div>
                         </form>
                     </div>
 
-                    {/* === YOUR ORIGINAL SUMMARY CARDS === */}
+                    {/* === SUMMARY CARDS === */}
                     {data && (
                         <div className="revenue-cards">
                             <div className="row g-4">
@@ -699,7 +732,7 @@ function AudioStreamingRevenueReportsComponent() {
                         </div>
                     )}
 
-                    {/* === YOUR ORIGINAL CHARTS === */}
+                    {/* === CHARTS === */}
                     {data && (
                         <div className="revenue-charts">
                             <div className="row g-4">
@@ -743,7 +776,7 @@ function AudioStreamingRevenueReportsComponent() {
                         </div>
                     )}
 
-                    {/* === YOUR ORIGINAL TABLE === */}
+                    {/* === TABLE === */}
                     <div className="table-sec">
                         {loading ? (
                             <div className="text-center py-5"><Loader small={true} /></div>
@@ -780,7 +813,7 @@ function AudioStreamingRevenueReportsComponent() {
                         )}
                     </div>
 
-                    {/* Pagination - Added here */}
+                    {/* Pagination */}
                     <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                         <CustomPagination
                             pageCount={pageCount}

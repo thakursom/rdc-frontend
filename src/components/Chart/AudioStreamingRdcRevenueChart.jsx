@@ -2,38 +2,47 @@ import React, { useEffect } from "react";
 import Highcharts from "highcharts";
 
 function YoutubeRdcRevenueChart({ revenueByMonth = {} }) {
+
   useEffect(() => {
-    // Clear the container first to prevent duplicate charts
     const container = document.getElementById("yt-rdc-revenue-container");
     if (container) container.innerHTML = "";
 
-    // More strict check - ensure revenueByMonth is not empty object
     if (!revenueByMonth || Object.keys(revenueByMonth).length === 0) {
-      return; // Don't render chart if no data
+      return;
     }
 
-    const years = Object.keys(revenueByMonth).map(key =>
-      Number(key.split(" ")[1])
-    );
+    const transformedData = {};
 
-    const selectedYear = Math.max(...years);
+    Object.keys(revenueByMonth).forEach(key => {
+      if (key.includes('-')) {
+        const [year, month] = key.split('-');
+        const monthNumber = parseInt(month, 10) - 1;
+        const date = new Date(year, monthNumber, 1);
 
-    const allMonths = Array.from({ length: 12 }, (_, i) => {
-      const date = new Date(selectedYear, i, 1);
+        let monthLabel = date.toLocaleString("default", {
+          month: "short",
+          year: "numeric"
+        });
 
-      let monthLabel = date.toLocaleString("default", {
-        month: "short",
-        year: "numeric"
-      });
-      // Fix for September mismatch
-      if (monthLabel.startsWith("Sep")) {
-        monthLabel = monthLabel.replace("Sept", "Sep");
+        if (monthLabel.startsWith("Sep")) {
+          monthLabel = monthLabel.replace("Sept", "Sep");
+        }
+
+        transformedData[monthLabel] = revenueByMonth[key];
+      } else {
+        transformedData[key] = revenueByMonth[key];
       }
-
-      return monthLabel;
     });
 
-    const barData = allMonths.map(m => revenueByMonth[m] || 0);
+    const allMonthsFromData = Object.keys(transformedData);
+
+    allMonthsFromData.sort((a, b) => {
+      const dateA = new Date(a);
+      const dateB = new Date(b);
+      return dateA - dateB;
+    });
+
+    const barData = allMonthsFromData.map(m => transformedData[m] || 0);
 
     Highcharts.chart("yt-rdc-revenue-container", {
       chart: { zooming: { type: "xy" } },
@@ -41,7 +50,7 @@ function YoutubeRdcRevenueChart({ revenueByMonth = {} }) {
       credits: { enabled: false },
 
       xAxis: {
-        categories: allMonths,
+        categories: allMonthsFromData,
         crosshair: true
       },
 

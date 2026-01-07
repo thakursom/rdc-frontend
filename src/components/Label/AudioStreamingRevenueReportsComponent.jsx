@@ -38,6 +38,7 @@ function AudioStreamingRevenueReportsComponent() {
     const [itemToDelete, setItemToDelete] = useState(null);
     const [deletingId, setDeletingId] = useState(null);
     const [selectedFilter, setSelectedFilter] = useState("");
+    const [initialData, setInitialData] = useState(null);
 
     const reports = reportData?.reports || [];
 
@@ -103,9 +104,42 @@ function AudioStreamingRevenueReportsComponent() {
         return params.toString();
     };
 
+    const fetchInitialSummary = async () => {
+        try {
+            const result = await apiRequest(`/revenue-summary`, "GET", null, true);
+            console.log("Initial revenue-summary result", result);
+
+            if (result.success) {
+                const transformedData = {
+                    summary: {
+                        totalStreams: result.data.data.total_stream || 0,
+                        totalRevenue: result.data.data.total_revenue || 0
+                    },
+                    revenueByMonth: result.data.data.netRevenueByMonth || {},
+                    revenueByChannel: result.data.data.revenueByChannel || {},
+                    revenueByCountry: result.data.data.revenueByCountry || {}
+                };
+                setInitialData(transformedData);
+                setData(transformedData); // Show it immediately
+            }
+        } catch (error) {
+            console.error("Error fetching initial summary:", error);
+        }
+    }
+
     const fetchSummarys = async (includeCheckboxFilters = false) => {
         setLoading(true);
         try {
+            const hasFilters = filters.platform || filters.fromDate || filters.toDate || labelFilter || (includeCheckboxFilters && selectedFilter);
+
+            // If no filters → use cached initial data
+            if (!hasFilters && initialData) {
+                setData(initialData);
+                await fetchReports(includeCheckboxFilters);
+                setLoading(false);
+                return;
+            }
+
             const query = buildQueryString(includeCheckboxFilters);
             const result = await apiRequest(`/audio-streaming-revenue/summary?${query}`, "GET", null, true);
 
@@ -142,14 +176,21 @@ function AudioStreamingRevenueReportsComponent() {
         const fetchInitialData = async () => {
             if (initialRender.current) {
                 initialRender.current = false;
-                await fetchSummarys(false);
-            } else {
-                await fetchSummarys(selectedFilter);
+                setLoading(true);
+                await fetchInitialSummary();   // ← New: Load unfiltered summary
+                await fetchReports(false);     // ← Then load first page of reports
+                setLoading(false);
             }
         };
 
         fetchInitialData();
-    }, [filters.platform, filters.year, filters.month, filters.fromDate, filters.toDate, filters.page, filters.limit, labelFilter]);
+    }, []);
+
+    useEffect(() => {
+        if (!initialRender.current) {
+            fetchSummarys(selectedFilter);
+        }
+    }, [filters.platform, filters.fromDate, filters.toDate, filters.page, filters.limit, labelFilter]);
 
     const handlePageChange = (selectedObj) => {
         setFilters(prev => ({
@@ -177,6 +218,34 @@ function AudioStreamingRevenueReportsComponent() {
         }
 
         setFilters(prev => ({ ...prev, page: 1 }));
+    };
+
+    const handleClearFilters = () => {
+        setFilters({
+            platform: "",
+            month: "",
+            quarter: "",
+            fromDate: "",
+            toDate: "",
+            releases: false,
+            artist: false,
+            format: false,
+            territory: false,
+            page: 1,
+            limit: 10,
+        });
+        setSelectedFilter("");
+        setLabelFilter("");
+        setShowDates(false);
+        setFiltersApplied(false);
+
+        // ← Revert to initial unfiltered data
+        if (initialData) {
+            setData(initialData);
+        } else {
+            fetchInitialSummary();
+        }
+        fetchReports(false);
     };
 
     const handleFilterChange = (e) => {
@@ -643,19 +712,15 @@ function AudioStreamingRevenueReportsComponent() {
                                     </button>
 
                                     {/* Optional: Add clear filter button */}
-                                    {selectedFilter && (
-                                        <button
-                                            type="button"
-                                            className="theme-btn bg-red white-cl"
-                                            onClick={() => {
-                                                setSelectedFilter("");
-                                                setFilters(prev => ({ ...prev, page: 1 }));
-                                                fetchSummarys(false);
-                                            }}
-                                        >
-                                            Clear
-                                        </button>
-                                    )}
+                                    <button
+                                        type="button"
+                                        className="theme-btn bg-red white-cl"
+                                        onClick={handleClearFilters}
+                                        disabled={loading}
+                                    >
+                                        {/* <i className="fa-solid fa-times me-2" /> */}
+                                        Clear
+                                    </button>
                                 </div>
                             </div>
                         </form>

@@ -117,7 +117,7 @@ function BankDetailComponent() {
                             </div>
 
                             <button
-                                className="theme-btn green-cl white-cl me-1"
+                                className="theme-btn green-cl white-cl mb-2"
                                 onClick={() => navigate(`/superadmin/bank-details-form`)}
                             >
                                 <i className="fa-regular fa-circle-user me-1" />

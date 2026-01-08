@@ -44,7 +44,8 @@
 .green-cl {
     background-color: var(--green-cl);
 }
-.green-cl:hover{
+
+.green-cl:hover {
     background-color: var(--light-black-cl) !important;
 }
 
@@ -79,9 +80,11 @@
 .bg-red {
     background: var(--dark-red) !important;
 }
-.bg-red:hover{
+
+.bg-red:hover {
     background: var(--dark-red-dark) !important;
 }
+
 .yellow-dark {
     background: var(--yellow-dark);
 }
@@ -1857,6 +1860,10 @@ select.rows-select {
     margin-left: 112px;
 }
 
+.choose-file-fx {
+    height: 35px;
+}
+
 /* ############## Media Query ############## */
 
 @media(max-width:1799px) {
@@ -2168,12 +2175,12 @@ select.rows-select {
 
     .main-chartbox canvas#revenueChart {
         width: 100% !important;
-        height: 250px !important;
+        height: 450px !important;
     }
 
     .main-chartbox canvas#yearChart {
         width: 100% !important;
-        height: 300px !important;
+        height: 380px !important;
     }
 
     .theme-btn {
@@ -2376,6 +2383,15 @@ select.rows-select {
     .mian-sec-heading1 {
         flex-direction: row;
     }
+
+    .pagination-wrapper {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    section#right-sidebar {
+        padding: 30px 15px;
+    }
 }
 
 @media(max-width:576px) {
@@ -2393,7 +2409,7 @@ select.rows-select {
 
     .main-chartbox canvas#revenueChart {
         width: 100% !important;
-        height: 250px !important;
+        /* height: 250px !important; */
     }
 
     .main-chartbox canvas#barChart {
@@ -2407,7 +2423,7 @@ select.rows-select {
 
     .main-chartbox canvas#yearChart {
         width: 100% !important;
-        height: 200px !important;
+        /* height: 200px !important; */
     }
 
     .main-chartbox canvas#barChartDashboard {

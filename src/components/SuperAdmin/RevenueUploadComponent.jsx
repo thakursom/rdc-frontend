@@ -374,7 +374,7 @@ function RevenueUploadComponent() {
                                                 <div className="form-group">
                                                     <input
                                                         ref={fileInputRef}
-                                                        className={`form-control ${formik.touched.file && formik.errors.file ? 'is-invalid' : ''}`}
+                                                        className={`form-control choose-file-fx ${formik.touched.file && formik.errors.file ? 'is-invalid' : ''}`}
                                                         type="file"
                                                         name="file"
                                                         accept=".xls,.xlsx,.csv"

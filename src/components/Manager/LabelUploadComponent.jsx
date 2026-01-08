@@ -81,7 +81,7 @@ function LabelUploadComponent() {
 
                                 <div className="form-group">
                                     <input
-                                        className={`form-control ${fileInvalid ? "is-invalid" : ""}`}
+                                        className={`form-control choose-file-fx ${fileInvalid ? "is-invalid" : ""}`}
                                         type="file"
                                         accept=".xls,.xlsx"
                                         onChange={handleFileChange}

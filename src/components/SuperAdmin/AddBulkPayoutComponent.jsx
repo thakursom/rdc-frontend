@@ -87,7 +87,7 @@ function AddBulkPayoutComponent() {
 
                                 <div className="form-group">
                                     <input
-                                        className={`form-control ${fileInvalid ? "is-invalid" : ""}`}
+                                        className={`form-control choose-file-fx ${fileInvalid ? "is-invalid" : ""}`}
                                         type="file"
                                         accept=".xls,.xlsx"
                                         onChange={handleFileChange}
@@ -102,7 +102,7 @@ function AddBulkPayoutComponent() {
                                 {/* Upload Button */}
                                 <button
                                     type="submit"
-                                    className="theme-btn green-cl white-cl mt-2"
+                                    className="theme-btn green-cl white-cl"
                                     disabled={formik.isSubmitting}
                                 >
                                     {formik.isSubmitting ? "Uploading..." : "Upload"}

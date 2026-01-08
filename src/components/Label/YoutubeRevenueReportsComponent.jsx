@@ -17,12 +17,8 @@ function YoutubeRevenueReportsComponent() {
         toDate: "",
         releases: false,
         artist: false,
-        track: false,
-        partner: false,
-        contentType: false,
         format: false,
         territory: false,
-        quarters: false,
         page: 1,
         limit: 10,
     });
@@ -33,34 +29,30 @@ function YoutubeRevenueReportsComponent() {
     const [showDates, setShowDates] = useState(false);
     const [pageCount, setPageCount] = useState(1);
     const [totalRecords, setTotalRecords] = useState(10);
-
-    // Separate state for checkbox filters that require button click
-    const [checkboxFilters, setCheckboxFilters] = useState({
-        releases: false,
-        artist: false,
-        track: false,
-        partner: false,
-        contentType: false,
-        format: false,
-        territory: false,
-        quarters: false,
-    });
-
-    // Track initial render
     const initialRender = useRef(true);
-    // Track if filters have been applied via button
     const [filtersApplied, setFiltersApplied] = useState(false);
-    const [downloadStatus, setDownloadStatus] = useState("");
     const [downloadHistory, setDownloadHistory] = useState([]);
     const [labelFilter, setLabelFilter] = useState("");
     const [showReportsTable, setShowReportsTable] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
     const [deletingId, setDeletingId] = useState(null);
-    const [role, setRole] = useState("");
-    const [userId, setUserId] = useState(null);
+    const [selectedFilter, setSelectedFilter] = useState("");
+    const [initialData, setInitialData] = useState(null);
 
-    const DOWNLOAD_STATUS_KEY = "youtubeExcelDownloadStatus";
+    const reports = reportData?.reports || [];
+
+    let columns = [
+        { key: "date", label: "Date" },
+        { key: "platform", label: "Platform" },
+        { key: "artist", label: "Artist" },
+        { key: "release", label: "Release" },
+        { key: "isrc_code", label: "ISRC" },
+        { key: "territory", label: "Territory" },
+        { key: "revenue", label: "Revenue", isNumber: true }
+    ];
+
+    columns = columns.filter(col => reports.some(r => r[col.key] !== undefined && r[col.key] !== null));
 
     const generateYears = () => {
         const currentYear = new Date().getFullYear();
@@ -90,28 +82,6 @@ function YoutubeRevenueReportsComponent() {
         }
     };
 
-    // Check localStorage on mount
-    useEffect(() => {
-        const saved = localStorage.getItem(DOWNLOAD_STATUS_KEY);
-        if (saved === "downloaded") {
-            setDownloadStatus("downloaded");
-        } else if (saved === "preparing") {
-            setDownloadStatus("preparing");
-        }
-        const user = JSON.parse(localStorage.getItem("user"));
-        setRole(user?.role);
-        setUserId(user?.userId)
-    }, []);
-
-    // Sync status to localStorage whenever it changes
-    useEffect(() => {
-        if (downloadStatus) {
-            localStorage.setItem(DOWNLOAD_STATUS_KEY, downloadStatus);
-        } else {
-            localStorage.removeItem(DOWNLOAD_STATUS_KEY);
-        }
-    }, [downloadStatus]);
-
     const buildQueryString = (includeCheckboxFilters = false) => {
         const params = new URLSearchParams();
 
@@ -122,19 +92,9 @@ function YoutubeRevenueReportsComponent() {
         if (filters.fromDate) params.append("fromDate", filters.fromDate);
         if (filters.toDate) params.append("toDate", filters.toDate);
         if (labelFilter) params.append("labelId", labelFilter);
-        if (role) params.append("role", role);
-        if (userId) params.append("userId", userId);
 
-        // Include checkbox filters based on parameter
-        if (includeCheckboxFilters) {
-            if (checkboxFilters.releases) params.append("releases", "true");
-            if (checkboxFilters.artist) params.append("artist", "true");
-            if (checkboxFilters.track) params.append("track", "true");
-            if (checkboxFilters.partner) params.append("partner", "true");
-            if (checkboxFilters.contentType) params.append("contentType", "true");
-            if (checkboxFilters.format) params.append("format", "true");
-            if (checkboxFilters.territory) params.append("territory", "true");
-            if (checkboxFilters.quarters) params.append("quarters", "true");
+        if (includeCheckboxFilters && selectedFilter) {
+            params.append(selectedFilter, "true");
         }
 
         params.append("page", filters.page);
@@ -142,15 +102,52 @@ function YoutubeRevenueReportsComponent() {
         return params.toString();
     };
 
+    const fetchInitialSummary = async () => {
+        try {
+            const result = await apiRequest(`/youtube-revenue-summary`, "GET", null, true);
+
+            if (result.success) {
+                const transformedData = {
+                    summary: {
+                        totalStreams: result.data.data.youtube_total_stream || 0,
+                        totalRevenue: result.data.data.youtube_total_revenue || 0
+                    },
+                    revenueByMonth: result.data.data.netRevenueByMonth || {},
+                    revenueByChannel: result.data.data.revenueByChannel || {},
+                    revenueByCountry: result.data.data.revenueByCountry || {}
+                };
+                setInitialData(transformedData);
+                setData(transformedData);
+            }
+        } catch (error) {
+            console.error("Error fetching initial summary:", error);
+        }
+    };
+
     const fetchSummarys = async (includeCheckboxFilters = false) => {
         setLoading(true);
         try {
+            // Don't fetch filtered summary if no filters are applied
+            const hasFilters = filters.platform || filters.year || filters.month || filters.fromDate ||
+                filters.toDate || labelFilter || (includeCheckboxFilters && selectedFilter);
+
+            if (!hasFilters) {
+                // If no filters, use the initial data
+                if (initialData) {
+                    setData(initialData);
+                } else {
+                    await fetchInitialSummary();
+                }
+                // Still fetch reports even when no filters (to get paginated data)
+                await fetchReports(includeCheckboxFilters);
+                return;
+            }
+
             const query = buildQueryString(includeCheckboxFilters);
             const result = await apiRequest(`/youtube-revenue/summary?${query}`, "GET", null, true);
 
             if (result.success) {
                 setData(result.data.data);
-                // After summary is loaded, fetch reports
                 await fetchReports(includeCheckboxFilters);
             }
         } catch (error) {
@@ -177,21 +174,32 @@ function YoutubeRevenueReportsComponent() {
         }
     };
 
+    // Fetch initial data on first render
     useEffect(() => {
         const fetchInitialData = async () => {
             if (initialRender.current) {
                 initialRender.current = false;
-                await fetchSummarys(false);
-            } else {
-                const hasActiveCheckboxFilters = Object.values(checkboxFilters).some(value => value);
-                await fetchSummarys(hasActiveCheckboxFilters);
+                // Fetch initial summary data first
+                await fetchInitialSummary();
+                // Then fetch reports (first page)
+                await fetchReports(false);
+                setLoading(false);
             }
         };
 
         fetchInitialData();
-    }, [filters.platform, filters.year, filters.month, filters.fromDate, filters.toDate, filters.page, filters.limit, labelFilter])
+    }, []);
 
-    // Handle pagination click
+    // Fetch data when regular filters change
+    useEffect(() => {
+        if (!initialRender.current) {
+            const fetchFilteredData = async () => {
+                await fetchSummarys(selectedFilter);
+            };
+            fetchFilteredData();
+        }
+    }, [filters.platform, filters.year, filters.month, filters.fromDate, filters.toDate, filters.page, filters.limit, labelFilter]);
+
     const handlePageChange = (selectedObj) => {
         setFilters(prev => ({
             ...prev,
@@ -203,32 +211,28 @@ function YoutubeRevenueReportsComponent() {
         setFilters(prev => ({
             ...prev,
             limit: parseInt(value),
-            page: 1 // reset to first page
+            page: 1
         }));
     };
 
-    // Handle checkbox filter changes separately
     const handleCheckboxChange = (e) => {
         const { name, checked } = e.target;
-        setCheckboxFilters(prev => ({
-            ...prev,
-            [name]: checked
-        }));
-        // Reset to page 1 when checkbox changes
+
+        if (checked) {
+            setSelectedFilter(name);
+        } else {
+            setSelectedFilter("");
+        }
+
         setFilters(prev => ({ ...prev, page: 1 }));
     };
 
     const handleFilterChange = (e) => {
-        const { name, value, type, checked } = e.target;
-
-        if (["releases", "artist", "track", "territory"].includes(name)) {
-            // These are now handled by handleCheckboxChange
-            return;
-        }
+        const { name, value } = e.target;
 
         setFilters(prev => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: value,
             page: 1
         }));
     };
@@ -236,15 +240,42 @@ function YoutubeRevenueReportsComponent() {
     const handleApplyFilters = (e) => {
         e.preventDefault();
         setFilters(prev => ({ ...prev, page: 1 }));
-        fetchSummarys(true); // This will automatically call fetchReports after
+        setFiltersApplied(true);
+        fetchSummarys(true);
     };
 
+    const handleClearFilters = () => {
+        setFilters({
+            platform: "",
+            month: "",
+            quarter: "",
+            fromDate: "",
+            toDate: "",
+            releases: false,
+            artist: false,
+            format: false,
+            territory: false,
+            page: 1,
+            limit: 10,
+        });
+        setSelectedFilter("");
+        setLabelFilter("");
+        setShowDates(false);
+        setFiltersApplied(false);
+
+        // When clearing filters, revert to initial data
+        if (initialData) {
+            setData(initialData);
+        } else {
+            fetchInitialSummary();
+        }
+        fetchReports(false);
+    };
 
     const handleExcelDownload = async (useCheckboxFilters = false) => {
         try {
             setLoading(true);
 
-            // First, trigger YouTube report generation
             const query = buildQueryString(useCheckboxFilters);
 
             const triggerResponse = await apiRequest(
@@ -256,36 +287,39 @@ function YoutubeRevenueReportsComponent() {
 
             if (triggerResponse.success) {
                 toast.success(triggerResponse?.data?.message);
-
-                // Fetch updated history to show preparing status
                 await fetchHistory();
-
-                // Auto-show the reports table if not already shown
                 if (!showReportsTable) {
                     setShowReportsTable(true);
                 }
             } else {
-                toast.error("Failed to start YouTube report generation");
+                toast.error("Failed to start report generation");
             }
 
         } catch (error) {
-            console.error("Error triggering YouTube report:", error);
-            toast.error("Error starting YouTube report generation");
+            console.error("Error triggering report:", error);
+            toast.error("Error starting report generation");
         } finally {
             setLoading(false);
         }
     };
 
     const getLast12MonthsRange = () => {
-        const revenueByMonth = data?.revenueByMonth;
+        const revenueByMonth = data?.revenueByMonth || {};
 
         if (!revenueByMonth || Object.keys(revenueByMonth).length === 0) return "";
 
         const dates = Object.keys(revenueByMonth)
             .map(key => {
-                const [month, year] = key.split(" ");
-                const date = new Date(`${month} 1, ${year}`);
-                return isNaN(date) ? null : date;
+                // Handle different date formats
+                if (key.includes('-')) {
+                    const [year, month] = key.split('-');
+                    const date = new Date(year, month - 1);
+                    return isNaN(date.getTime()) ? null : date;
+                } else {
+                    const [month, year] = key.split(" ");
+                    const date = new Date(`${month} 1, ${year}`);
+                    return isNaN(date.getTime()) ? null : date;
+                }
             })
             .filter(Boolean)
             .sort((a, b) => a - b);
@@ -307,7 +341,6 @@ function YoutubeRevenueReportsComponent() {
     const fetchHistory = async () => {
         try {
             const result = await apiRequest('/youtube-report-history', "GET", null, true);
-            console.log("result", result);
 
             if (result.success) {
                 setDownloadHistory(result?.data?.data || []);
@@ -318,7 +351,6 @@ function YoutubeRevenueReportsComponent() {
     };
 
     useEffect(() => {
-
         fetchHistory();
     }, []);
 
@@ -361,18 +393,15 @@ function YoutubeRevenueReportsComponent() {
         }
     };
 
-    // Polling effect for report status
     useEffect(() => {
         let intervalId;
 
         if (showReportsTable && downloadHistory.length > 0) {
-            // Check if any reports are still pending
             const hasPreparingReports = downloadHistory.some(
                 item => item.status === "pending" || item.status === "generating"
             );
 
             if (hasPreparingReports) {
-                // Poll every 5 seconds for status updates
                 intervalId = setInterval(() => {
                     fetchHistory();
                 }, 5000);
@@ -385,7 +414,6 @@ function YoutubeRevenueReportsComponent() {
             }
         };
     }, [showReportsTable, downloadHistory]);
-
 
     return (
         <>
@@ -403,6 +431,7 @@ function YoutubeRevenueReportsComponent() {
                                     {showReportsTable ? 'Hide' : 'Show'} downloads ({downloadHistory.length})
                                 </button>
                             )}
+
                             <button
                                 className="theme-btn green-cl white-cl me-1 position-relative"
                                 onClick={() => handleExcelDownload(filtersApplied)}
@@ -412,28 +441,6 @@ function YoutubeRevenueReportsComponent() {
                             </button>
                         </div>
                     </div>
-
-                    {downloadStatus === "preparing" && (
-                        <div className="alert alert-warning alert-sm mt-2 py-2">
-                            Data getting ready to export… Please wait
-                        </div>
-                    )}
-                    {/* {downloadStatus === "downloaded" && (
-                        <div className="alert alert-success alert-sm mt-2 py-2 d-flex justify-content-between align-items-center">
-                            <span>File downloaded successfully!</span>
-                            <button
-                                type="button"
-                                className="btn btn-link text-success p-0 border-0"
-                                onClick={() => {
-                                    setDownloadStatus("");
-                                    localStorage.removeItem("youtubeExcelDownloadStatus");
-                                }}
-                                style={{ fontSize: "1.2rem", lineHeight: "1" }}
-                            >
-                                ×
-                            </button>
-                        </div>
-                    )} */}
 
                     <div className="mt-4">
                         {showReportsTable && downloadHistory && downloadHistory.length > 0 && (
@@ -475,6 +482,7 @@ function YoutubeRevenueReportsComponent() {
                                                             Pending...
                                                         </span>
                                                     )}
+
                                                     {item.status === "ready" && (
                                                         <span className="badge bg-success">
                                                             <i className="fa-solid fa-check me-1"></i>
@@ -513,7 +521,7 @@ function YoutubeRevenueReportsComponent() {
                                                                 )}
                                                             </button>
                                                         </>
-                                                    ) : item.status === "pending" ? (
+                                                    ) : (item.status === "pending" || item.status === "generating") ? (
                                                         <>
                                                             <button
                                                                 className="border-less border-red dark-red table-button me-2 stop-button"
@@ -521,7 +529,7 @@ function YoutubeRevenueReportsComponent() {
                                                                 disabled={deletingId === item._id}
                                                             >
                                                                 {deletingId === item._id ? (
-                                                                    <span><i className="fa-solid fa-spinner fa-spin"></i> Stoping...</span>
+                                                                    <span><i className="fa-solid fa-spinner fa-spin"></i>Stoping...</span>
                                                                 ) : (
                                                                     <>Stop <i className="fa-solid fa-trash" /></>
                                                                 )}
@@ -530,7 +538,7 @@ function YoutubeRevenueReportsComponent() {
                                                     ) : (
                                                         <>
                                                             <button
-                                                                className="border-less border-red dark-red table-button me-2"
+                                                                className="border-less border-red dark-red table-button me-2 stop-button"
                                                                 onClick={() => handleDeleteClick(item)}
                                                                 disabled={deletingId === item._id}
                                                             >
@@ -551,7 +559,7 @@ function YoutubeRevenueReportsComponent() {
                         )}
                     </div>
 
-                    {/* === YOUR ORIGINAL FILTERS === */}
+                    {/* === FILTERS === */}
                     <div className="revnue-filters mt-3">
                         <form className="revenue-filter-fx" onSubmit={handleApplyFilters}>
                             <div className="row g-3 mb-4">
@@ -561,7 +569,7 @@ function YoutubeRevenueReportsComponent() {
                                             cacheOptions
                                             loadOptions={loadOptions}
                                             defaultOptions
-                                            placeholder="Search Sub Label"
+                                            placeholder="Search Label"
                                             isClearable
                                             onChange={(selected) => {
                                                 if (selected) {
@@ -574,64 +582,22 @@ function YoutubeRevenueReportsComponent() {
                                         />
                                     </div>
                                 </div>
+
                                 <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
                                     <div className="form-group">
                                         <div className="form-sec">
                                             <select className="form-select" name="platform" value={filters.platform} onChange={handleFilterChange}>
                                                 <option value="">Select Platform</option>
-                                                <option>Sound Recording (Audio Claim)</option>
-                                                <option>Art Track (YouTube Music)</option>
-                                                <option>YouTubePartnerChannel</option>
-                                                <option>YouTubeRDCChannel</option>
-                                                <option>YouTubeVideoClaim</option>
-                                                <option>YTPremiumRevenue</option>
+                                                <option value="SoundRecording">Sound Recording (Audio Claim)</option>
+                                                <option value="YouTubeArtTrack">Art Track (YouTube Music)</option>
+                                                <option value="YouTubePartnerChannel">YouTubePartnerChannel</option>
+                                                <option value="YouTubeRDCChannel">YouTubeRDCChannel</option>
+                                                <option value="YouTubeVideoClaim">YouTubeVideoClaim</option>
+                                                <option value="YTPremiumRevenue">YTPremiumRevenue</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                {/* Year Filter - Added here */}
-                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
-                                    <div className="form-group">
-                                        <div className="form-sec">
-                                            <select className="form-select" name="year" value={filters.year} onChange={handleFilterChange}>
-                                                <option value="">Select Year</option>
-                                                {years.map(year => (
-                                                    <option key={year} value={year}>
-                                                        {year}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div> */}
-                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
-                                    <div className="form-group">
-                                        <div className="form-sec">
-                                            <select className="form-select" name="month" value={filters.month} onChange={handleFilterChange}>
-                                                <option value="">Month</option>
-                                                {[...Array(12)].map((_, i) => (
-                                                    <option key={i + 1} value={i + 1}>
-                                                        {new Date(0, i).toLocaleString("default", { month: "long" })}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div> */}
-
-                                {/* <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-2">
-                                    <div className="form-group">
-                                        <div className="form-sec">
-                                            <select className="form-select" name="quarter" value={filters.quarter} onChange={handleFilterChange}>
-                                                <option value="">Quarter</option>
-                                                <option value="1">Q1 (Jan-Mar)</option>
-                                                <option value="2">Q2 (Apr-Jun)</option>
-                                                <option value="3">Q3 (Jul-Sep)</option>
-                                                <option value="4">Q4 (Oct-Dec)</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div> */}
 
                                 <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3">
                                     <div className="form-group">
@@ -643,7 +609,6 @@ function YoutubeRevenueReportsComponent() {
                                                     if (e.target.value === "custom") {
                                                         setShowDates(true);
                                                     } else {
-                                                        // When selecting "Date Range" (default)
                                                         setShowDates(false);
                                                         setFilters(prev => ({
                                                             ...prev,
@@ -693,7 +658,7 @@ function YoutubeRevenueReportsComponent() {
                                             className="form-check-input"
                                             type="checkbox"
                                             name={key}
-                                            checked={checkboxFilters[key]}
+                                            checked={selectedFilter === key}
                                             onChange={handleCheckboxChange}
                                             id={key}
                                         />
@@ -703,22 +668,31 @@ function YoutubeRevenueReportsComponent() {
                                     </div>
                                 ))}
 
-                                <div className="form-check">
+                                <div className="form-check d-flex gap-2">
                                     <button
                                         type="submit"
                                         className="theme-btn green-cl white-cl"
                                         disabled={loading}
                                     >
                                         <i className="fa-solid fa-filter me-2" />
-                                        {/* {loading && filtersApplied ? "Filtering..." : "Apply Filters"} */}
                                         Filter
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        className="theme-btn bg-red white-cl"
+                                        onClick={handleClearFilters}
+                                        disabled={loading}
+                                    >
+                                        {/* <i className="fa-solid fa-times me-2" /> */}
+                                        Clear
                                     </button>
                                 </div>
                             </div>
                         </form>
                     </div>
 
-                    {/* === YOUR ORIGINAL SUMMARY CARDS === */}
+                    {/* === SUMMARY CARDS === */}
                     {data && (
                         <div className="revenue-cards">
                             <div className="row g-4">
@@ -754,7 +728,7 @@ function YoutubeRevenueReportsComponent() {
                         </div>
                     )}
 
-                    {/* === YOUR ORIGINAL CHARTS === */}
+                    {/* === CHARTS === */}
                     {data && (
                         <div className="revenue-charts">
                             <div className="row g-4">
@@ -797,43 +771,45 @@ function YoutubeRevenueReportsComponent() {
                             </div>
                         </div>
                     )}
-                    {/* === YOUR ORIGINAL TABLE === */}
+
+                    {/* === TABLE === */}
                     <div className="table-sec">
                         {loading ? (
                             <div className="text-center py-5"><Loader small={true} /></div>
-                        ) : reportData?.reports?.length > 0 ? (
+                        ) : reports.length > 0 ? (
                             <>
                                 <table className="rdc-table">
                                     <thead>
                                         <tr>
-                                            <th className="main-th start">Date</th>
-                                            <th>Platform</th>
-                                            <th>Artist</th>
-                                            <th>Release</th>
-                                            {/* <th>Streams</th> */}
-                                            <th className="last">Revenue</th>
+                                            {columns.map(col => (
+                                                <th key={col.key} className={col.key === "date" ? "main-th start" : ""}>
+                                                    {col.label}
+                                                </th>
+                                            ))}
                                         </tr>
                                     </thead>
+
                                     <tbody>
-                                        {reportData.reports.map((row, i) => (
+                                        {reports.map((row, i) => (
                                             <tr key={i}>
-                                                <td className="main-td">{row.date}</td>
-                                                <td>{row.platform}</td>
-                                                <td>{row.artist}</td>
-                                                <td>{row.release}</td>
-                                                {/* <td>{row.streams.toLocaleString()}</td> */}
-                                                <td>${row.revenue.toFixed(2)}</td>
+                                                {columns.map(col => (
+                                                    <td key={col.key}>
+                                                        {col.isNumber
+                                                            ? `$${Number(row[col.key] || 0).toFixed(2)}`
+                                                            : row[col.key] || "-"}
+                                                    </td>
+                                                ))}
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
-
                             </>
                         ) : (
                             <div className="text-center py-5 text-muted">No data found</div>
                         )}
                     </div>
-                    {/* Pagination - Added here */}
+
+                    {/* Pagination */}
                     <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                         <CustomPagination
                             pageCount={pageCount}
@@ -858,6 +834,7 @@ function YoutubeRevenueReportsComponent() {
                                         <i className={`fa-solid ${itemToDelete?.status === 'ready' ? 'fa-trash-can' : 'fa-circle-stop'} me-2`}></i>
                                         {itemToDelete?.status === 'ready' ? 'Confirm Delete' : 'Confirm Stop'}
                                     </h5>
+
                                     <button
                                         type="button"
                                         className="btn-close"
@@ -895,6 +872,7 @@ function YoutubeRevenueReportsComponent() {
                                                             ? itemToDelete?.filename.slice(0, 20) + "..."
                                                             : itemToDelete?.filename
                                                         : "N/A"}
+
                                                 </p>
                                             </div>
                                             <div className="col-md-6">

@@ -406,12 +406,12 @@ function RevenueUploadComponent() {
                                                     )}
                                                 </div>
 
-                                                <div className="csv-btn">
+                                                {/* <div className="csv-btn">
                                                     <button type="button" className="border-less">Need a template?</button>
                                                     <button type="button" className="border-less border-green color-green table-button">
                                                         Download Template
                                                     </button>
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
 

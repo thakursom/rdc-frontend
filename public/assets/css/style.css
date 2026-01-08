@@ -25,6 +25,7 @@
     --navy-cl: #4D4E8E;
     --orange-dark: #FF5F51;
     --dark-red: #DF5053;
+    --dark-red-dark: #690507;
     --yellow-dark: #F59E0B;
     --light-cl: #b7b7b7;
     --parot-light: #B2F4EE;
@@ -42,6 +43,9 @@
 
 .green-cl {
     background-color: var(--green-cl);
+}
+.green-cl:hover{
+    background-color: var(--light-black-cl) !important;
 }
 
 .purple-cl {
@@ -75,7 +79,9 @@
 .bg-red {
     background: var(--dark-red) !important;
 }
-
+.bg-red:hover{
+    background: var(--dark-red-dark) !important;
+}
 .yellow-dark {
     background: var(--yellow-dark);
 }
@@ -130,6 +136,8 @@ body {
     border: none;
     padding: 5px 15px;
     border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
 }
 
 .border-less {

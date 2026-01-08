@@ -107,7 +107,6 @@ function AudioStreamingRevenueReportsComponent() {
     const fetchInitialSummary = async () => {
         try {
             const result = await apiRequest(`/revenue-summary`, "GET", null, true);
-            console.log("Initial revenue-summary result", result);
 
             if (result.success) {
                 const transformedData = {

@@ -102,14 +102,11 @@ function AudioStreamingRevenueReportsComponent() {
         return params.toString();
     };
 
-    // Function to fetch initial summary data (no filters)
     const fetchInitialSummary = async () => {
         try {
             const result = await apiRequest(`/revenue-summary`, "GET", null, true);
-            console.log("result", result);
 
             if (result.success) {
-                // Transform the initial API response to match your component's expected format
                 const transformedData = {
                     summary: {
                         totalStreams: result.data.data.total_stream || 0,
@@ -120,7 +117,7 @@ function AudioStreamingRevenueReportsComponent() {
                     revenueByCountry: result.data.data.revenueByCountry || {}
                 };
                 setInitialData(transformedData);
-                setData(transformedData); // Set as current data as well
+                setData(transformedData);
             }
         } catch (error) {
             console.error("Error fetching initial summary:", error);
@@ -541,7 +538,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                     ) : (
                                                         <>
                                                             <button
-                                                                 className="border-less border-red dark-red table-button me-2 stop-button"
+                                                                className="border-less border-red dark-red table-button me-2 stop-button"
                                                                 onClick={() => handleDeleteClick(item)}
                                                                 disabled={deletingId === item._id}
                                                             >

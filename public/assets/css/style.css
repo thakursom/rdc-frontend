@@ -631,6 +631,12 @@ form.rdc-form {
     border-radius: 10px;
 }
 
+.stem-child1 {
+    display: table-cell;
+    width: 100%;
+    border-radius: 10px;
+}
+
 .territory-card {
     width: 100%;
     border-radius: 5px;

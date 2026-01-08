@@ -417,7 +417,7 @@ function DashboardComponent() {
                                     </div>
                                 </div>
                                 <div className="col-md-6  stem-col">
-                                    <div className="dash-charts stem-child">
+                                    <div className="dash-charts stem-child1">
                                         <div className="chart-content-head">
                                             <h5>Territory Heatmap (Revenue)</h5>
                                             <div className="chart-icon">

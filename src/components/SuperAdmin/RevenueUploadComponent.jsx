@@ -464,7 +464,7 @@ function RevenueUploadComponent() {
                             <table className="rdc-table">
                                 <thead>
                                     <tr>
-                                        <th>Label Name</th>
+                                        <th>Super Admin/Manager</th>
                                         <th>Platform</th>
                                         <th>FileName</th>
                                         <th>Date of upload</th>

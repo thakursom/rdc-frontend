@@ -19,6 +19,10 @@ function LabelSummaryComponent() {
     const [contractToRemind, setContractToRemind] = useState(null);
     const [emailLoading, setEmailLoading] = useState(false);
     const [whatsappLoading, setWhatsappLoading] = useState(false);
+    const [showRenewModal, setShowRenewModal] = useState(false);
+    const [contractToRenew, setContractToRenew] = useState(null);
+    const [renewLoading, setRenewLoading] = useState(false);
+
 
     const navigate = useNavigate();
 
@@ -96,6 +100,46 @@ function LabelSummaryComponent() {
             setDeleteLoading(false);
             handleCloseDeleteModal();
         }
+    };
+
+    const handleAutoRenewContract = (contract) => {
+        setContractToRenew(contract);
+        setShowRenewModal(true);
+    };
+
+    const handleConfirmAutoRenew = async () => {
+        if (!contractToRenew) return;
+
+        setRenewLoading(true);
+
+        try {
+            const res = await apiRequest(
+                `/contracts/auto-renew/${contractToRenew._id}`,
+                "POST",
+                null,
+                true
+            );
+
+            if (res.success) {
+                toast.success("Contract auto-renewed successfully! New contract created for 1 year.");
+                fetchContracts(); // Refresh list to show latest contract
+            } else {
+                toast.error(res.message || "Failed to auto-renew contract");
+            }
+        } catch (error) {
+            console.error("Error auto-renewing contract:", error);
+            toast.error("Error auto-renewing contract. Please try again.");
+        } finally {
+            setRenewLoading(false);
+            setShowRenewModal(false);
+            setContractToRenew(null);
+        }
+    };
+
+    const handleCloseRenewModal = () => {
+        setShowRenewModal(false);
+        setContractToRenew(null);
+        setRenewLoading(false);
     };
 
     // Reminder Modal Handlers
@@ -202,7 +246,7 @@ function LabelSummaryComponent() {
 
                             <button
                                 className="theme-btn green-cl white-cl me-1"
-                                onClick={() => navigate(`/manager/contract-from`)}
+                                onClick={() => navigate(`/superadmin/contract-from`)}
                             >
                                 <i className="fa-solid fa-file-signature me-1" />
                                 Add New Contract
@@ -250,16 +294,23 @@ function LabelSummaryComponent() {
                                                         </span>
                                                     </td>
                                                     <td>
+                                                        <button
+                                                            className="border-less border-yellow color-yellow table-button me-1"
+                                                            onClick={() => handleAutoRenewContract(contract)}
+
+                                                        >
+                                                            Auto Renew Contract <i className="fa-solid fa-file-signature me-1"></i>
+                                                        </button>
                                                         <button className="border-less border-green color-green table-button me-1"
                                                             onClick={() =>
-                                                                navigate(`/manager/all-contracts/${contract.user_id}`)
+                                                                navigate(`/superadmin/all-contracts/${contract.user_id}`)
                                                             }
                                                         >
                                                             All Contracts
                                                         </button>
                                                         <button className="border-less border-purple color-purple table-button me-1"
                                                             onClick={() =>
-                                                                navigate(`/manager/sub-label-summary/${contract.user_id}`)
+                                                                navigate(`/superadmin/sub-label-summary/${contract.user_id}`)
                                                             }
                                                         >
                                                             Sub Label
@@ -270,7 +321,7 @@ function LabelSummaryComponent() {
                                                         <button
                                                             className="border-less border-green color-green table-button me-1"
                                                             onClick={() =>
-                                                                navigate(`/manager/contract-from/${contract._id}`)
+                                                                navigate(`/superadmin/contract-from/${contract._id}`)
                                                             }
                                                         >
                                                             Edit <i className="fa-solid fa-chevron-right" />
@@ -286,7 +337,7 @@ function LabelSummaryComponent() {
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"
                                                             onClick={() =>
-                                                                navigate(`/manager/contract-logs/${contract._id}`)
+                                                                navigate(`/superadmin/contract-logs/${contract._id}`)
                                                             }
                                                         >
                                                             View Logs <i className="fa-solid fa-right-to-bracket"></i>
@@ -303,7 +354,7 @@ function LabelSummaryComponent() {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="6" style={{ textAlign: "center" }}>
+                                                <td colSpan="7" style={{ textAlign: "center" }}>
                                                     No Contracts Found
                                                 </td>
                                             </tr>
@@ -452,6 +503,82 @@ function LabelSummaryComponent() {
                                                 </>
                                             ) : (
                                                 "Send Email"
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* AUTO RENEW CONFIRMATION MODAL */}
+                {showRenewModal && (
+                    <div className="modal-backdrop show">
+                        <div className="modal d-block" tabIndex="-1">
+                            <div className="modal-dialog modal-dialog-centered">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title">
+                                            <i className="fa-solid fa-file-signature me-2"></i>
+                                            Confirm Auto Renewal
+                                        </h5>
+                                        <button
+                                            type="button"
+                                            className="btn-close"
+                                            onClick={handleCloseRenewModal}
+                                            disabled={renewLoading}
+                                        >
+                                            <i className="fa-solid fa-xmark"></i>
+                                        </button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <p>
+                                            Are you sure you want to <strong>auto-renew</strong> this contract?
+                                        </p>
+                                        <div className="bg-light p-3 rounded mb-3">
+                                            <p className="mb-1"><strong>Client:</strong> {contractToRenew?.userName}</p>
+                                            <p className="mb-1"><strong>Current Contract Ends:</strong> {new Date(contractToRenew?.endDate).toLocaleDateString()}</p>
+                                            <p className="mb-0 text-success">
+                                                <strong>New Period:</strong> {(() => {
+                                                    const end = new Date(contractToRenew?.endDate);
+                                                    const newStart = new Date(end);
+                                                    newStart.setDate(newStart.getDate() + 1);
+                                                    const newEnd = new Date(newStart);
+                                                    newEnd.setFullYear(newEnd.getFullYear() + 1);
+                                                    return `${newStart.toLocaleDateString()} → ${newEnd.toLocaleDateString()}`;
+                                                })()}
+                                            </p>
+                                        </div>
+                                        <small className="text-muted">
+                                            A new contract will be created with the same details (PDF, percentage, etc.).
+                                        </small>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button
+                                            type="button"
+                                            className="theme-btn green-cl white-cl"
+                                            onClick={handleCloseRenewModal}
+                                            disabled={renewLoading}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="theme-btn bg-warning text-dark"
+                                            onClick={handleConfirmAutoRenew}
+                                            disabled={renewLoading}
+                                        >
+                                            {renewLoading ? (
+                                                <>
+                                                    <span className="spinner-border spinner-border-sm me-2" />
+                                                    Renewing...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <i className="fa-solid fa-rotate-right me-2"></i>
+                                                    Auto Renew
+                                                </>
                                             )}
                                         </button>
                                     </div>

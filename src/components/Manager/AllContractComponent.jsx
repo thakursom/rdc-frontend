@@ -11,7 +11,6 @@ function AllContractComponent() {
     const navigate = useNavigate();
 
     const [contracts, setContracts] = useState([]);
-    console.log("contracts", contracts);
 
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
@@ -38,7 +37,6 @@ function AllContractComponent() {
                 null,
                 true
             );
-            console.log("res", res);
 
             if (res.success) {
                 setContracts(res.data.data);

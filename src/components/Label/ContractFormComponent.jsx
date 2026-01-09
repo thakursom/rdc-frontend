@@ -24,27 +24,22 @@ function ContractFormComponent() {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    // ✅ Simplified Validation Schema
+    // Validation Schema
     const validationSchema = Yup.object({
         label: Yup.string().required("Label is required"),
         contractName: Yup.string()
             .required("Contract Name is required")
             .min(3, "Contract Name must be at least 3 characters"),
-        startDate: Yup.date()
-            .required("Start Date is required")
-            .min(new Date(), "Start Date cannot be in the past"),
-        endDate: Yup.date()
-            .required("End Date is required")
-            .min(Yup.ref("startDate"), "End Date must be after Start Date"),
+        startDate: Yup.date().required("Start Date is required"),
+        endDate: Yup.date().required("End Date is required"),
         labelPercentage: Yup.number()
             .typeError("Label Percentage must be a number")
-            .min(0, "Label Percentage cannot be negative")
-            .max(100, "Label Percentage cannot exceed 100%"),
+            .min(0, "Cannot be negative")
+            .max(100, "Cannot exceed 100%"),
         description: Yup.string().max(500, "Max 500 characters allowed"),
-
     });
 
-    // ✅ Fetch existing contract when editing
+    // Fetch contract on edit
     useEffect(() => {
         if (id) {
             const fetchContract = async () => {
@@ -53,7 +48,6 @@ function ContractFormComponent() {
                     if (res.success) {
                         const detail = res.data?.data;
 
-                        // ✅ Set initial values for Formik
                         setInitialValues({
                             label: detail.user_id || "",
                             contractName: detail.contractName || "",
@@ -65,19 +59,16 @@ function ContractFormComponent() {
                                 ? new Date(detail.endDate).toISOString().split("T")[0]
                                 : "",
                             labelPercentage: detail.labelPercentage || "",
-                            pdf: null, // Keep as null for edits
+                            pdf: null,
                         });
 
-                        // ✅ Store existing PDF filename
                         setExistingPdf(detail.pdf || "");
 
-                        // ✅ Prefill dropdown label properly
                         if (detail.user_id && detail.userName) {
                             setSelectedLabel(detail.user_id);
                             setSelectedLabelName(detail.userName);
                         }
 
-                        // ✅ Prefill file name
                         setFileName(detail.pdf || "");
                     }
                 } catch (error) {
@@ -88,10 +79,10 @@ function ContractFormComponent() {
         }
     }, [id]);
 
-    // ✅ Fetch dropdown labels dynamically
+    // Load labels for AsyncSelect
     const loadOptions = async (inputValue) => {
         try {
-            const res = await apiRequest(`/fetchAllSubLabel?search=${inputValue}`, "GET", null, true);
+            const res = await apiRequest(`/fetchAllLabel?search=${inputValue}`, "GET", null, true);
             if (res.success) {
                 return res.data?.labels.map((item) => ({
                     value: item.id,
@@ -105,25 +96,11 @@ function ContractFormComponent() {
         }
     };
 
-    const getTodayDate = () => new Date().toISOString().split("T")[0];
-
-    // ✅ Handle save/update with manual PDF validation
+    // Submit handler
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
-            // ✅ Manual PDF validation
             if (!id && !values.pdf) {
                 toast.error("PDF file is required for new contracts");
-                return;
-            }
-
-            if (id && !values.pdf && !existingPdf) {
-                toast.error("PDF file is required");
-                return;
-            }
-
-            // ✅ File type validation
-            if (values.pdf && values.pdf.type !== "application/pdf") {
-                toast.error("Only PDF files are allowed");
                 return;
             }
 
@@ -135,7 +112,6 @@ function ContractFormComponent() {
             payload.append("endDate", values.endDate);
             payload.append("labelPercentage", values.labelPercentage);
 
-            // ✅ Only append PDF if it's a new file
             if (values.pdf) {
                 payload.append("pdf", values.pdf);
             }
@@ -149,7 +125,7 @@ function ContractFormComponent() {
 
             if (res.success) {
                 toast.success(id ? "Contract Updated Successfully!" : "Contract Uploaded Successfully!");
-                navigate("/superadmin/contract");
+                navigate("/superadmin/label-summary");
             } else {
                 toast.error(res.message || "Something went wrong");
             }
@@ -160,20 +136,6 @@ function ContractFormComponent() {
             setSubmitting(false);
         }
     };
-
-    // ✅ Required field label component
-    const RequiredLabel = ({ children }) => (
-        <label className="form-label fw-semibold">
-            {children} <span className="text-danger">*</span>
-        </label>
-    );
-
-    // ✅ Optional field label component
-    const OptionalLabel = ({ children }) => (
-        <label className="form-label fw-semibold">
-            {children}
-        </label>
-    );
 
     return (
         <>
@@ -189,208 +151,192 @@ function ContractFormComponent() {
                         </button>
                     </div>
 
-
-                    <div className="row g-4">
-                        <div className="col-md-12 stem-col">
-                            <div className="dash-charts stem-child">
-                                <Formik
-                                    initialValues={initialValues}
-                                    validationSchema={validationSchema}
-                                    onSubmit={handleSubmit}
-                                    enableReinitialize
-                                >
-                                    {({ setFieldValue, values, isSubmitting, errors, touched }) => (
-                                        <Form className="setting-form">
-                                            <div className="row">
-                                                {/* Label Selection */}
-                                                <div className="col-md-6 mb-3">
-                                                    <RequiredLabel>Select Sub Label</RequiredLabel>
-                                                    <AsyncSelect
-                                                        cacheOptions
-                                                        defaultOptions
-                                                        loadOptions={loadOptions}
-                                                        placeholder="Search Sub Label"
-                                                        isClearable
-                                                        value={
-                                                            selectedLabel
-                                                                ? { value: selectedLabel, label: selectedLabelName }
-                                                                : null
+                    <div className="card shadow-sm">
+                        <div className="card-body">
+                            <Formik
+                                initialValues={initialValues}
+                                validationSchema={validationSchema}
+                                onSubmit={handleSubmit}
+                                enableReinitialize
+                            >
+                                {({ setFieldValue, values, isSubmitting, errors, touched }) => (
+                                    <Form>
+                                        <div className="row g-4">
+                                            {/* Label Selection */}
+                                            <div className="col-md-6">
+                                                <label className="form-label fw-semibold">
+                                                    Select Label <span className="text-danger">*</span>
+                                                </label>
+                                                <AsyncSelect
+                                                    cacheOptions
+                                                    defaultOptions
+                                                    loadOptions={loadOptions}
+                                                    placeholder="Search and select label"
+                                                    isClearable
+                                                    value={
+                                                        selectedLabel
+                                                            ? { value: selectedLabel, label: selectedLabelName }
+                                                            : null
+                                                    }
+                                                    onChange={(selected) => {
+                                                        if (selected) {
+                                                            setSelectedLabel(selected.value);
+                                                            setSelectedLabelName(selected.label);
+                                                            setFieldValue("label", selected.value);
+                                                        } else {
+                                                            setSelectedLabel("");
+                                                            setSelectedLabelName("");
+                                                            setFieldValue("label", "");
                                                         }
-                                                        onChange={(selected) => {
-                                                            if (selected) {
-                                                                setSelectedLabel(selected.value);
-                                                                setSelectedLabelName(selected.label);
-                                                                setFieldValue("label", selected.value);
-                                                            } else {
-                                                                setSelectedLabel("");
-                                                                setSelectedLabelName("");
-                                                                setFieldValue("label", "");
-                                                            }
-                                                        }}
-                                                        className={touched.label && errors.label ? "is-invalid" : ""}
-                                                    />
-                                                    <ErrorMessage
-                                                        name="label"
-                                                        component="div"
-                                                        className="text-danger small mt-1"
-                                                    />
-                                                </div>
-
-                                                {/* Contract Name */}
-                                                <div className="col-md-6 mb-3">
-                                                    <RequiredLabel>Contract Name</RequiredLabel>
-                                                    <Field
-                                                        type="text"
-                                                        name="contractName"
-                                                        className={`form-control ${touched.contractName && errors.contractName ? "is-invalid" : ""}`}
-                                                        placeholder="Enter Contract Name"
-                                                    />
-                                                    <ErrorMessage
-                                                        name="contractName"
-                                                        component="div"
-                                                        className="text-danger small mt-1"
-                                                    />
-                                                </div>
-
-                                                {/* Description */}
-                                                <div className="col-md-6 mb-3">
-                                                    <OptionalLabel>Description</OptionalLabel>
-                                                    <Field
-                                                        as="textarea"
-                                                        name="description"
-                                                        rows="3"
-                                                        className={`form-control ${touched.description && errors.description ? "is-invalid" : ""}`}
-                                                        placeholder="Enter contract description"
-                                                    />
-                                                    <ErrorMessage
-                                                        name="description"
-                                                        component="div"
-                                                        className="text-danger small mt-1"
-                                                    />
-                                                </div>
-
-
-                                                {/* Start Date */}
-                                                <div className="col-md-6 mb-3">
-                                                    <RequiredLabel>Start Date</RequiredLabel>
-                                                    <Field
-                                                        type="date"
-                                                        name="startDate"
-                                                        className={`form-control ${touched.startDate && errors.startDate ? "is-invalid" : ""}`}
-                                                        min={getTodayDate()}
-                                                    />
-                                                    <ErrorMessage
-                                                        name="startDate"
-                                                        component="div"
-                                                        className="text-danger small mt-1"
-                                                    />
-                                                </div>
-
-                                                {/* End Date */}
-                                                <div className="col-md-6 mb-3">
-                                                    <RequiredLabel>End Date</RequiredLabel>
-                                                    <Field
-                                                        type="date"
-                                                        name="endDate"
-                                                        className={`form-control ${touched.endDate && errors.endDate ? "is-invalid" : ""}`}
-                                                        min={values.startDate || getTodayDate()}
-                                                    />
-                                                    <ErrorMessage
-                                                        name="endDate"
-                                                        component="div"
-                                                        className="text-danger small mt-1"
-                                                    />
-                                                </div>
-
-                                                {/* Label Percentage */}
-                                                <div className="col-md-6 mb-3">
-                                                    <OptionalLabel>Label Percentage (%)</OptionalLabel>
-                                                    <Field
-                                                        type="number"
-                                                        name="labelPercentage"
-                                                        className={`form-control ${touched.labelPercentage && errors.labelPercentage ? "is-invalid" : ""}`}
-                                                        placeholder="0"
-                                                        min="0"
-                                                        max="100"
-                                                        step="0.01"
-                                                    />
-                                                    <ErrorMessage
-                                                        name="labelPercentage"
-                                                        component="div"
-                                                        className="text-danger small mt-1"
-                                                    />
-                                                </div>
-
-                                                {/* PDF Upload */}
-                                                <div className="col-md-6 mb-3">
-                                                    {!id ? (
-                                                        <RequiredLabel>Upload Contract PDF</RequiredLabel>
-                                                    ) : (
-                                                        <OptionalLabel>Upload Contract PDF</OptionalLabel>
-                                                    )}
-
-                                                    {/* Show current PDF when editing */}
-                                                    {id && existingPdf && (
-                                                        <div className="mb-2 p-2 bg-light rounded d-flex align-items-center justify-content-between">
-                                                            <div className="d-flex align-items-center">
-                                                                <i className="fa-regular fa-file-pdf text-danger me-2"></i>
-                                                                <span className="small">{existingPdf}</span>
-                                                            </div>
-                                                            <span className="badge bg-success">Current File</span>
-                                                        </div>
-                                                    )}
-
-                                                    <input
-                                                        type="file"
-                                                        accept="application/pdf"
-                                                        className="form-control"
-                                                        onChange={(e) => {
-                                                            const file = e.target.files[0];
-                                                            setFieldValue("pdf", file);
-                                                            setFileName(file?.name || "");
-                                                        }}
-                                                    />
-
-                                                    {/* Show new file name when selected */}
-                                                    {values.pdf && (
-                                                        <div className="mt-2 p-2 bg-light rounded d-flex align-items-center">
-                                                            <i className="fa-regular fa-file-pdf text-danger me-2"></i>
-                                                            <span className="small">{values.pdf.name}</span>
-                                                        </div>
-                                                    )}
-
-                                                    {id && (
-                                                        <div className="form-text">
-                                                            Leave empty to keep current file
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                {/* Submit Button */}
-                                                <div className="col-md-12 text-end mt-3">
-                                                    <button
-                                                        type="submit"
-                                                        className="theme-btn green-cl white-cl"
-                                                        disabled={isSubmitting}
-                                                    >
-                                                        {isSubmitting ? (
-                                                            <>
-                                                                <span className="spinner-border spinner-border-sm me-2" />
-                                                                {id ? "Updating..." : "Uploading..."}
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <i className="fa-regular fa-paper-plane me-2"></i>
-                                                                {id ? "Update Contract" : "Upload Contract"}
-                                                            </>
-                                                        )}
-                                                    </button>
-                                                </div>
+                                                    }}
+                                                    className={touched.label && errors.label ? "is-invalid" : ""}
+                                                    styles={{
+                                                        control: (base) => ({
+                                                            ...base,
+                                                            borderColor: touched.label && errors.label ? '#dc3545' : base.borderColor,
+                                                        }),
+                                                    }}
+                                                />
+                                                <ErrorMessage name="label" component="div" className="text-danger small mt-1" />
                                             </div>
-                                        </Form>
-                                    )}
-                                </Formik>
-                            </div>
+
+                                            {/* Contract Name */}
+                                            <div className="col-md-6">
+                                                <label className="form-label fw-semibold">
+                                                    Contract Name <span className="text-danger">*</span>
+                                                </label>
+                                                <Field
+                                                    type="text"
+                                                    name="contractName"
+                                                    className={`form-control ${touched.contractName && errors.contractName ? "is-invalid" : ""}`}
+                                                    placeholder="Enter contract name"
+                                                />
+                                                <ErrorMessage name="contractName" component="div" className="text-danger small mt-1" />
+                                            </div>
+
+                                            {/* Description */}
+                                            <div className="col-md-6">
+                                                <label className="form-label fw-semibold">Description</label>
+                                                <Field
+                                                    as="textarea"
+                                                    name="description"
+                                                    rows="4"
+                                                    className={`form-control ${touched.description && errors.description ? "is-invalid" : ""}`}
+                                                    placeholder="Enter contract description (optional)"
+                                                />
+                                                <ErrorMessage name="description" component="div" className="text-danger small mt-1" />
+                                            </div>
+
+                                            {/* Start Date */}
+                                            <div className="col-md-6">
+                                                <label className="form-label fw-semibold">
+                                                    Start Date <span className="text-danger">*</span>
+                                                </label>
+                                                <Field
+                                                    type="date"
+                                                    name="startDate"
+                                                    className={`form-control ${touched.startDate && errors.startDate ? "is-invalid" : ""}`}
+                                                />
+                                                <ErrorMessage name="startDate" component="div" className="text-danger small mt-1" />
+                                            </div>
+
+                                            {/* End Date */}
+                                            <div className="col-md-6">
+                                                <label className="form-label fw-semibold">
+                                                    End Date <span className="text-danger">*</span>
+                                                </label>
+                                                <Field
+                                                    type="date"
+                                                    name="endDate"
+                                                    className={`form-control ${touched.endDate && errors.endDate ? "is-invalid" : ""}`}
+                                                />
+                                                <ErrorMessage name="endDate" component="div" className="text-danger small mt-1" />
+                                            </div>
+
+                                            {/* Label Percentage */}
+                                            <div className="col-md-6">
+                                                <label className="form-label fw-semibold">Label Percentage (%)</label>
+                                                <Field
+                                                    type="number"
+                                                    name="labelPercentage"
+                                                    min="0"
+                                                    max="100"
+                                                    step="0.01"
+                                                    placeholder="e.g. 30"
+                                                    className={`form-control ${touched.labelPercentage && errors.labelPercentage ? "is-invalid" : ""}`}
+                                                />
+                                                <ErrorMessage name="labelPercentage" component="div" className="text-danger small mt-1" />
+                                            </div>
+
+                                            {/* PDF Upload */}
+                                            <div className="col-md-6">
+                                                <label className="form-label fw-semibold">
+                                                    Upload Contract PDF {!id && <span className="text-danger">*</span>}
+                                                </label>
+
+                                                {/* Show existing PDF in edit mode */}
+                                                {id && existingPdf && (
+                                                    <div className="alert alert-info small py-2 px-3 mb-3 d-flex align-items-center justify-content-between">
+                                                        <div>
+                                                            <i className="fa-regular fa-file-pdf text-danger me-2"></i>
+                                                            <strong>Current:</strong> {existingPdf.split("/").pop()}
+                                                        </div>
+                                                        <span className="badge bg-success">Active</span>
+                                                    </div>
+                                                )}
+
+                                                <input
+                                                    type="file"
+                                                    accept="application/pdf"
+                                                    className="form-control"
+                                                    onChange={(e) => {
+                                                        const file = e.target.files[0];
+                                                        if (file) {
+                                                            setFieldValue("pdf", file);
+                                                            setFileName(file.name);
+                                                        }
+                                                    }}
+                                                />
+
+                                                {/* Show newly selected file */}
+                                                {values.pdf && (
+                                                    <div className="alert alert-success small py-2 px-3 mt-3">
+                                                        <i className="fa-regular fa-file-pdf text-danger me-2"></i>
+                                                        <strong>New file selected:</strong> {values.pdf.name}
+                                                    </div>
+                                                )}
+
+                                                {id && (
+                                                    <div className="form-text mt-2">
+                                                        Leave empty to keep the current PDF
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Submit Button */}
+                                        <div className="col-md-12 text-end mt-3">
+                                            <button
+                                                type="submit"
+                                                className="theme-btn green-cl white-cl"
+                                                disabled={isSubmitting}
+                                            >
+                                                {isSubmitting ? (
+                                                    <>
+                                                        <span className="spinner-border spinner-border-sm me-2" />
+                                                        {id ? "Updating..." : "Uploading..."}
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <i className="fa-regular fa-paper-plane me-2"></i>
+                                                        {id ? "Update Contract" : "Upload Contract"}
+                                                    </>
+                                                )}
+                                            </button>
+                                        </div>
+                                    </Form>
+                                )}
+                            </Formik>
                         </div>
                     </div>
                 </div>

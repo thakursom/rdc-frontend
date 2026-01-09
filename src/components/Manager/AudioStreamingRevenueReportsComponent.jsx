@@ -25,7 +25,8 @@ function AudioStreamingRevenueReportsComponent() {
 
     const [data, setData] = useState(null);
     const [reportData, setReportData] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [summaryLoading, setSummaryLoading] = useState(false);
+    const [reportsLoading, setReportsLoading] = useState(false);
     const [showDates, setShowDates] = useState(false);
     const [pageCount, setPageCount] = useState(1);
     const [totalRecords, setTotalRecords] = useState(10);
@@ -85,7 +86,6 @@ function AudioStreamingRevenueReportsComponent() {
     const buildQueryString = (includeCheckboxFilters = false) => {
         const params = new URLSearchParams();
 
-        // Always include these filters
         if (filters.platform) params.append("platform", filters.platform);
         if (filters.year) params.append("year", filters.year);
         if (filters.month) params.append("month", filters.month);
@@ -101,7 +101,6 @@ function AudioStreamingRevenueReportsComponent() {
         params.append("limit", filters.limit);
         return params.toString();
     };
-
 
     const fetchInitialSummary = async () => {
         try {
@@ -126,23 +125,25 @@ function AudioStreamingRevenueReportsComponent() {
     };
 
     const fetchSummarys = async (includeCheckboxFilters = false) => {
-        setLoading(true);
         try {
-            // Don't fetch filtered summary if no filters are applied
             const hasFilters = filters.platform || filters.year || filters.month || filters.fromDate ||
                 filters.toDate || labelFilter || (includeCheckboxFilters && selectedFilter);
 
             if (!hasFilters) {
-                // If no filters, use the initial data
                 if (initialData) {
                     setData(initialData);
                 } else {
+                    setSummaryLoading(true);
                     await fetchInitialSummary();
+                    setSummaryLoading(false);
                 }
-                // Still fetch reports even when no filters (to get paginated data)
+                setReportsLoading(true);
                 await fetchReports(includeCheckboxFilters);
+                setReportsLoading(false);
                 return;
             }
+            setSummaryLoading(true);
+            setReportsLoading(true);
 
             const query = buildQueryString(includeCheckboxFilters);
             const result = await apiRequest(`/audio-streaming-revenue/summary?${query}`, "GET", null, true);
@@ -151,10 +152,13 @@ function AudioStreamingRevenueReportsComponent() {
                 setData(result.data.data);
                 await fetchReports(includeCheckboxFilters);
             }
+            setSummaryLoading(false);
+            setReportsLoading(false);
+
         } catch (error) {
             console.error(error);
-        } finally {
-            setLoading(false);
+            setSummaryLoading(false);
+            setReportsLoading(false);
         }
     };
 
@@ -175,23 +179,19 @@ function AudioStreamingRevenueReportsComponent() {
         }
     };
 
-    // Fetch initial data on first render
     useEffect(() => {
         const fetchInitialData = async () => {
             if (initialRender.current) {
                 initialRender.current = false;
-                // Fetch initial summary data first
                 await fetchInitialSummary();
-                // Then fetch reports (first page)
                 await fetchReports(false);
-                setLoading(false);
+                setReportsLoading(false);
             }
         };
 
         fetchInitialData();
     }, []);
 
-    // Fetch data when regular filters change
     useEffect(() => {
         if (!initialRender.current) {
             const fetchFilteredData = async () => {
@@ -245,8 +245,8 @@ function AudioStreamingRevenueReportsComponent() {
         fetchSummarys(true);
     };
 
-    const handleClearFilters = () => {
-        setFilters({
+    const handleClearFilters = async () => {
+        const clearedFilters = {
             platform: "",
             month: "",
             quarter: "",
@@ -258,24 +258,30 @@ function AudioStreamingRevenueReportsComponent() {
             territory: false,
             page: 1,
             limit: 10,
-        });
+        };
+
+        setFilters(clearedFilters);
         setSelectedFilter("");
         setLabelFilter("");
         setShowDates(false);
         setFiltersApplied(false);
 
-        // When clearing filters, revert to initial data
         if (initialData) {
             setData(initialData);
         } else {
-            fetchInitialSummary();
+            setSummaryLoading(true);
+            await fetchInitialSummary();
+            setSummaryLoading(false);
         }
-        fetchReports(false);
+
+        setReportsLoading(true);
+        await fetchReports(false);
+        setReportsLoading(false);
     };
 
     const handleExcelDownload = async (useCheckboxFilters = false) => {
         try {
-            setLoading(true);
+            setReportsLoading(true);
 
             const query = buildQueryString(useCheckboxFilters);
 
@@ -300,7 +306,7 @@ function AudioStreamingRevenueReportsComponent() {
             console.error("Error triggering report:", error);
             toast.error("Error starting report generation");
         } finally {
-            setLoading(false);
+            setReportsLoading(false);
         }
     };
 
@@ -311,7 +317,6 @@ function AudioStreamingRevenueReportsComponent() {
 
         const dates = Object.keys(revenueByMonth)
             .map(key => {
-                // Handle different date formats
                 if (key.includes('-')) {
                     const [year, month] = key.split('-');
                     const date = new Date(year, month - 1);
@@ -436,7 +441,7 @@ function AudioStreamingRevenueReportsComponent() {
                             <button
                                 className="theme-btn green-cl white-cl me-1 position-relative"
                                 onClick={() => handleExcelDownload(filtersApplied)}
-                                disabled={loading}
+                                disabled={reportsLoading}
                             >
                                 <i className="fa-solid fa-file-excel" /> Generate Excel Report
                             </button>
@@ -674,7 +679,7 @@ function AudioStreamingRevenueReportsComponent() {
                                     <button
                                         type="submit"
                                         className="theme-btn green-cl white-cl"
-                                        disabled={loading}
+                                        disabled={reportsLoading}
                                     >
                                         <i className="fa-solid fa-filter me-2" />
                                         Filter
@@ -684,9 +689,8 @@ function AudioStreamingRevenueReportsComponent() {
                                         type="button"
                                         className="theme-btn bg-red white-cl"
                                         onClick={handleClearFilters}
-                                        disabled={loading}
+                                        disabled={reportsLoading}
                                     >
-                                        {/* <i className="fa-solid fa-times me-2" /> */}
                                         Clear
                                     </button>
                                 </div>
@@ -741,8 +745,25 @@ function AudioStreamingRevenueReportsComponent() {
                                                 {getLast12MonthsRange()}
                                             </span></h5>
                                         </div>
-                                        <div className="main-chartbox">
+                                        <div className="main-chartbox" style={{ position: "relative" }}>
                                             <AudioStreamingRdcRevenueChart revenueByMonth={data?.revenueByMonth || {}} />
+                                            {summaryLoading && (
+                                                <div style={{
+                                                    position: "absolute",
+                                                    top: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    bottom: 0,
+                                                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    borderRadius: "8px",
+                                                    zIndex: 10
+                                                }}>
+                                                    <Loader small={true} />
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -753,8 +774,26 @@ function AudioStreamingRevenueReportsComponent() {
                                                 {getLast12MonthsRange()}
                                             </span></h5>
                                         </div>
-                                        <div className="main-chartbox">
+                                        <div className="main-chartbox" style={{ position: "relative" }}>
                                             <AudioStreamingRevenueBarChart revenueByChannel={data?.revenueByChannel || {}} />
+
+                                            {summaryLoading && (
+                                                <div style={{
+                                                    position: "absolute",
+                                                    top: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    bottom: 0,
+                                                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    borderRadius: "8px",
+                                                    zIndex: 10
+                                                }}>
+                                                    <Loader small={true} />
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -765,8 +804,26 @@ function AudioStreamingRevenueReportsComponent() {
                                                 {getLast12MonthsRange()}
                                             </span></h5>
                                         </div>
-                                        <div className="main-chartbox">
+                                        <div className="main-chartbox" style={{ position: "relative" }}>
                                             <AudioStreamingCountryRevenueChart revenueByCountry={data?.revenueByCountry || {}} />
+
+                                            {summaryLoading && (
+                                                <div style={{
+                                                    position: "absolute",
+                                                    top: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    bottom: 0,
+                                                    backgroundColor: "rgba(255, 255, 255, 0.7)",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    borderRadius: "8px",
+                                                    zIndex: 10
+                                                }}>
+                                                    <Loader small={true} />
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -776,7 +833,7 @@ function AudioStreamingRevenueReportsComponent() {
 
                     {/* === TABLE === */}
                     <div className="table-sec">
-                        {loading ? (
+                        {reportsLoading ? (
                             <div className="text-center py-5"><Loader small={true} /></div>
                         ) : reports.length > 0 ? (
                             <>

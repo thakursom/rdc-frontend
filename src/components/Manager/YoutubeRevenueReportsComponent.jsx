@@ -53,7 +53,16 @@ function YoutubeRevenueReportsComponent() {
         { key: "revenue", label: "Revenue", isNumber: true }
     ];
 
-    columns = columns.filter(col => reports.some(r => r[col.key] !== undefined && r[col.key] !== null));
+    const formattedReports = reports.map(item => ({
+        ...item,
+        release: item.track_title || item.asset_title || "N/A"
+    }));
+
+
+    columns = columns.filter(col =>
+        formattedReports.some(r => r[col.key] !== undefined && r[col.key] !== null)
+    );
+
 
     const generateYears = () => {
         const currentYear = new Date().getFullYear();
@@ -281,6 +290,7 @@ function YoutubeRevenueReportsComponent() {
         setReportsLoading(false);
     };
 
+
     const handleExcelDownload = async (useCheckboxFilters = false) => {
         try {
             setReportsLoading(true);
@@ -428,7 +438,7 @@ function YoutubeRevenueReportsComponent() {
         <>
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
-                    <div className="mian-sec-heading">
+                    <div className="mian-sec-heading1">
                         <h6>Youtube Revenue Reports</h6>
                         <div className="btn-right-sec">
                             {downloadHistory.length >= 1 && (
@@ -854,10 +864,19 @@ function YoutubeRevenueReportsComponent() {
                                             <tr key={i}>
                                                 {columns.map(col => (
                                                     <td key={col.key}>
-                                                        {col.isNumber
-                                                            ? `$${Number(row[col.key] || 0).toFixed(2)}`
-                                                            : row[col.key] || "-"}
+                                                        {col.key === "release" ? (
+                                                            <span title={row[col.key]}>
+                                                                {row[col.key].length > 30
+                                                                    ? row[col.key].slice(0, 30) + "..."
+                                                                    : row[col.key]}
+                                                            </span>
+                                                        ) : col.isNumber ? (
+                                                            `$${Number(row[col.key] || 0).toFixed(2)}`
+                                                        ) : (
+                                                            row[col.key] || "-"
+                                                        )}
                                                     </td>
+
                                                 ))}
                                             </tr>
                                         ))}

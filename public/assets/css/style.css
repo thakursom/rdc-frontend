@@ -2387,7 +2387,7 @@ select.rows-select {
     }
 
     .mian-sec-heading1 {
-        flex-direction: row;
+        flex-direction: column;
     }
 
     .pagination-wrapper {

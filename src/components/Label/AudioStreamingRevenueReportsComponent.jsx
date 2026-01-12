@@ -53,15 +53,7 @@ function AudioStreamingRevenueReportsComponent() {
         { key: "revenue", label: "Revenue", isNumber: true }
     ];
 
-    const formattedReports = reports.map(item => ({
-        ...item,
-        release: item.track_title || item.asset_title || "N/A"
-    }));
-
-
-    columns = columns.filter(col =>
-        formattedReports.some(r => r[col.key] !== undefined && r[col.key] !== null)
-    );
+    columns = columns.filter(col => reports.some(r => r[col.key] !== undefined && r[col.key] !== null));
 
 
     const generateYears = () => {
@@ -861,17 +853,9 @@ function AudioStreamingRevenueReportsComponent() {
                                             <tr key={i}>
                                                 {columns.map(col => (
                                                     <td key={col.key}>
-                                                        {col.key === "release" ? (
-                                                            <span title={row[col.key]}>
-                                                                {row[col.key].length > 30
-                                                                    ? row[col.key].slice(0, 30) + "..."
-                                                                    : row[col.key]}
-                                                            </span>
-                                                        ) : col.isNumber ? (
-                                                            `$${Number(row[col.key] || 0).toFixed(2)}`
-                                                        ) : (
-                                                            row[col.key] || "-"
-                                                        )}
+                                                        {col.isNumber
+                                                            ? `$${Number(row[col.key] || 0).toFixed(2)}`
+                                                            : row[col.key] || "-"}
                                                     </td>
                                                 ))}
                                             </tr>

@@ -19,13 +19,11 @@ function LabelSummaryComponent() {
     const [contractToRemind, setContractToRemind] = useState(null);
     const [emailLoading, setEmailLoading] = useState(false);
     const [whatsappLoading, setWhatsappLoading] = useState(false);
-    console.log("contracts", contracts);
 
 
 
     const navigate = useNavigate();
 
-    // Fetch contracts
     const fetchContracts = async () => {
         setLoading(true);
         try {
@@ -63,7 +61,6 @@ function LabelSummaryComponent() {
         setPage(1); // reset to first page
     };
 
-    // Delete Modal Handlers
     const handleDeleteClick = (contract) => {
         setContractToDelete(contract);
         setShowDeleteModal(true);
@@ -101,7 +98,6 @@ function LabelSummaryComponent() {
         }
     };
 
-    // Reminder Modal Handlers
     const handleReminderClick = (contract) => {
         setContractToRemind(contract);
         setShowReminderModal(true);
@@ -183,9 +179,9 @@ function LabelSummaryComponent() {
 
         try {
             const res = await apiRequest(
-                `/contracts/${contract._id}/auto-renew`, // make sure route matches
+                `/contracts/${contract._id}/auto-renew`,
                 "PUT",
-                { autoRenew: newValue }, // send boolean
+                { autoRenew: newValue },
                 true
             );
 
@@ -194,7 +190,6 @@ function LabelSummaryComponent() {
                     `Auto-renew ${newValue ? "enabled" : "disabled"} successfully!`
                 );
 
-                // Optimistic update + refetch
                 setContracts(prev =>
                     prev.map(c =>
                         c._id === contract._id
@@ -203,7 +198,6 @@ function LabelSummaryComponent() {
                     )
                 );
 
-                // Optional: refresh full list after small delay
                 setTimeout(fetchContracts, 400);
             } else {
                 toast.error(res.message || "Failed to update auto renew");
@@ -313,9 +307,6 @@ function LabelSummaryComponent() {
                                                             />
                                                         </div>
                                                     </td>
-
-
-
                                                     <td>
                                                         <button className="border-less border-green color-green table-button me-1"
                                                             onClick={() =>
@@ -370,7 +361,7 @@ function LabelSummaryComponent() {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="7" style={{ textAlign: "center" }}>
+                                                <td colSpan="8" style={{ textAlign: "center" }}>
                                                     No Contracts Found
                                                 </td>
                                             </tr>

@@ -47,7 +47,7 @@ function AddBulkPayoutComponent() {
                     toast.success("Excel uploaded successfully");
                     resetForm();
                     setFile(null);
-                    navigate("/superadmin/payouts");
+                    navigate("/manager/payouts");
                 } else {
                     toast.error(result.message || "Upload failed");
                 }

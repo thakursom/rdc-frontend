@@ -436,7 +436,7 @@ function YoutubeRevenueReportsComponent() {
         <>
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
-                    <div className="mian-sec-heading1">
+                    <div className="mian-sec-heading mian-sec-heading1">
                         <h6>Youtube Revenue Reports</h6>
                         <div className="btn-right-sec">
                             {downloadHistory.length >= 1 && (

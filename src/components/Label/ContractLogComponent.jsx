@@ -6,21 +6,15 @@ import { useParams, useNavigate } from "react-router-dom";
 
 function ContractLogComponent() {
     const { id } = useParams();
-    // ✅ Assuming you have a route like /contracts/:contract_id/logs
     const navigate = useNavigate();
-
     const [logs, setLogs] = useState([]);
-
     const [loading, setLoading] = useState(true);
     const [selectedLog, setSelectedLog] = useState(null);
     const [showModal, setShowModal] = useState(false);
-
-    // Pagination + Search
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [search, setSearch] = useState("");
 
-    // Helper to format values nicely
     const formatValue = (value) => {
         if (value === null || value === undefined) return "<empty>";
         if (typeof value === "boolean") return value ? "Yes" : "No";
@@ -33,7 +27,6 @@ function ContractLogComponent() {
         return String(value);
     };
 
-    // ✅ Fetch Logs for given contract_id
     const fetchLogs = async (pageNumber = 1, searchTerm = "") => {
         try {
             setLoading(true);
@@ -56,11 +49,10 @@ function ContractLogComponent() {
         }
     };
 
-    // ✅ Load logs when component mounts or page/search changes
     useEffect(() => {
         const delay = setTimeout(() => {
             fetchLogs(page, search);
-        }, 500); // debounce
+        }, 500);
 
         return () => clearTimeout(delay);
     }, [page, search, id]);
@@ -79,11 +71,12 @@ function ContractLogComponent() {
         setSelectedLog(null);
     };
 
+    const isUpdateLog = logs.some(log => log.data?.after);
+
     return (
         <>
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
-                    {/* Header with Back button + Search */}
                     <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
                         <h6>Contract Logs</h6>
                         <button
@@ -94,7 +87,6 @@ function ContractLogComponent() {
                         </button>
                     </div>
 
-                    {/* Table Section */}
                     <div>
                         {loading ? (
                             <div
@@ -115,6 +107,7 @@ function ContractLogComponent() {
                                             <tr>
                                                 <th>Client</th>
                                                 <th>Action</th>
+                                                <th>{isUpdateLog ? "Updated By" : "Added By"}</th>
                                                 <th>IP Address</th>
                                                 <th>Date</th>
                                                 <th>View</th>
@@ -126,6 +119,7 @@ function ContractLogComponent() {
                                                     <tr key={log._id}>
                                                         <td>{log.user?.name || "N/A"}</td>
                                                         <td>{log.action}</td>
+                                                        <td>{log.updated_by || "N/A"}</td>
                                                         <td>{log.ipAddress?.replace(/^::ffff:/, "") || "-"}</td>
                                                         <td>{new Date(log.createdAt).toLocaleString()}</td>
                                                         <td>
@@ -167,7 +161,6 @@ function ContractLogComponent() {
                         )}
                     </div>
 
-                    {/* Modal */}
                     {/* Modal */}
                     {showModal && selectedLog && (
                         <div className="modal-overlay">

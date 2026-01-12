@@ -7,15 +7,8 @@ import { toast } from "react-toastify";
 import Loader from "../Loader/Loader";
 import { useNavigate } from "react-router-dom";
 
-// Validation schema - Updated for Excel files
 const validationSchema = Yup.object({
     platform: Yup.string().required("Platform is required"),
-    // periodFrom: Yup.string()
-    //     .required("Start Date required")
-    //     .matches(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
-    // periodTo: Yup.string()
-    //     .required("End Date required")
-    //     .matches(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
     file: Yup.mixed()
         .required("Please upload a file")
         .test("fileType", "Only Excel files allowed", (value) =>
@@ -46,8 +39,6 @@ function RevenueUploadComponent() {
     const formik = useFormik({
         initialValues: {
             platform: "",
-            // periodFrom: "",
-            // periodTo: "",
             file: null,
         },
 
@@ -59,8 +50,6 @@ function RevenueUploadComponent() {
             const formData = new FormData();
             formData.append("file", values.file);
             formData.append("platform", values.platform);
-            // formData.append("periodFrom", values.periodFrom);
-            // formData.append("periodTo", values.periodTo);
 
             try {
                 const result = await apiRequest(
@@ -156,8 +145,6 @@ function RevenueUploadComponent() {
         }
     };
 
-
-    // DELETE FUNCTIONS
     const handleDeleteClick = (item) => {
         setItemToDelete(item);
         setShowDeleteModal(true);
@@ -196,14 +183,13 @@ function RevenueUploadComponent() {
         }
     };
 
-    // Handle pagination click
     const handlePageChange = (selectedObj) => {
         setPage(selectedObj.selected + 1);
     };
 
     const handlePerPageChange = (value) => {
         setPerPage(value);
-        setPage(1); // reset to first page
+        setPage(1);
     };
 
     const handleProcessUploadClick = () => {
@@ -224,8 +210,6 @@ function RevenueUploadComponent() {
         formik.validateForm().then(errors => {
             formik.setTouched({
                 platform: true,
-                // periodFrom: true,
-                // periodTo: true,
                 file: true,
             });
 
@@ -237,7 +221,6 @@ function RevenueUploadComponent() {
         });
     };
 
-    // Handle file drop functionality
     const handleDrop = (e) => {
         e.preventDefault();
         const files = e.dataTransfer.files;
@@ -267,12 +250,8 @@ function RevenueUploadComponent() {
                                     <div className="chart-content-head">
                                         <h5>Upload Royalty/Usage Report</h5>
                                     </div>
-
-                                    {/* FORM START */}
                                     <form className="revenue-upload">
                                         <div className="row g-3">
-
-                                            {/* Platform */}
                                             <div className="col-md-4">
                                                 <div className="form-group">
                                                     <label className="form-label">Platform</label>
@@ -306,53 +285,9 @@ function RevenueUploadComponent() {
                                                     )}
                                                 </div>
                                             </div>
-
-                                            {/* Period From */}
-                                            {/* <div className="col-md-4">
-                                                <div className="form-group">
-                                                    <label className="form-label">Period From</label>
-                                                    <input
-                                                        className={`form-control ${formik.touched.periodFrom && formik.errors.periodFrom ? 'is-invalid' : ''}`}
-                                                        type="date"
-                                                        name="periodFrom"
-                                                        value={formik.values.periodFrom}
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                    />
-
-                                                    {formik.touched.periodFrom && formik.errors.periodFrom && (
-                                                        <div className="text-danger small">
-                                                            {formik.errors.periodFrom}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div> */}
-
-                                            {/* Period To */}
-                                            {/* <div className="col-md-4">
-                                                <div className="form-group">
-                                                    <label className="form-label">Period To</label>
-                                                    <input
-                                                        className={`form-control ${formik.touched.periodTo && formik.errors.periodTo ? 'is-invalid' : ''}`}
-                                                        type="date"
-                                                        name="periodTo"
-                                                        value={formik.values.periodTo}
-                                                        onChange={formik.handleChange}
-                                                        onBlur={formik.handleBlur}
-                                                    />
-
-                                                    {formik.touched.periodTo && formik.errors.periodTo && (
-                                                        <div className="text-danger small">
-                                                            {formik.errors.periodTo}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div> */}
-
                                         </div>
                                     </form>
 
-                                    {/* FILE UPLOAD */}
                                     <div className="row">
                                         <div className="col-md-12 mb-3">
                                             <div
@@ -406,12 +341,6 @@ function RevenueUploadComponent() {
                                                     )}
                                                 </div>
 
-                                                {/* <div className="csv-btn">
-                                                    <button type="button" className="border-less">Need a template?</button>
-                                                    <button type="button" className="border-less border-green color-green table-button">
-                                                        Download Template
-                                                    </button>
-                                                </div> */}
                                             </div>
                                         </div>
 
@@ -468,8 +397,6 @@ function RevenueUploadComponent() {
                                         <th>Platform</th>
                                         <th>FileName</th>
                                         <th>Date of upload</th>
-                                        {/* <th>From</th>
-                                        <th>To</th> */}
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -482,14 +409,12 @@ function RevenueUploadComponent() {
                                                 <td>{item.platform}</td>
                                                 <td>{item.fileName}</td>
                                                 <td>{item.createdAt ? new Date(item.createdAt).toISOString().split("T")[0] : "N/A"}</td>
-                                                {/* <td>{item.periodFrom}</td>
-                                                <td>{item.periodTo}</td> */}
                                                 <td>
                                                     {/* Show View button only if NOT accepted */}
                                                     {!item.isAccepted && (
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"
-                                                            onClick={() => navigate(`/superadmin/revenues/${item._id}`)}
+                                                            onClick={() => navigate(`/manager/revenues/${item._id}`)}
                                                         >
                                                             View <i className="fa-solid fa-chevron-right" />
                                                         </button>
@@ -666,11 +591,6 @@ function RevenueUploadComponent() {
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* <p className="text-danger small mt-3">
-                                        <i className="fa-solid fa-circle-exclamation me-1" />
-                                        This action cannot be undone. All data will be permanently removed.
-                                    </p> */}
                                 </div>
                                 <div className="modal-footer">
                                     <button

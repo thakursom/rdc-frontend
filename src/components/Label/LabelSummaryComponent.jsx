@@ -60,10 +60,9 @@ function LabelSummaryComponent() {
 
     const handlePerPageChange = (value) => {
         setPerPage(value);
-        setPage(1); // reset to first page
+        setPage(1);
     };
 
-    // Delete Modal Handlers
     const handleDeleteClick = (contract) => {
         setContractToDelete(contract);
         setShowDeleteModal(true);
@@ -101,17 +100,14 @@ function LabelSummaryComponent() {
         }
     };
 
-    // Reminder Modal Handlers
     const handleReminderClick = (contract) => {
         setContractToRemind(contract);
         setShowReminderModal(true);
     };
 
     const handleCloseReminderModal = () => {
-        // close modal and reset selected contract
         setShowReminderModal(false);
         setContractToRemind(null);
-        // optionally also reset loading flags (safe guard)
         setEmailLoading(false);
         setWhatsappLoading(false);
     };
@@ -170,10 +166,7 @@ function LabelSummaryComponent() {
 
 
     const handleSendWhatsappReminder = () => {
-        // Just open WhatsApp Web in a new tab
         window.open("https://web.whatsapp.com/", "_blank");
-
-        // Close modal
         handleCloseReminderModal();
     };
 
@@ -183,9 +176,9 @@ function LabelSummaryComponent() {
 
         try {
             const res = await apiRequest(
-                `/contracts/${contract._id}/auto-renew`, // make sure route matches
+                `/contracts/${contract._id}/auto-renew`,
                 "PUT",
-                { autoRenew: newValue }, // send boolean
+                { autoRenew: newValue },
                 true
             );
 
@@ -194,7 +187,6 @@ function LabelSummaryComponent() {
                     `Auto-renew ${newValue ? "enabled" : "disabled"} successfully!`
                 );
 
-                // Optimistic update + refetch
                 setContracts(prev =>
                     prev.map(c =>
                         c._id === contract._id
@@ -203,7 +195,6 @@ function LabelSummaryComponent() {
                     )
                 );
 
-                // Optional: refresh full list after small delay
                 setTimeout(fetchContracts, 400);
             } else {
                 toast.error(res.message || "Failed to update auto renew");
@@ -244,7 +235,7 @@ function LabelSummaryComponent() {
 
                             <button
                                 className="theme-btn green-cl white-cl me-1"
-                                onClick={() => navigate(`/superadmin/contract-from`)}
+                                onClick={() => navigate(`/label/contract-from`)}
                             >
                                 <i className="fa-solid fa-file-signature me-1" />
                                 Add New Contract
@@ -259,7 +250,6 @@ function LabelSummaryComponent() {
                                 <table className="rdc-table">
                                     <thead>
                                         <tr>
-                                            {/* <th>Contract Name</th> */}
                                             <th>Label Name</th>
                                             <th>Percentage</th>
                                             <th>Start Date</th>
@@ -274,7 +264,6 @@ function LabelSummaryComponent() {
                                         {contracts.length > 0 ? (
                                             contracts.map((contract, i) => (
                                                 <tr key={i}>
-                                                    {/* <td>{contract.contractName}</td> */}
                                                     <td>{contract.userName}</td>
                                                     <td>{contract.labelPercentage}</td>
                                                     <td>{new Date(contract.startDate).toISOString().split("T")[0]}</td>
@@ -319,41 +308,32 @@ function LabelSummaryComponent() {
                                                     <td>
                                                         <button className="border-less border-green color-green table-button me-1"
                                                             onClick={() =>
-                                                                navigate(`/superadmin/all-contracts/${contract.user_id}`)
+                                                                navigate(`/label/all-contracts/${contract.user_id}`)
                                                             }
                                                         >
                                                             All Contracts
                                                         </button>
                                                         <button className="border-less border-purple color-purple table-button me-1"
                                                             onClick={() =>
-                                                                navigate(`/superadmin/sub-label-summary/${contract.user_id}`)
+                                                                navigate(`/label/sub-label-summary/${contract.user_id}`)
                                                             }
                                                         >
                                                             Sub Label
                                                         </button>
-                                                        {/* <button className="border-less border-purple color-purple table-button me-1">
-                                                            NOC
-                                                        </button> */}
+
                                                         <button
                                                             className="border-less border-green color-green table-button me-1"
                                                             onClick={() =>
-                                                                navigate(`/superadmin/contract-from/${contract._id}`)
+                                                                navigate(`/label/contract-from/${contract._id}`)
                                                             }
                                                         >
                                                             Edit <i className="fa-solid fa-chevron-right" />
                                                         </button>
 
-                                                        {/* <button
-                                                            className="border-less border-red dark-red table-button me-1"
-                                                            onClick={() => handleDeleteClick(contract)}
-                                                        >
-                                                            Delete <i className="fa-solid fa-trash" />
-                                                        </button> */}
-
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"
                                                             onClick={() =>
-                                                                navigate(`/superadmin/contract-logs/${contract._id}`)
+                                                                navigate(`/label/contract-logs/${contract._id}`)
                                                             }
                                                         >
                                                             View Logs <i className="fa-solid fa-right-to-bracket"></i>
@@ -370,7 +350,7 @@ function LabelSummaryComponent() {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="7" style={{ textAlign: "center" }}>
+                                                <td colSpan="8" style={{ textAlign: "center" }}>
                                                     No Contracts Found
                                                 </td>
                                             </tr>

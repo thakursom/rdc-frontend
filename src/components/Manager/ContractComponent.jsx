@@ -11,12 +11,9 @@ function ContractComponent() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(false);
-
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [contractToDelete, setContractToDelete] = useState(null);
     const [deleteLoading, setDeleteLoading] = useState(false);
-
-    // ✅ New States for Reminder Modal
     const [showReminderModal, setShowReminderModal] = useState(false);
     const [contractToRemind, setContractToRemind] = useState(null);
     const [emailLoading, setEmailLoading] = useState(false);
@@ -24,7 +21,6 @@ function ContractComponent() {
 
     const navigate = useNavigate();
 
-    // ✅ Fetch contracts
     const fetchContracts = async () => {
         setLoading(true);
         try {
@@ -57,7 +53,6 @@ function ContractComponent() {
         setPage(selectedObj.selected + 1);
     };
 
-    // ✅ Delete Modal Handlers
     const handleDeleteClick = (contract) => {
         setContractToDelete(contract);
         setShowDeleteModal(true);
@@ -95,17 +90,14 @@ function ContractComponent() {
         }
     };
 
-    // ✅ Reminder Modal Handlers
     const handleReminderClick = (contract) => {
         setContractToRemind(contract);
         setShowReminderModal(true);
     };
 
     const handleCloseReminderModal = () => {
-        // close modal and reset selected contract
         setShowReminderModal(false);
         setContractToRemind(null);
-        // optionally also reset loading flags (safe guard)
         setEmailLoading(false);
         setWhatsappLoading(false);
     };
@@ -164,10 +156,7 @@ function ContractComponent() {
 
 
     const handleSendWhatsappReminder = () => {
-        // Just open WhatsApp Web in a new tab
         window.open("https://web.whatsapp.com/", "_blank");
-
-        // Close modal
         handleCloseReminderModal();
     };
 
@@ -181,7 +170,6 @@ function ContractComponent() {
                     </div>
 
                     <div className="dashTabs mainDashboarTabs">
-                        {/* ✅ SEARCH BAR + ADD BUTTON */}
                         <div className="d-flex justify-content-between align-items-center flex-wrap">
                             <div className="form-sec" style={{ marginBottom: "15px", width: "300px" }}>
                                 <i className="fa-solid fa-magnifying-glass" />
@@ -199,14 +187,12 @@ function ContractComponent() {
 
                             <button
                                 className="theme-btn green-cl white-cl me-1"
-                                onClick={() => navigate(`/superadmin/contract-from`)}
+                                onClick={() => navigate(`/manager/contract-from`)}
                             >
                                 <i className="fa-solid fa-file-signature me-1" />
                                 Add New Contract
                             </button>
                         </div>
-
-                        {/* ✅ TABLE */}
                         <div className="table-sec">
                             {loading ? (
                                 <Loader />
@@ -246,7 +232,7 @@ function ContractComponent() {
                                                         <button
                                                             className="border-less border-green color-green table-button me-1"
                                                             onClick={() =>
-                                                                navigate(`/superadmin/contract-from/${contract._id}`)
+                                                                navigate(`/manager/contract-from/${contract._id}`)
                                                             }
                                                         >
                                                             Edit <i className="fa-solid fa-chevron-right" />
@@ -262,7 +248,7 @@ function ContractComponent() {
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"
                                                             onClick={() =>
-                                                                navigate(`/superadmin/contract-logs/${contract._id}`)
+                                                                navigate(`/manager/contract-logs/${contract._id}`)
                                                             }
                                                         >
                                                             View Logs <i className="fa-solid fa-right-to-bracket"></i>
@@ -289,7 +275,7 @@ function ContractComponent() {
                             )}
                         </div>
 
-                        {/* ✅ PAGINATION */}
+                        {/* PAGINATION */}
                         <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                             <CustomPagination
                                 pageCount={totalPages}
@@ -300,7 +286,7 @@ function ContractComponent() {
                     </div>
                 </div>
 
-                {/* ✅ DELETE MODAL */}
+                {/* DELETE MODAL */}
                 {showDeleteModal && (
                     <div className="modal-backdrop show">
                         <div className="modal d-block" tabIndex="-1">
@@ -357,7 +343,7 @@ function ContractComponent() {
                     </div>
                 )}
 
-                {/* ✅ REMINDER MODAL */}
+                {/* REMINDER MODAL */}
                 {showReminderModal && (
                     <div className="modal-backdrop  show" id="modal-view">
                         <div className="modal d-block" tabIndex="-1">

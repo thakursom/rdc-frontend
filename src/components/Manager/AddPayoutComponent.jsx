@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// Validation schema
 const validationSchema = Yup.object({
     selectedUser: Yup.string().required("User selection is required"),
     amount: Yup.number()
@@ -23,7 +22,6 @@ function AddPayoutComponent() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    // Formik initialization
     const formik = useFormik({
         initialValues: {
             selectedUser: "",
@@ -58,7 +56,7 @@ function AddPayoutComponent() {
                     setBankDetail({});
                     setSelectedUserLabel("");
                     setSelectedUserAmount(0);
-                    navigate("/superadmin/payouts");
+                    navigate("/manager/payouts");
                 } else {
                     toast.error(res.message || "Failed to save payout");
                 }
@@ -71,7 +69,6 @@ function AddPayoutComponent() {
         },
     });
 
-    // Load users/labels
     const loadOptions = async (inputValue) => {
         try {
             const res = await apiRequest(`/fetchAllLabel?search=${inputValue}`, "GET", null, true);
@@ -90,7 +87,6 @@ function AddPayoutComponent() {
         }
     };
 
-    // Fetch bank data when user selected
     useEffect(() => {
         if (!formik.values.selectedUser) return;
 
@@ -105,11 +101,9 @@ function AddPayoutComponent() {
 
                 const detail = res.data?.data;
 
-                // If no bank detail exists
                 if (!res.success || !detail || Object.keys(detail).length === 0) {
                     toast.error("Bank details are missing for this user. Please add them first.");
 
-                    // Reset user selection and bank details
                     formik.setFieldValue("selectedUser", "");
                     formik.setFieldValue("amount", "");
                     formik.setFieldValue("description", "");
@@ -119,7 +113,6 @@ function AddPayoutComponent() {
                     return;
                 }
 
-                // Bank detail exists
                 setBankDetail(detail);
 
             } catch (err) {
@@ -134,14 +127,12 @@ function AddPayoutComponent() {
         fetchData();
     }, [formik.values.selectedUser]);
 
-    // Handle user selection change
     const handleUserChange = (sel) => {
         if (sel) {
             formik.setFieldValue("selectedUser", sel.value);
             setSelectedUserLabel(sel.label);
             setSelectedUserAmount(sel.amount);
         } else {
-            // FULL RESET
             formik.setFieldValue("selectedUser", "");
             formik.setFieldValue("amount", "");
             formik.setFieldValue("description", "");
@@ -151,11 +142,10 @@ function AddPayoutComponent() {
         }
     };
 
-    // Custom styles for AsyncSelect to show red border on error
     const customStyles = {
         control: (base, state) => ({
             ...base,
-            minHeight: "38px",        // same as .form-control
+            minHeight: "38px",
             height: "38px",
             paddingLeft: "6px",
             paddingRight: "6px",
@@ -190,16 +180,13 @@ function AddPayoutComponent() {
     };
 
 
-    // Handle form submission with validation
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Validate all fields and show errors
         formik.validateForm().then(errors => {
             if (Object.keys(errors).length === 0) {
                 formik.handleSubmit();
             } else {
-                // Set all fields as touched to show validation errors
                 formik.setTouched({
                     selectedUser: true,
                     amount: true,

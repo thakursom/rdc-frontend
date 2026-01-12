@@ -6,21 +6,27 @@ import { useParams, useNavigate } from "react-router-dom";
 
 function ContractLogComponent() {
     const { id } = useParams();
-    // ✅ Assuming you have a route like /contracts/:contract_id/logs
     const navigate = useNavigate();
-
     const [logs, setLogs] = useState([]);
-
     const [loading, setLoading] = useState(true);
     const [selectedLog, setSelectedLog] = useState(null);
     const [showModal, setShowModal] = useState(false);
-
-    // Pagination + Search
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [search, setSearch] = useState("");
 
-    // ✅ Fetch Logs for given contract_id
+    const formatValue = (value) => {
+        if (value === null || value === undefined) return "<empty>";
+        if (typeof value === "boolean") return value ? "Yes" : "No";
+        if (value instanceof Date || (typeof value === "string" && !isNaN(Date.parse(value)))) {
+            return new Date(value).toLocaleDateString();
+        }
+        if (typeof value === "string" && value.startsWith("http")) {
+            return <a href={value} target="_blank" rel="noopener noreferrer">View File</a>;
+        }
+        return String(value);
+    };
+
     const fetchLogs = async (pageNumber = 1, searchTerm = "") => {
         try {
             setLoading(true);
@@ -43,11 +49,10 @@ function ContractLogComponent() {
         }
     };
 
-    // ✅ Load logs when component mounts or page/search changes
     useEffect(() => {
         const delay = setTimeout(() => {
             fetchLogs(page, search);
-        }, 500); // debounce
+        }, 500);
 
         return () => clearTimeout(delay);
     }, [page, search, id]);
@@ -66,11 +71,12 @@ function ContractLogComponent() {
         setSelectedLog(null);
     };
 
+    const isUpdateLog = logs.some(log => log.data?.after);
+
     return (
         <>
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
-                    {/* Header with Back button + Search */}
                     <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
                         <h6>Contract Logs</h6>
                         <button
@@ -81,7 +87,6 @@ function ContractLogComponent() {
                         </button>
                     </div>
 
-                    {/* Table Section */}
                     <div>
                         {loading ? (
                             <div
@@ -102,6 +107,7 @@ function ContractLogComponent() {
                                             <tr>
                                                 <th>Client</th>
                                                 <th>Action</th>
+                                                <th>{isUpdateLog ? "Updated By" : "Added By"}</th>
                                                 <th>IP Address</th>
                                                 <th>Date</th>
                                                 <th>View</th>
@@ -113,6 +119,7 @@ function ContractLogComponent() {
                                                     <tr key={log._id}>
                                                         <td>{log.user?.name || "N/A"}</td>
                                                         <td>{log.action}</td>
+                                                        <td>{log.updated_by || "N/A"}</td>
                                                         <td>{log.ipAddress?.replace(/^::ffff:/, "") || "-"}</td>
                                                         <td>{new Date(log.createdAt).toLocaleString()}</td>
                                                         <td>
@@ -157,7 +164,7 @@ function ContractLogComponent() {
                     {/* Modal */}
                     {showModal && selectedLog && (
                         <div className="modal-overlay">
-                            <div className="modal-content">
+                            <div className="modal-content" style={{ maxWidth: "800px", width: "90%" }}>
                                 <div className="modal-header">
                                     <h5>Log Details</h5>
                                     <button className="close-btn" onClick={closeModal}>
@@ -165,34 +172,78 @@ function ContractLogComponent() {
                                     </button>
                                 </div>
                                 <div className="modal-body">
-                                    <p>
-                                        <strong>Client:</strong> {selectedLog.user?.name} ({selectedLog.user?.email})
-                                    </p>
-                                    <p>
-                                        <strong>Action:</strong> {selectedLog.action}
-                                    </p>
-                                    <p>
-                                        <strong>Message:</strong> {selectedLog.message}
-                                    </p>
-                                    <p>
-                                        <strong>IP:</strong>{" "}
-                                        {selectedLog.ipAddress?.replace(/^::ffff:/, "") || "-"}
-                                    </p>
-                                    <p>
-                                        <strong>Date:</strong> {new Date(selectedLog.createdAt).toLocaleString()}
-                                    </p>
+                                    <div className="row mb-3">
+                                        <div className="col-md-6">
+                                            <p><strong>Client:</strong> {selectedLog.user?.name} ({selectedLog.user?.email})</p>
+                                            <p><strong>Action:</strong> <span className="badge bg-primary">{selectedLog.action}</span></p>
+                                            <p><strong>IP Address:</strong> {selectedLog.ipAddress?.replace(/^::ffff:/, "") || "-"}</p>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <p><strong>Date:</strong> {new Date(selectedLog.createdAt).toLocaleString()}</p>
+                                            <p><strong>Message:</strong> {selectedLog.message || "-"}</p>
+                                        </div>
+                                    </div>
+
                                     <hr />
-                                    <h6>Full Data (JSON)</h6>
-                                    <pre
-                                        style={{
-                                            background: "#f8f9fa",
-                                            padding: "10px",
-                                            borderRadius: "8px",
-                                            overflowX: "auto",
-                                        }}
-                                    >
-                                        {JSON.stringify(selectedLog.data, null, 2)}
-                                    </pre>
+
+                                    <h6 className="mb-3">
+                                        <i className="fa-solid fa-exchange-alt me-2"></i>
+                                        Changes Made
+                                    </h6>
+
+                                    {selectedLog.data?.before && selectedLog.data?.after ? (
+                                        <>
+                                            {(() => {
+                                                const before = selectedLog.data.before;
+                                                const after = selectedLog.data.after;
+                                                const keys = new Set([...Object.keys(before), ...Object.keys(after)]);
+                                                const changedFields = Array.from(keys).filter(key =>
+                                                    JSON.stringify(before[key]) !== JSON.stringify(after[key])
+                                                );
+
+                                                return changedFields.length > 0 ? (
+                                                    <div className="table-responsive">
+                                                        <table className="table table-sm table-bordered table-striped">
+                                                            <thead className="table-light">
+                                                                <tr>
+                                                                    <th style={{ width: "30%" }}>Field</th>
+                                                                    <th style={{ width: "35%" }}>Previous Value</th>
+                                                                    <th style={{ width: "35%" }}>New Value</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {changedFields.map(key => (
+                                                                    <tr key={key}>
+                                                                        <td><strong>{key.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}</strong></td>
+                                                                        <td>
+                                                                            <em className="text-danger">
+                                                                                {formatValue(before[key])}
+                                                                            </em>
+                                                                        </td>
+                                                                        <td>
+                                                                            <em className="text-success">
+                                                                                {formatValue(after[key])}
+                                                                            </em>
+                                                                        </td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                ) : (
+                                                    <div className="alert alert-info">
+                                                        <i className="fa-solid fa-info-circle me-2"></i>
+                                                        No changes detected in the tracked fields.
+                                                    </div>
+                                                );
+                                            })()}
+                                        </>
+                                    ) : (
+                                        <div className="alert alert-warning">
+                                            <i className="fa-solid fa-exclamation-triangle me-2"></i>
+                                            No before/after data available for this log.
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

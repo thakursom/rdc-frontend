@@ -125,7 +125,7 @@ function ContractFormComponent() {
 
             if (res.success) {
                 toast.success(id ? "Contract Updated Successfully!" : "Contract Uploaded Successfully!");
-                navigate("/superadmin/label-summary");
+                navigate("/manager/label-summary");
             } else {
                 toast.error(res.message || "Something went wrong");
             }

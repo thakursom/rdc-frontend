@@ -1947,7 +1947,6 @@ select.rows-select {
 
     .main-chartbox canvas#revenueChart {
         width: 100% !important;
-        height: 280px !important;
     }
 
     .main-chartbox canvas#yearChart {
@@ -2036,7 +2035,6 @@ select.rows-select {
 
     .main-chartbox canvas#revenueChart {
         width: 100% !important;
-        height: 250px !important;
     }
 
     canvas#lineChart {
@@ -2103,7 +2101,6 @@ select.rows-select {
 
     .main-chartbox canvas#revenueChart {
         width: 100% !important;
-        height: 250px !important;
     }
 
     form.rdc-form {

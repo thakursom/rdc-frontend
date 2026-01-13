@@ -63,7 +63,7 @@ function ArtistComponent() {
 
     const handlePerPageChange = (value) => {
         setPerPage(value);
-        setPage(1); // reset to first page
+        setPage(1);
     };
 
     return (

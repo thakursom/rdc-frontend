@@ -220,7 +220,6 @@ function LabelSummaryComponent() {
                     </div>
 
                     <div className="dashTabs mainDashboarTabs">
-                        {/* SEARCH BAR + ADD BUTTON */}
                         <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
                             <div className="form-sec" style={{ marginBottom: "15px", maxWidth: "400px" }}>
                                 <i className="fa-solid fa-magnifying-glass" />
@@ -253,7 +252,6 @@ function LabelSummaryComponent() {
                                 <table className="rdc-table">
                                     <thead>
                                         <tr>
-                                            {/* <th>Contract Name</th> */}
                                             <th>Label Name</th>
                                             <th>Percentage</th>
                                             <th>Start Date</th>
@@ -268,7 +266,6 @@ function LabelSummaryComponent() {
                                         {contracts.length > 0 ? (
                                             contracts.map((contract, i) => (
                                                 <tr key={i}>
-                                                    {/* <td>{contract.contractName}</td> */}
                                                     <td>{contract.userName}</td>
                                                     <td>{contract.labelPercentage}</td>
                                                     <td>{new Date(contract.startDate).toISOString().split("T")[0]}</td>

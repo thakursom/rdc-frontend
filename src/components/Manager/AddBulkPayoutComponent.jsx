@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// Validation Schema
 const validationSchema = Yup.object({
     file: Yup.mixed()
         .required("Please upload a file")

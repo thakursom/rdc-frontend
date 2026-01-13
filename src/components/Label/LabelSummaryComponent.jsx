@@ -19,13 +19,8 @@ function LabelSummaryComponent() {
     const [contractToRemind, setContractToRemind] = useState(null);
     const [emailLoading, setEmailLoading] = useState(false);
     const [whatsappLoading, setWhatsappLoading] = useState(false);
-    console.log("contracts", contracts);
-
-
-
     const navigate = useNavigate();
 
-    // Fetch contracts
     const fetchContracts = async () => {
         setLoading(true);
         try {
@@ -217,7 +212,6 @@ function LabelSummaryComponent() {
                     </div>
 
                     <div className="dashTabs mainDashboarTabs">
-                        {/* SEARCH BAR + ADD BUTTON */}
                         <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
                             <div className="form-sec" style={{ marginBottom: "15px", maxWidth: "400px" }}>
                                 <i className="fa-solid fa-magnifying-glass" />

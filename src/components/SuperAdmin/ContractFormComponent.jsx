@@ -24,7 +24,6 @@ function ContractFormComponent() {
     const navigate = useNavigate();
     const { id } = useParams();
 
-    // Validation Schema
     const validationSchema = Yup.object({
         label: Yup.string().required("Label is required"),
         contractName: Yup.string()
@@ -39,7 +38,6 @@ function ContractFormComponent() {
         description: Yup.string().max(500, "Max 500 characters allowed"),
     });
 
-    // Fetch contract on edit
     useEffect(() => {
         if (id) {
             const fetchContract = async () => {
@@ -79,7 +77,6 @@ function ContractFormComponent() {
         }
     }, [id]);
 
-    // Load labels for AsyncSelect
     const loadOptions = async (inputValue) => {
         try {
             const res = await apiRequest(`/fetchAllLabel?search=${inputValue}`, "GET", null, true);
@@ -96,7 +93,6 @@ function ContractFormComponent() {
         }
     };
 
-    // Submit handler
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
             if (!id && !values.pdf) {

@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-// validation
 const validationSchema = Yup.object({
     file: Yup.mixed()
         .required("Please upload a file")
@@ -52,11 +51,7 @@ function ConversionComponent() {
                     toast.error("Conversion failed");
                     return;
                 }
-
-                // Show XML text in UI
                 setXmlPreview(result.xml);
-
-                // Show download button
                 setShowDownloadBtn(true);
 
                 toast.success("File Converted Successfully!");

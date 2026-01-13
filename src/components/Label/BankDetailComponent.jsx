@@ -45,22 +45,19 @@ function BankDetailComponent() {
 
     const handlePerPageChange = (value) => {
         setPerPage(value);
-        setPage(1); // reset to first page
+        setPage(1);
     };
 
-    // Open confirmation modal
     const handleDeleteClick = (bank) => {
         setBankToDelete(bank);
         setShowDeleteModal(true);
     };
 
-    // Close confirmation modal
     const handleCloseModal = () => {
         setShowDeleteModal(false);
         setBankToDelete(null);
     };
 
-    // Confirm and delete bank detail
     const handleConfirmDelete = async () => {
         if (!bankToDelete) return;
 
@@ -74,12 +71,9 @@ function BankDetailComponent() {
             );
 
             if (res.success) {
-                // Refresh the data after successful deletion
                 fetchBankDetails();
-                // Show success message (you can add a toast notification here)
                 console.log("Bank detail deleted successfully");
             } else {
-                // Show error message
                 console.error("Failed to delete bank detail:", res.message);
             }
         } catch (error) {
@@ -144,7 +138,6 @@ function BankDetailComponent() {
                                         {bankDetails.length > 0 ? (
                                             bankDetails.map((b, i) => (
                                                 <tr key={i}>
-                                                    {/* FIXED: Using userName instead of user_id.name */}
                                                     <td>{b.userName || "N/A"}</td>
                                                     <td>{b.paymentMethod}</td>
                                                     <td>

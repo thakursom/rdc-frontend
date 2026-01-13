@@ -33,14 +33,13 @@ function UserManagementComponent() {
   }, [filterRole, page, perPage, search]);
 
 
-  // Handle pagination click
   const handlePageChange = (selectedObj) => {
     setPage(selectedObj.selected + 1);
   };
 
   const handlePerPageChange = (value) => {
     setPerPage(value);
-    setPage(1); // reset to first page
+    setPage(1);
   };
 
   return (
@@ -52,7 +51,6 @@ function UserManagementComponent() {
           </div>
 
           <div className="dashTabs mainDashboarTabs">
-            {/* Tabs Same */}
             <ul className="nav nav-tabs" role="tablist" style={{ marginBottom: "15px" }}>
               <li className="nav-item" role="presentation">
                 <a
@@ -72,20 +70,6 @@ function UserManagementComponent() {
                 </a>
 
               </li>
-
-              {/* <li className="nav-item" role="presentation">
-                <button
-                  className={`nav-link ${filterRole === "manager" ? "active" : ""}`}
-                  role="tab"
-                  onClick={() => {
-                    setFilterRole("manager");
-                    setPage(1);
-                  }}
-                >
-                  Manager
-                </button>
-
-              </li> */}
             </ul>
 
             {/*Table */}
@@ -104,13 +88,6 @@ function UserManagementComponent() {
                   }}
                 />
               </div>
-
-              {/* <button className="theme-btn green-cl white-cl me-1"
-                onClick={() => navigate(`/superadmin/add-user`)}
-              >
-                <i className="fa-regular fa-circle-user me-1" />
-                Add User
-              </button> */}
             </div>
 
             <div className="table-sec">
@@ -121,7 +98,6 @@ function UserManagementComponent() {
                     <th>Email</th>
                     <th>Roles</th>
                     <th>Action</th>
-                    {/* <th>ThirdPartyUsername</th> */}
                   </tr>
                 </thead>
                 {loading ? (
@@ -138,7 +114,6 @@ function UserManagementComponent() {
                           <td>{u.name || "N/A"}</td>
                           <td>{u.email || "N/A"}</td>
                           <td>{u.role || "N/A"}</td>
-                          {/* <td>{u.third_party_username || "N/A"}</td> */}
                           <td>
                             <button className="border-less border-purple color-purple table-button me-1">
                               <a className="color-purple" href="#">
@@ -146,11 +121,6 @@ function UserManagementComponent() {
                               </a>{" "}
                               <i className="fa-solid fa-chevron-right" />
                             </button>
-                            {/* <button className="border-less border-green color-green table-button"
-                              onClick={() => navigate(`/superadmin/sub-label/${u.id}`)}
-                            >
-                              Sub Label <i className="fa-solid fa-chevron-right" />
-                            </button> */}
                           </td>
                         </tr>
                       ))

@@ -86,7 +86,6 @@ function YoutubeRevenueReportsComponent() {
     const buildQueryString = (includeCheckboxFilters = false) => {
         const params = new URLSearchParams();
 
-        // Always include these filters
         if (filters.platform) params.append("platform", filters.platform);
         if (filters.year) params.append("year", filters.year);
         if (filters.month) params.append("month", filters.month);
@@ -193,7 +192,6 @@ function YoutubeRevenueReportsComponent() {
         fetchInitialData();
     }, []);
 
-    // Fetch data when regular filters change
     useEffect(() => {
         if (!initialRender.current) {
             const fetchFilteredData = async () => {
@@ -319,7 +317,6 @@ function YoutubeRevenueReportsComponent() {
 
         const dates = Object.keys(revenueByMonth)
             .map(key => {
-                // Handle different date formats
                 if (key.includes('-')) {
                     const [year, month] = key.split('-');
                     const date = new Date(year, month - 1);

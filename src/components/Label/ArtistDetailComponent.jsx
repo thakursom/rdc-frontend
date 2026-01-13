@@ -74,15 +74,12 @@ function ArtistDetailComponent() {
                     <div className="heading-content">
                         <div className="inner-content">
                             <p>{state?.artistName || "N/A"}</p>
-                            {/* <span>Country: {state?.countries?.join(", ") || "N/A"}</span> */}
                         </div>
                     </div>
 
-                    {/* --- DASH CARDS SECTION --- */}
                     <div className="artist-details">
                         <div className="row g-4">
 
-                            {/* Total Streams */}
                             <div className="col-md-6 col-lg-6 col-xl-6 col-xxl-3 col-stem">
                                 <div className="navy-cl stem-child">
                                     <div className="dash-card ">
@@ -246,7 +243,7 @@ function ArtistDetailComponent() {
                                             setFromDate("");
                                             setToDate("");
                                             setPage(1);
-                                            setApplyFilter(prev => !prev);   // trigger refresh
+                                            setApplyFilter(prev => !prev);
                                         }}
                                         disabled={!search && !fromDate && !toDate}
                                     >

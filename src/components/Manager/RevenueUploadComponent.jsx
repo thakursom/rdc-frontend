@@ -318,7 +318,6 @@ function RevenueUploadComponent() {
                                                             formik.setFieldValue("file", uploaded);
                                                             formik.setFieldTouched("file", true, false);
 
-                                                            // Show file name feedback
                                                             if (uploaded) {
                                                                 toast.info(`Selected file: ${uploaded.name}`);
                                                             }
@@ -332,7 +331,6 @@ function RevenueUploadComponent() {
                                                         </div>
                                                     )}
 
-                                                    {/* Show selected file name */}
                                                     {formik.values.file && (
                                                         <div className="text-success small mt-2">
                                                             <i className="fa-solid fa-check me-1" />
@@ -384,11 +382,7 @@ function RevenueUploadComponent() {
                                 </div>
                             </div>
                         </div>
-
-                        {/* Show Loader when uploading */}
                         {loading && <Loader />}
-
-                        {/* Revenue Uploads Table */}
                         <div className="table-sec mt-5">
                             <table className="rdc-table">
                                 <thead>
@@ -410,7 +404,6 @@ function RevenueUploadComponent() {
                                                 <td>{item.fileName}</td>
                                                 <td>{item.createdAt ? new Date(item.createdAt).toISOString().split("T")[0] : "N/A"}</td>
                                                 <td>
-                                                    {/* Show View button only if NOT accepted */}
                                                     {!item.isAccepted && (
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"
@@ -420,7 +413,6 @@ function RevenueUploadComponent() {
                                                         </button>
                                                     )}
 
-                                                    {/* Show Accept button only if NOT accepted */}
                                                     {!item.isAccepted ? (
                                                         <button
                                                             className="border-less border-green color-green table-button me-1"

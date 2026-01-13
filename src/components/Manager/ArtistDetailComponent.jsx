@@ -74,7 +74,6 @@ function ArtistDetailComponent() {
                     <div className="heading-content">
                         <div className="inner-content">
                             <p>{state?.artistName || "N/A"}</p>
-                            {/* <span>Country: {state?.countries?.join(", ") || "N/A"}</span> */}
                         </div>
 
                     </div>
@@ -251,7 +250,7 @@ function ArtistDetailComponent() {
                                             setFromDate("");
                                             setToDate("");
                                             setPage(1);
-                                            setApplyFilter(prev => !prev);   // trigger refresh
+                                            setApplyFilter(prev => !prev);
                                         }}
                                         disabled={!search && !fromDate && !toDate}
                                     >

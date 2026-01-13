@@ -10,7 +10,6 @@ function LogComponent() {
     const [pageCount, setPageCount] = useState(1);
     const [loading, setLoading] = useState(false);
 
-    // Fetch Logs API
     const fetchLogs = async () => {
         setLoading(true);
 
@@ -63,7 +62,6 @@ function LogComponent() {
                                         <th>Description</th>
                                         <th>IP</th>
                                         <th>Date</th>
-                                        {/* <th>Action</th> */}
                                     </tr>
                                 </thead>
 
@@ -76,20 +74,6 @@ function LogComponent() {
                                                 <td>{log.description || "N/A"}</td>
                                                 <td>{log.ip || "N/A"}</td>
                                                 <td>{log.createdAt ? new Date(log.createdAt).toISOString().split("T")[0] : "N/A"}</td>
-
-                                                {/* <td>
-                                                    <button className="green-cl white-cl icon-btn me-1">
-                                                        <i className="fa-solid fa-download" />
-                                                    </button>
-
-                                                    <button className="purple-cl white-cl icon-btn me-1">
-                                                        <i className="fa-solid fa-square-check" />
-                                                    </button>
-
-                                                    <button className="bg-red white-cl icon-btn me-1">
-                                                        <i className="fa-solid fa-trash-can" />
-                                                    </button>
-                                                </td> */}
                                             </tr>
                                         ))
                                     ) : (

@@ -33,14 +33,13 @@ function UserManagementComponent() {
   }, [filterRole, page, perPage, search]);
 
 
-  // Handle pagination click
   const handlePageChange = (selectedObj) => {
     setPage(selectedObj.selected + 1);
   };
 
   const handlePerPageChange = (value) => {
     setPerPage(value);
-    setPage(1); // reset to first page
+    setPage(1);
   };
 
   return (
@@ -52,7 +51,6 @@ function UserManagementComponent() {
           </div>
 
           <div className="dashTabs mainDashboarTabs">
-            {/* Tabs Same */}
             <ul className="nav nav-tabs" role="tablist" style={{ marginBottom: "15px" }}>
               <li className="nav-item" role="presentation">
                 <a
@@ -161,9 +159,7 @@ function UserManagementComponent() {
                           <td>{u.name || "N/A"}</td>
                           <td>{u.email || "N/A"}</td>
                           <td>{u.role || "N/A"}</td>
-                          {/* <td>{u.third_party_username || "N/A"}</td> */}
                           <td>
-                            {/* View Button (Always show) */}
                             <button className="border-less border-purple color-purple table-button me-1">
                               <a className="color-purple" href="#">
                                 View
@@ -171,7 +167,6 @@ function UserManagementComponent() {
                               <i className="fa-solid fa-chevron-right" />
                             </button>
 
-                            {/* Sub Label Button (Hide when Sub Label tab is active) */}
                             {filterRole !== "sub label" && (
                               <button
                                 className="border-less border-green color-green table-button"

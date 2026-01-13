@@ -321,7 +321,6 @@ function YoutubeRevenueReportsComponent() {
 
         const dates = Object.keys(revenueByMonth)
             .map(key => {
-                // Handle different date formats
                 if (key.includes('-')) {
                     const [year, month] = key.split('-');
                     const date = new Date(year, month - 1);

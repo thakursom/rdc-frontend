@@ -7,7 +7,6 @@ import CustomPagination from "../Pagination/CustomPagination";
 
 function AllRevenueComponent() {
     const { userId } = useParams();
-
     const [revenues, setRevenues] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
@@ -16,7 +15,6 @@ function AllRevenueComponent() {
 
     const navigate = useNavigate();
 
-    // Fetch revenue API
     const fetchRevenueData = async () => {
         setLoading(true);
 
@@ -50,14 +48,13 @@ function AllRevenueComponent() {
         fetchRevenueData();
     }, [userId, page, perPage]);
 
-    // Pagination change handler
     const handlePageChange = (selectedObj) => {
         setPage(selectedObj.selected + 1);
     };
 
     const handlePerPageChange = (value) => {
         setPerPage(value);
-        setPage(1); // reset to first page
+        setPage(1);
     };
 
     return (
@@ -85,12 +82,10 @@ function AllRevenueComponent() {
                                         <th>Title</th>
                                         <th>Artist</th>
                                         <th>Tracks</th>
-                                        {/* <th>Release Date</th> */}
                                         <th>Label</th>
                                         <th>ISRC</th>
                                         <th>Retailer</th>
                                         <th>Territory</th>
-                                        {/* <th>Delivery</th> */}
                                         <th>Net Total</th>
                                         <th>Upload Date</th>
                                     </tr>
@@ -112,12 +107,10 @@ function AllRevenueComponent() {
                                                 </td>
                                                 <td>{item.track_artist || "N/A"}</td>
                                                 <td>{item.track_count || "N/A"}</td>
-                                                {/* <td>{item.date || "N/A"}</td> */}
                                                 <td>{item.label || item.label_name || "N/A"}</td>
                                                 <td>{item.isrc_code || "N/A"}</td>
                                                 <td>{item.retailer || "N/A"}</td>
                                                 <td>{item.territory || item.country || "N/A"}</td>
-                                                {/* <td>{item.delivery || "N/A"}</td> */}
                                                 <td>{item.net_total || item.total_revenue || "N/A"}</td>
                                                 <td>{item.uploading_date || "N/A"}</td>
                                             </tr>

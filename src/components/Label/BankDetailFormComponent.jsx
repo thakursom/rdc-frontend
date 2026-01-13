@@ -26,28 +26,22 @@ function BankDetailFormComponent() {
         upiId: ""
     });
 
-    // Simplified Validation Schema - Remove conditional validation for now
     const validationSchema = Yup.object({
         user_id: Yup.string().required("User is required"),
         paymentMethod: Yup.string().required("Payment method is required"),
-        // Always validate all fields but make them conditionally required in the form
     });
 
-    // Manual validation function
     const validateForm = (values) => {
         const errors = {};
 
-        // User is always required
         if (!values.user_id) {
             errors.user_id = "User is required";
         }
 
-        // Payment method is always required
         if (!values.paymentMethod) {
             errors.paymentMethod = "Payment method is required";
         }
 
-        // Conditional validation based on payment method
         if (values.paymentMethod === "bank") {
             if (!values.bankName) errors.bankName = "Bank name is required";
             if (!values.accountHolderName) errors.accountHolderName = "Account holder name is required";
@@ -99,7 +93,6 @@ function BankDetailFormComponent() {
         }
     }, [id]);
 
-    // Async User search
     const loadOptions = async (inputValue) => {
         try {
             const res = await apiRequest(`/fetchAllSubLabel?search=${inputValue}`, "GET", null, true);
@@ -116,7 +109,6 @@ function BankDetailFormComponent() {
         }
     };
 
-    // Save or Update
     const handleSubmit = async (values, { setSubmitting }) => {
         try {
             const payload = {
@@ -153,14 +145,12 @@ function BankDetailFormComponent() {
         }
     };
 
-    // Required field label component
     const RequiredLabel = ({ children }) => (
         <label className="form-label fw-semibold">
             {children} <span className="text-danger">*</span>
         </label>
     );
 
-    // Optional field label component
     const OptionalLabel = ({ children }) => (
         <label className="form-label fw-semibold">
             {children}
@@ -187,7 +177,7 @@ function BankDetailFormComponent() {
                                 <Formik
                                     initialValues={initialValues}
                                     validationSchema={validationSchema}
-                                    validate={validateForm} // Add custom validation
+                                    validate={validateForm}
                                     onSubmit={handleSubmit}
                                     enableReinitialize
                                 >

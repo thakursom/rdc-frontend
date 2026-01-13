@@ -3,8 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 function SingleReleaseComponent() {
     const navigate = useNavigate();
-
-    // Static fields (you can remove state if you don’t want input to work)
     const [search, setSearch] = useState("");
     const [fromDate, setFromDate] = useState("");
     const [toDate, setToDate] = useState("");
@@ -13,8 +11,6 @@ function SingleReleaseComponent() {
         <>
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
-
-                    {/* Heading */}
                     <div className="mian-sec-heading artistHeading">
                         <h6>Release Details</h6>
                         <button
@@ -25,14 +21,12 @@ function SingleReleaseComponent() {
                         </button>
                     </div>
 
-                    {/* Dummy name */}
                     <div className="heading-content">
                         <div className="inner-content">
                             <p>Release Name</p>
                         </div>
                     </div>
 
-                    {/* DASH CARDS SECTION */}
                     <div className="artist-details">
                         <div className="row g-4">
 

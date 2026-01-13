@@ -63,7 +63,7 @@ function ArtistComponent() {
 
     const handlePerPageChange = (value) => {
         setPerPage(value);
-        setPage(1); // reset to first page
+        setPage(1);
     };
 
     return (
@@ -162,7 +162,7 @@ function ArtistComponent() {
                             )}
                         </table>
                     </div>
-                    {/* ✅ Pagination */}
+                    {/*Pagination */}
                     <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                         <CustomPagination
                             pageCount={pageCount}

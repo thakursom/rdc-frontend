@@ -9,9 +9,7 @@ function AllContractComponent() {
     const { userId } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
-
     const [contracts, setContracts] = useState([]);
-
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
@@ -20,7 +18,6 @@ function AllContractComponent() {
     const [labelName, setLabelName] = useState("");
 
     useEffect(() => {
-        // Get label name from navigation state or fetch it
         if (location.state?.labelName) {
             setLabelName(location.state.labelName);
         } else if (contracts.length > 0) {
@@ -79,7 +76,6 @@ function AllContractComponent() {
                 </div>
 
                 <div className="dashTabs mainDashboarTabs">
-                    {/* CONTRACTS TABLE */}
                     <div className="table-sec mt-3">
                         {loading ? (
                             <Loader />
@@ -119,22 +115,6 @@ function AllContractComponent() {
                                                 </td>
                                                 <td>
                                                     <div className="d-flex gap-1">
-                                                        {/* <button
-                                                            className="border-less border-green color-green table-button"
-                                                            onClick={() =>
-                                                                navigate(`/superadmin/contract-from/${contract._id}`)
-                                                            }
-                                                        >
-                                                            Edit
-                                                        </button>
-                                                        <button
-                                                            className="border-less border-purple color-purple table-button"
-                                                            onClick={() =>
-                                                                navigate(`/superadmin/contract-logs/${contract._id}`)
-                                                            }
-                                                        >
-                                                            View Logs
-                                                        </button> */}
                                                         <button className="border-less border-purple color-purple table-button me-1">
                                                             NOC
                                                         </button>

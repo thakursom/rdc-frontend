@@ -156,7 +156,7 @@ function ArtistComponent() {
                             )}
                         </table>
                     </div>
-                    {/* ✅ Pagination */}
+                    {/* Pagination */}
                     <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                         <CustomPagination
                             pageCount={totalPages}

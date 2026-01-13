@@ -9,7 +9,6 @@ function ContractLogComponent() {
     const navigate = useNavigate();
 
     const [logs, setLogs] = useState([]);
-
     const [loading, setLoading] = useState(true);
     const [selectedLog, setSelectedLog] = useState(null);
     const [showModal, setShowModal] = useState(false);

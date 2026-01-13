@@ -20,7 +20,6 @@ function AllContractComponent() {
     const [labelName, setLabelName] = useState("");
 
     useEffect(() => {
-        // Get label name from navigation state or fetch it
         if (location.state?.labelName) {
             setLabelName(location.state.labelName);
         } else if (contracts.length > 0) {
@@ -119,22 +118,6 @@ function AllContractComponent() {
                                                 </td>
                                                 <td>
                                                     <div className="d-flex gap-1">
-                                                        {/* <button
-                                                            className="border-less border-green color-green table-button"
-                                                            onClick={() =>
-                                                                navigate(`/superadmin/contract-from/${contract._id}`)
-                                                            }
-                                                        >
-                                                            Edit
-                                                        </button>
-                                                        <button
-                                                            className="border-less border-purple color-purple table-button"
-                                                            onClick={() =>
-                                                                navigate(`/superadmin/contract-logs/${contract._id}`)
-                                                            }
-                                                        >
-                                                            View Logs
-                                                        </button> */}
                                                         <button className="border-less border-purple color-purple table-button me-1">
                                                             NOC
                                                         </button>

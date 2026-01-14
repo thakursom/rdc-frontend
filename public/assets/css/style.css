@@ -617,7 +617,7 @@ form.rdc-form {
 
 .main-chartbox canvas#yearChart {
     width: 100% !important;
-    height: 350px !important;
+    height: 400px !important;
 }
 
 .stem-col {
@@ -1885,6 +1885,29 @@ span.track-name {
     color: rgb(106, 114, 130);
 }
 
+/* new Chart  */
+
+canvas#growthChart {
+    width: 100% !important;
+    height: 400px !important;
+}
+
+canvas#plateFormShare {
+    width: 100% !important;
+    height: 400px !important;
+}
+
+canvas#revenueStackedArea {
+    width: 100% !important;
+    height: 400px !important;
+}
+
+canvas#territoryRevenue {
+    width: 100% !important;
+    height: 400px !important;
+}
+
+
 /* ############## Media Query ############## */
 
 @media(max-width:1799px) {
@@ -1924,7 +1947,6 @@ span.track-name {
 
     .main-chartbox canvas#yearChart {
         width: 100% !important;
-        height: 300px !important;
     }
 
     form.rdc-form {
@@ -1966,7 +1988,6 @@ span.track-name {
 
     .main-chartbox canvas#yearChart {
         width: 100% !important;
-        height: 200px !important;
     }
 
     .chart-content-head {
@@ -2198,7 +2219,6 @@ span.track-name {
 
     .main-chartbox canvas#yearChart {
         width: 100% !important;
-        height: 380px !important;
     }
 
     .theme-btn {

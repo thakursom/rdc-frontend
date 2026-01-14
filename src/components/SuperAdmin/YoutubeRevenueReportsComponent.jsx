@@ -116,7 +116,9 @@ function YoutubeRevenueReportsComponent() {
                     },
                     revenueByMonth: result.data.data.netRevenueByMonth || {},
                     revenueByChannel: result.data.data.revenueByChannel || {},
-                    revenueByCountry: result.data.data.revenueByCountry || {}
+                    revenueByCountry: result.data.data.revenueByCountry || {},
+                    topTracks: result.data.data.topTracks,
+                    topPlatforms: result.data.data.topPlatforms,
                 };
                 setInitialData(transformedData);
                 setData(transformedData);
@@ -833,8 +835,167 @@ function YoutubeRevenueReportsComponent() {
                         </div>
                     )}
 
+                    {/* Top 10 Tracks + Top Platforms */}
+                    {data && (
+                        <div className="row g-4">
+                            {/* Top 10 Performing Tracks */}
+                            <div className="col-md-12 stem-child">
+                                <div className="dash-charts ">
+                                    <div className="chart-content-head">
+                                        <h5>
+                                            Top 10 Performing Tracks
+                                            <span >
+                                                | {getLast12MonthsRange()}
+                                            </span>
+                                        </h5>
+                                        <div className="dropdown">
+                                            <button
+                                                className="btn btn-link text-muted"
+                                                type="button"
+                                                data-bs-toggle="dropdown"
+                                            >
+                                                ⋯
+                                            </button>
+                                            <ul className="dropdown-menu dropdown-menu-end">
+                                                <li><button className="dropdown-item">Export as CSV</button></li>
+                                                <li><button className="dropdown-item">Refresh Data</button></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    {summaryLoading ? (
+                                        <div className="text-center py-5">
+                                            <Loader small={true} />
+                                        </div>
+                                    ) : data.topTracks?.length > 0 ? (
+                                        <table className="rdc-table mt-3">
+                                            <thead>
+                                                <tr>
+                                                    <th>Track Name</th>
+                                                    <th>Total Plays</th>
+                                                    <th>Platform</th>
+                                                    <th>Revenue</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {data.topTracks.slice(0, 10).map((track, index) => (
+                                                    <tr key={track.isrc || index}>
+                                                        <td className="fw-medium">{track.track || track.release || "N/A"}</td>
+                                                        <td>{Number(track.totalPlays || 0).toLocaleString()}</td>
+                                                        <td>
+                                                            <span className="badge bg-light text-dark px-3 py-2">
+                                                                {track.platform || "N/A"}
+                                                            </span>
+                                                        </td>
+                                                        <td className="fw-bold">
+                                                            ${Number(track.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    ) : (
+                                        <div className="text-center py-5 text-muted">
+                                            <div className="mb-3 fs-1 opacity-50">📊</div>
+                                            <h6>No Data Available</h6>
+                                            <small>*Plays include Free/Subscription/Promotional/Trials</small>
+                                        </div>
+                                    )}
+                                </div>
+
+
+                            </div>
+
+                            {/* Top Platforms */}
+                            <div className="col-md-12 stem-child">
+                                <div className="dash-charts">
+                                    <div className="chart-content-head d-flex justify-content-between align-items-center">
+                                        <h5>
+                                            Top 10 in Top 5
+                                            <span>| {getLast12MonthsRange()}</span>
+                                        </h5>
+                                        <div className="dropdown">
+                                            <button className="btn btn-link text-muted" type="button" data-bs-toggle="dropdown">
+                                                ⋯
+                                            </button>
+                                            <ul className="dropdown-menu dropdown-menu-end">
+                                                <li><button className="dropdown-item">Export as CSV</button></li>
+                                                <li><button className="dropdown-item">Refresh Data</button></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    {summaryLoading ? (
+                                        <div className="text-center py-5">
+                                            <Loader small={true} />
+                                        </div>
+                                    ) : Object.keys(data?.topPlatforms || {}).length > 0 ? (
+                                        <div className="table-responsive mt-3">
+                                            <table className="rdc-table">
+                                                <thead>
+                                                    <tr>
+                                                        {Object.keys(data.topPlatforms)
+                                                            .slice(0, 5)
+                                                            .map((platformName) => (
+                                                                <th key={platformName}>
+                                                                    {platformName}
+                                                                </th>
+                                                            ))}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {Array.from({ length: 10 }).map((_, rowIndex) => (
+                                                        <tr key={rowIndex}>
+                                                            {Object.keys(data.topPlatforms)
+                                                                .slice(0, 5)
+                                                                .map((platformName) => {
+                                                                    const item = data.topPlatforms[platformName]?.[rowIndex];
+
+                                                                    return (
+                                                                        <td key={`${platformName}-${rowIndex}`}>
+                                                                            {item ? (
+                                                                                <div >
+                                                                                    <div className="revenue-fx">
+                                                                                        ${Number(item.revenue || 0).toLocaleString(undefined, {
+                                                                                            minimumFractionDigits: 2,
+                                                                                            maximumFractionDigits: 2,
+                                                                                        })}
+                                                                                    </div>
+                                                                                    <span
+                                                                                        className="track-name"
+                                                                                        data-bs-toggle="tooltip"
+                                                                                        data-bs-placement="top"
+                                                                                        title={item.track || "—"}
+                                                                                    >
+                                                                                        {(item.track || "—").length > 20
+                                                                                            ? (item.track || "—").substring(0, 20) + "..."
+                                                                                            : (item.track || "—")}
+                                                                                    </span>
+                                                                                </div>
+                                                                            ) : (
+                                                                                <span className="text-muted">—</span>
+                                                                            )}
+                                                                        </td>
+                                                                    );
+                                                                })}
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-5 text-muted">
+                                            <div className="mb-3 fs-1 opacity-50">📈</div>
+                                            <h6>No Platform Data Available</h6>
+                                            <small>Data for top platforms will appear here</small>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* === TABLE === */}
-                    <div className="table-sec">
+                    <div className="table-sec mt-4">
                         {reportsLoading ? (
                             <div className="text-center py-5"><Loader small={true} /></div>
                         ) : reports.length > 0 ? (

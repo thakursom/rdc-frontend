@@ -1870,6 +1870,21 @@ select.rows-select {
     height: 35px;
 }
 
+.revenue-fx {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 100%;
+    color: #6A7282;
+    margin-bottom: 4px;
+}
+
+span.track-name {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 100%;
+    color: rgb(106, 114, 130);
+}
+
 /* ############## Media Query ############## */
 
 @media(max-width:1799px) {

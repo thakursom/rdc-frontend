@@ -5,6 +5,10 @@ import MusicStreamsChart from "../Chart/MusicStreamsChart";
 import WeeklyStreamChart from "../Chart/WeeklyStreamChart";
 import MusicStreamComparisonChart from "../Chart/MusicStreamComparisonChart";
 import StreamingTrendsOverTimeChart from "../Chart/StreamingTrendsOverTimeChart";
+import GrowthChart from "../Chart/GrowthChart";
+import PlateFormShare from "../Chart/PlateFormShare";
+import RevenueStackedArea from "../Chart/RevenueStackedArea";
+import TerritoryRevenue from "../Chart/TerritoryRevenue";
 
 
 function DashboardComponent() {
@@ -306,7 +310,8 @@ function DashboardComponent() {
                                             </div>
                                             <div className="main-chartbox">
                                                 {/* <canvas id="barChartDashboard" /> */}
-                                                <DashboardChart />
+                                                {/* <DashboardChart /> */}
+                                                <GrowthChart />
                                             </div>
                                         </div>
                                     </div>
@@ -348,7 +353,7 @@ function DashboardComponent() {
                                             </div>
                                             <div className="main-chartbox">
                                                 {/* <canvas id="myChart" /> */}
-                                                <PlateformShareChart />
+                                                <PlateFormShare />
                                             </div>
                                         </div>
                                     </div>
@@ -397,7 +402,8 @@ function DashboardComponent() {
                                             </div>
                                             <div className="main-chartbox">
                                                 {/* <canvas id="revenueChart" /> */}
-                                                <RevenueByMonthChart />
+                                                {/* <RevenueByMonthChart /> */}
+                                                <RevenueStackedArea />
                                             </div>
                                         </div>
                                     </div>
@@ -480,61 +486,8 @@ function DashboardComponent() {
                                                 </div>
                                             </div>
                                             <div className="main-chartbox">
-                                                <div className="row g-3 mb-3">
-                                                    <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                                        <div className="territory-card green-cl ">
-                                                            <span className="white-cl">Us</span>
-                                                            <h6 className="white-cl">$4,200.00</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                                        <div className="territory-card parot-light ">
-                                                            <span>CA</span>
-                                                            <h6>$1,200.00</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                                        <div className="territory-card parot-light">
-                                                            <span>JM</span>
-                                                            <h6>$9,50.00</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                                        <div className="territory-card parot-light">
-                                                            <span>TT</span>
-                                                            <h6>$7,50.00</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                                        <div className="territory-card parot-light">
-                                                            <span>PR</span>
-                                                            <h6>$1,450.00</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                                        <div className="territory-card parot-light">
-                                                            <span>DO</span>
-                                                            <h6>$1,100.00</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                                        <div className="territory-card parot-light">
-                                                            <span>BS</span>
-                                                            <h6>$6,80.00</h6>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-sm-6 col-md-6 col-lg-6 col-xl-6 col-xxl-3">
-                                                        <div className="territory-card parot-light color-blk">
-                                                            <span>GB</span>
-                                                            <h6>$1,600.00</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                <TerritoryRevenue />
                                             </div>
-                                            <p>
-                                                Darker tiles indicate higher revenue relative to max
-                                                territory.
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -883,6 +836,7 @@ function DashboardComponent() {
                 </div>
             </section>
         </>
+
     );
 }
 

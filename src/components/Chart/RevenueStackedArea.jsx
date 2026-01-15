@@ -21,56 +21,66 @@ ChartJS.register(
   Legend
 );
 
-const RevenueStackedArea = () => {
+const COLORS = [
+  { border: "#20D4B0", background: "rgba(32, 212, 176, 0.25)" },
+  { border: "#A284F5", background: "rgba(162, 132, 245, 0.25)" },
+  { border: "#FF9B78", background: "rgba(255, 155, 120, 0.25)" },
+  { border: "#FFD670", background: "rgba(255, 214, 112, 0.25)" },
+  { border: "#64B5F6", background: "rgba(100, 181, 246, 0.25)" },
+  { border: "#F06292", background: "rgba(240, 98, 146, 0.25)" },
+  { border: "#7ED321", background: "rgba(126, 211, 33, 0.25)" },
+];
+
+const RevenueStackedArea = ({ revenueData = [] }) => {
+  console.log("revenueData", revenueData);
+
+  const labels = revenueData
+    .map(item => item._id)
+    .filter(id => id !== "")
+    .sort();
+
+  const allPlatforms = new Set();
+  revenueData.forEach(item => {
+    item.platforms.forEach(p => allPlatforms.add(p.name));
+  });
+  const platformNames = Array.from(allPlatforms);
+
+  const platformToIndex = {
+    "RDC Channel": 0,
+    "Premium Revenue": 1,
+    "Art Track": 2,
+    "UGC": 3,
+    "Partner Channel": 4,
+  };
+
+  const datasets = platformNames.map((platformName, index) => {
+    const colorIndex = index % COLORS.length;
+    const color = COLORS[colorIndex] || COLORS[index % COLORS.length];
+
+    const data = labels.map(month => {
+      const monthEntry = revenueData.find(item => item._id === month);
+      if (!monthEntry) return 0;
+
+      const platformEntry = monthEntry.platforms.find(p => p.name === platformName);
+      return platformEntry ? Number(platformEntry.value) : 0;
+    });
+
+    return {
+      label: platformName,
+      data: data,
+      borderColor: color.border,
+      backgroundColor: color.background,
+      fill: true,
+      tension: 0.3,
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 5,
+    };
+  });
+
   const data = {
-    labels: ["Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug"],
-    datasets: [
-      {
-        label: "RDC Channel",
-        data: [1.5,1.0,0.6,0.5,1.0,2.0,1.8,2.0,1.0,1.1,1.1,1.1],
-        borderColor: "#1FCCBE",
-        backgroundColor: "rgba(31, 204, 190, 0.25)",
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2
-      },
-      {
-        label: "Premium Revenue",
-        data: [0.7,0.65,0.62,0.6,0.7,0.75,0.7,0.68,0.58,0.55,0.55,0.52],
-        borderColor: "#FFC94D",
-        backgroundColor: "rgba(255, 201, 77, 0.25)",
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2
-      },
-      {
-        label: "Art Track",
-        data: [0.6,0.5,0.4,0.3,0.4,0.6,0.4,0.35,0.3,0.28,0.3,0.32],
-        borderColor: "#FF8A65",
-        backgroundColor: "rgba(255, 138, 101, 0.25)",
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2
-      },
-      {
-        label: "UGC",
-        data: [1.0,0.9,0.8,0.6,0.8,0.9,0.95,0.85,0.7,0.75,0.78,0.8],
-        borderColor: "#4E7DFF",
-        backgroundColor: "rgba(78, 125, 255, 0.25)",
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2
-      },
-      {
-        label: "Partner Channel",
-        data: [1.2,1.1,0.9,0.6,1.1,1.0,1.05,0.95,0.85,0.9,0.9,0.95],
-        borderColor: "#A678FF",
-        backgroundColor: "rgba(166, 120, 255, 0.25)",
-        fill: true,
-        tension: 0.3,
-        borderWidth: 2
-      }
-    ]
+    labels,
+    datasets,
   };
 
   const options = {
@@ -81,12 +91,15 @@ const RevenueStackedArea = () => {
       y: {
         beginAtZero: true,
         ticks: { color: "#888" },
-        grid: { color: "#eee" }
+        grid: { color: "#eee" },
+        title: {
+          display: false,
+        },
       },
       x: {
         ticks: { color: "#888" },
-        grid: { display: false }
-      }
+        grid: { display: false },
+      },
     },
 
     plugins: {
@@ -95,23 +108,40 @@ const RevenueStackedArea = () => {
         position: "bottom",
         labels: {
           padding: 20,
-          usePointStyle: true
-        }
+          usePointStyle: true,
+          boxWidth: 12,
+        },
       },
       tooltip: {
         mode: "index",
-        intersect: false
-      }
+        intersect: false,
+      },
     },
 
     interaction: {
       mode: "index",
-      intersect: false
-    }
+      intersect: false,
+    },
   };
 
+  if (labels.length === 0) {
+    return (
+      <div
+        style={{
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#aaa",
+        }}
+      >
+        No revenue data available
+      </div>
+    );
+  }
+
   return (
-    <div >
+    <div style={{ position: "relative", height: "100%", width: "100%" }}>
       <Line id="revenueStackedArea" data={data} options={options} />
     </div>
   );

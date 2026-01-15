@@ -799,7 +799,7 @@ function YoutubeRevenueReportsComponent() {
                                 <div className="col-md-12 stem-col">
                                     <div className="dash-charts stem-child">
                                         <div className="chart-content-head">
-                                            <h5>Net Revenue By Month <p><i className="fa-solid fa-circle" /> By Channel</p><span>
+                                            <h5>Net Revenue By Month <p><i className="fa-solid fa-circle" /></p><span>
                                                 {getLast12MonthsRange()}
                                             </span></h5>
                                         </div>

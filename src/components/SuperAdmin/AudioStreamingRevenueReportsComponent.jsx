@@ -64,8 +64,6 @@ function AudioStreamingRevenueReportsComponent() {
         return years;
     };
 
-    const years = generateYears();
-
     const loadOptions = async (inputValue) => {
         try {
             const res = await apiRequest(`/fetchAllLabel?search=${inputValue}`, "GET", null, true);
@@ -423,11 +421,77 @@ function AudioStreamingRevenueReportsComponent() {
         };
     }, [showReportsTable, downloadHistory]);
 
+
+    const downloadCSV = (type) => {
+        let filename = "";
+        let headers = [];
+        let rows = [];
+
+        if (type === "tracks") {
+            if (!data?.topTracks?.length) {
+                alert("No track data available to download");
+                return;
+            }
+
+            filename = `Top_10_Tracks_${getLast12MonthsRange() || "data"}.csv`;
+            headers = ["Track Name", "Total Plays", "Platform Name", "Revenue"];
+
+            rows = data.topTracks.slice(0, 10).map(track => [
+                `"${(track.track || track.release || "N/A").replace(/"/g, '""')}"`,
+                Number(track.totalPlays || 0),
+                `"${(track.platform || "N/A").replace(/"/g, '""')}"`,
+                Number(track.revenue || 0).toFixed(2)
+            ]);
+        }
+
+        else if (type === "platforms") {
+            if (!data?.topPlatforms || Object.keys(data.topPlatforms).length === 0) {
+                alert("No platform data available to download");
+                return;
+            }
+
+            const platforms = Object.keys(data.topPlatforms).slice(0, 5);
+            if (platforms.length === 0) return;
+
+            filename = `Top_10_in_Top_5_Platforms_${getLast12MonthsRange() || "data"}.csv`;
+            headers = ["Rank", ...platforms.flatMap(p => [`${p} Revenue`, `${p} Track`])];
+
+            rows = Array.from({ length: 10 }, (_, i) => {
+                const row = [i + 1];
+                platforms.forEach(p => {
+                    const item = data.topPlatforms[p]?.[i];
+                    if (item) {
+                        row.push(Number(item.revenue || 0).toFixed(2));
+                        row.push(`"${(item.track || "—").replace(/"/g, '""')}"`);
+                    } else {
+                        row.push("0.00", `"—"`);
+                    }
+                });
+                return row;
+            });
+        } else {
+            console.error("Unknown download type:", type);
+            return;
+        }
+
+        const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <>
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
-                    <div className="mian-sec-heading">
+                    <div className="mian-sec-heading mian-sec-heading1">
                         <h6>Audio Streaming Revenue Reports</h6>
                         <div className="btn-right-sec">
                             {downloadHistory.length >= 1 && (
@@ -846,17 +910,29 @@ function AudioStreamingRevenueReportsComponent() {
                                                 | {getLast12MonthsRange()}
                                             </span>
                                         </h5>
-                                        <div className="dropdown">
+                                        <div>
                                             <button
-                                                className="btn btn-link text-muted"
+                                                className="rdc-transpairent"
                                                 type="button"
+                                                id="plateformShare"
                                                 data-bs-toggle="dropdown"
+                                                aria-expanded="false"
                                             >
-                                                ⋯
+                                                <i className="fa-solid fa-ellipsis color-blk" />
                                             </button>
-                                            <ul className="dropdown-menu dropdown-menu-end">
-                                                <li><button className="dropdown-item">Export as CSV</button></li>
-                                                <li><button className="dropdown-item">Refresh Data</button></li>
+                                            <ul
+                                                className="dropdown-menu rdcDropdown rdc-plateformShare"
+                                                aria-labelledby="plateformShare"
+                                            >
+                                                <li>
+                                                    <a
+                                                        className="dropdown-item"
+                                                        href="#"
+                                                        onClick={(e) => { e.preventDefault(); downloadCSV('tracks'); }}
+                                                    >
+                                                        Download
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -865,32 +941,30 @@ function AudioStreamingRevenueReportsComponent() {
                                             <Loader small={true} />
                                         </div>
                                     ) : data.topTracks?.length > 0 ? (
-                                        <table className="rdc-table mt-3">
-                                            <thead>
-                                                <tr>
-                                                    <th>Track Name</th>
-                                                    <th>Total Plays</th>
-                                                    <th>Platform</th>
-                                                    <th>Revenue</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {data.topTracks.slice(0, 10).map((track, index) => (
-                                                    <tr key={track.isrc || index}>
-                                                        <td className="fw-medium">{track.track || track.release || "N/A"}</td>
-                                                        <td>{Number(track.totalPlays || 0).toLocaleString()}</td>
-                                                        <td>
-                                                            <span className="badge bg-light text-dark px-3 py-2">
-                                                                {track.platform || "N/A"}
-                                                            </span>
-                                                        </td>
-                                                        <td className="fw-bold">
-                                                            ${Number(track.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                                                        </td>
+                                        <div className="table-responsive mt-3">
+                                            <table className="rdc-table mt-3">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Track Name</th>
+                                                        <th>Total Plays</th>
+                                                        <th>Platform Name</th>
+                                                        <th>Revenue</th>
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {data.topTracks.slice(0, 10).map((track, index) => (
+                                                        <tr key={track.isrc || index}>
+                                                            <td className="fw-medium">{track.track || track.release || "N/A"}</td>
+                                                            <td>{Number(track.totalPlays || 0).toLocaleString()}</td>
+                                                            <td> {track.platform || "N/A"}</td>
+                                                            <td className="fw-bold">
+                                                                ${Number(track.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     ) : (
                                         <div className="text-center py-5 text-muted">
                                             <div className="mb-3 fs-1 opacity-50">📊</div>
@@ -899,8 +973,6 @@ function AudioStreamingRevenueReportsComponent() {
                                         </div>
                                     )}
                                 </div>
-
-
                             </div>
 
                             {/* Top Platforms */}
@@ -911,13 +983,29 @@ function AudioStreamingRevenueReportsComponent() {
                                             Top 10 in Top 5
                                             <span>| {getLast12MonthsRange()}</span>
                                         </h5>
-                                        <div className="dropdown">
-                                            <button className="btn btn-link text-muted" type="button" data-bs-toggle="dropdown">
-                                                ⋯
+                                        <div>
+                                            <button
+                                                className="rdc-transpairent"
+                                                type="button"
+                                                id="plateformShare"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <i className="fa-solid fa-ellipsis color-blk" />
                                             </button>
-                                            <ul className="dropdown-menu dropdown-menu-end">
-                                                <li><button className="dropdown-item">Export as CSV</button></li>
-                                                <li><button className="dropdown-item">Refresh Data</button></li>
+                                            <ul
+                                                className="dropdown-menu rdcDropdown rdc-plateformShare"
+                                                aria-labelledby="plateformShare"
+                                            >
+                                                <li>
+                                                    <a
+                                                        className="dropdown-item"
+                                                        href="#"
+                                                        onClick={(e) => { e.preventDefault(); downloadCSV('platforms'); }}
+                                                    >
+                                                        Download
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>

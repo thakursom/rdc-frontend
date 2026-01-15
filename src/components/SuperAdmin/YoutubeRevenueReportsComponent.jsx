@@ -65,8 +65,6 @@ function YoutubeRevenueReportsComponent() {
         return years;
     };
 
-    const years = generateYears();
-
     const loadOptions = async (inputValue) => {
         try {
             const res = await apiRequest(`/fetchAllLabel?search=${inputValue}`, "GET", null, true);
@@ -427,6 +425,59 @@ function YoutubeRevenueReportsComponent() {
             }
         };
     }, [showReportsTable, downloadHistory]);
+
+
+    const downloadTableAsCSV = (type) => {
+        const filenameBase = {
+            videos: "Top_10_Videos",
+            assets: "Top_10_Assets",
+            channels: "Top_10_Channels",
+            tracks: "Top_10_Tracks",
+            platforms: "Top_10_in_Top_5_Platforms"
+        }[type];
+
+        let headers = [];
+        let rows = [];
+
+        if (type === "videos") {
+            headers = ["Video Name", "Platform/Channel", "Revenue"];
+            rows = data.topVideos?.slice(0, 10)?.map(v => [
+                `"${(v.title || "N/A").replace(/"/g, '""')}"`,
+                `"${(v.channel || "Unknown").replace(/"/g, '""')}"`,
+                Number(v.revenue || 0).toFixed(2)
+            ]) || [];
+        }
+        else if (type === "assets") {
+            headers = ["Asset Name", "Platform/Channel", "Revenue"];
+            rows = data.topAssets?.slice(0, 10)?.map(a => [
+                `"${(a.assetTitle || "N/A").replace(/"/g, '""')}"`,
+                `"${(a.channel || "Unknown").replace(/"/g, '""')}"`,
+                Number(a.totalRevenue || 0).toFixed(2)
+            ]) || [];
+        }
+        else if (type === "channels") {
+            headers = ["Channel Name", "Total Revenue"];
+            rows = data.topChannels?.slice(0, 10)?.map(c => [
+                `"${(c.channelName || "Unknown").replace(/"/g, '""')}"`,
+                Number(c.totalRevenue || 0).toFixed(2)
+            ]) || [];
+        }
+
+        if (rows.length === 0) {
+            alert("No data available for download");
+            return;
+        }
+
+        const csv = [headers, ...rows].map(row => row.join(",")).join("\n");
+
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${filenameBase}_${getLast12MonthsRange() || "data"}.csv`;
+        link.click();
+        URL.revokeObjectURL(url);
+    };
 
     return (
         <>
@@ -836,7 +887,6 @@ function YoutubeRevenueReportsComponent() {
                         </div>
                     )}
 
-                    {/* Top 10 Tracks + Top Platforms */}
                     {data && (
                         <div className="row g-4">
                             {/* Top 10 Videos */}
@@ -847,13 +897,27 @@ function YoutubeRevenueReportsComponent() {
                                             Top 10 Videos
                                             <span>| {getLast12MonthsRange() || "Last 12 Months"}</span>
                                         </h5>
-                                        <div className="dropdown">
-                                            <button className="btn btn-link text-muted" type="button" data-bs-toggle="dropdown">
-                                                ⋯
+                                        <div>
+                                            <button
+                                                className="rdc-transpairent"
+                                                type="button"
+                                                id="plateformShare"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <i className="fa-solid fa-ellipsis color-blk" />
                                             </button>
-                                            <ul className="dropdown-menu dropdown-menu-end">
-                                                <li><button className="dropdown-item">Export as CSV</button></li>
-                                                <li><button className="dropdown-item">Refresh Data</button></li>
+                                            <ul
+                                                className="dropdown-menu rdcDropdown rdc-plateformShare"
+                                                aria-labelledby="plateformShare"
+                                            >
+                                                <li>
+                                                    <a className="dropdown-item" href="#"
+                                                        onClick={(e) => { e.preventDefault(); downloadTableAsCSV('videos'); }}
+                                                    >
+                                                        DownLoad
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -863,35 +927,31 @@ function YoutubeRevenueReportsComponent() {
                                             <Loader small={true} />
                                         </div>
                                     ) : data.topVideos?.length > 0 ? (
-                                        <table className="rdc-table mt-3">
-                                            <thead>
-                                                <tr>
-                                                    <th>Video Title</th>
-                                                    <th>Channel</th>
-                                                    <th>Total Plays</th>
-                                                    <th>Revenue</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {data.topVideos.slice(0, 10).map((video, index) => (
-                                                    <tr key={video.videoId || index}>
-                                                        <td className="fw-medium">{video.title || "N/A"}</td>
-                                                        <td>
-                                                            <span className="badge bg-light text-dark px-3 py-2">
-                                                                {video.channel || "Unknown"}
-                                                            </span>
-                                                        </td>
-                                                        <td>{Number(video.plays || 0).toLocaleString()}</td>
-                                                        <td className="fw-bold">
-                                                            ${Number(video.revenue || 0).toLocaleString(undefined, {
-                                                                minimumFractionDigits: 2,
-                                                                maximumFractionDigits: 2,
-                                                            })}
-                                                        </td>
+                                        <div className="table-responsive mt-3">
+                                            <table className="rdc-table mt-3">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Video Name</th>
+                                                        <th>Platform Name</th>
+                                                        <th>Revenue</th>
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {data.topVideos.slice(0, 10).map((video, index) => (
+                                                        <tr key={video.videoId || index}>
+                                                            <td className="fw-medium">{video.title || "N/A"}</td>
+                                                            <td>{video.channel || "Unknown"}</td>
+                                                            <td className="fw-bold">
+                                                                ${Number(video.revenue || 0).toLocaleString(undefined, {
+                                                                    minimumFractionDigits: 2,
+                                                                    maximumFractionDigits: 2,
+                                                                })}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     ) : (
                                         <div className="text-center py-5 text-muted">
                                             <div className="mb-3 fs-1 opacity-50">📽️</div>
@@ -910,13 +970,27 @@ function YoutubeRevenueReportsComponent() {
                                             Top 10 Assets
                                             <span>| {getLast12MonthsRange() || "Last 12 Months"}</span>
                                         </h5>
-                                        <div className="dropdown">
-                                            <button className="btn btn-link text-muted" type="button" data-bs-toggle="dropdown">
-                                                ⋯
+                                        <div>
+                                            <button
+                                                className="rdc-transpairent"
+                                                type="button"
+                                                id="plateformShare"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <i className="fa-solid fa-ellipsis color-blk" />
                                             </button>
-                                            <ul className="dropdown-menu dropdown-menu-end">
-                                                <li><button className="dropdown-item">Export as CSV</button></li>
-                                                <li><button className="dropdown-item">Refresh Data</button></li>
+                                            <ul
+                                                className="dropdown-menu rdcDropdown rdc-plateformShare"
+                                                aria-labelledby="plateformShare"
+                                            >
+                                                <li>
+                                                    <a className="dropdown-item" href="#"
+                                                        onClick={(e) => { e.preventDefault(); downloadTableAsCSV('assets'); }}
+                                                    >
+                                                        DownLoad
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -926,37 +1000,32 @@ function YoutubeRevenueReportsComponent() {
                                             <Loader small={true} />
                                         </div>
                                     ) : data.topAssets?.length > 0 ? (
-                                        <table className="rdc-table mt-3">
-                                            <thead>
-                                                <tr>
-                                                    <th>Asset Title</th>
-                                                    <th>Asset ID</th>
-                                                    <th>Channel</th>
-                                                    <th>Total Plays</th>
-                                                    <th>Revenue</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {data.topAssets.slice(0, 10).map((asset, index) => (
-                                                    <tr key={asset.assetId || index}>
-                                                        <td className="fw-medium">{asset.assetTitle || "N/A"}</td>
-                                                        <td className="text-muted">{asset.assetId || "—"}</td>
-                                                        <td>
-                                                            <span className="badge bg-light text-dark px-3 py-2">
-                                                                {asset.channel || "Unknown"}
-                                                            </span>
-                                                        </td>
-                                                        <td>{Number(asset.totalPlays || 0).toLocaleString()}</td>
-                                                        <td className="fw-bold text-success">
-                                                            ${Number(asset.totalRevenue || 0).toLocaleString(undefined, {
-                                                                minimumFractionDigits: 2,
-                                                                maximumFractionDigits: 2,
-                                                            })}
-                                                        </td>
+                                        <div className="table-responsive mt-3">
+                                            <table className="rdc-table mt-3">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Asset Name</th>
+                                                        <th>Platform Name</th>
+                                                        <th>Revenue</th>
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {data.topAssets.slice(0, 10).map((asset, index) => (
+                                                        <tr key={asset.assetId || index}>
+                                                            <td className="fw-medium">{asset.assetTitle || "N/A"}</td>
+                                                            <td>{asset.channel || "Unknown"} </td>
+                                                            <td className="fw-bold">
+                                                                ${Number(asset.totalRevenue || 0).toLocaleString(undefined, {
+                                                                    minimumFractionDigits: 2,
+                                                                    maximumFractionDigits: 2,
+                                                                })}
+                                                            </td>
+
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     ) : (
                                         <div className="text-center py-5 text-muted">
                                             <div className="mb-3 fs-1 opacity-50">🎞️</div>
@@ -975,13 +1044,27 @@ function YoutubeRevenueReportsComponent() {
                                             Top 10 Channels
                                             <span>| {getLast12MonthsRange() || "Last 12 Months"}</span>
                                         </h5>
-                                        <div className="dropdown">
-                                            <button className="btn btn-link text-muted" type="button" data-bs-toggle="dropdown">
-                                                ⋯
+                                        <div>
+                                            <button
+                                                className="rdc-transpairent"
+                                                type="button"
+                                                id="plateformShare"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <i className="fa-solid fa-ellipsis color-blk" />
                                             </button>
-                                            <ul className="dropdown-menu dropdown-menu-end">
-                                                <li><button className="dropdown-item">Export as CSV</button></li>
-                                                <li><button className="dropdown-item">Refresh Data</button></li>
+                                            <ul
+                                                className="dropdown-menu rdcDropdown rdc-plateformShare"
+                                                aria-labelledby="plateformShare"
+                                            >
+                                                <li>
+                                                    <a className="dropdown-item" href="#"
+                                                        onClick={(e) => { e.preventDefault(); downloadTableAsCSV('channels'); }}
+                                                    >
+                                                        DownLoad
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -991,31 +1074,29 @@ function YoutubeRevenueReportsComponent() {
                                             <Loader small={true} />
                                         </div>
                                     ) : data.topChannels?.length > 0 ? (
-                                        <table className="rdc-table mt-3">
-                                            <thead>
-                                                <tr>
-                                                    <th>Channel Name</th>
-                                                    <th>Total Plays</th>
-                                                    <th>Total Revenue</th>
-                                                    <th># Videos/Assets</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {data.topChannels.slice(0, 10).map((channel, index) => (
-                                                    <tr key={channel.channelName || index}>
-                                                        <td className="fw-medium">{channel.channelName || "Unknown"}</td>
-                                                        <td>{Number(channel.totalPlays || 0).toLocaleString()}</td>
-                                                        <td className="fw-bold text-success">
-                                                            ${Number(channel.totalRevenue || 0).toLocaleString(undefined, {
-                                                                minimumFractionDigits: 2,
-                                                                maximumFractionDigits: 2,
-                                                            })}
-                                                        </td>
-                                                        <td>{Number(channel.videoCount || 0).toLocaleString()}</td>
+                                        <div className="table-responsive mt-3">
+                                            <table className="rdc-table mt-3">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Platform Name</th>
+                                                        <th>Revenue</th>
                                                     </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                                                </thead>
+                                                <tbody>
+                                                    {data.topChannels.slice(0, 10).map((channel, index) => (
+                                                        <tr key={channel.channelName || index}>
+                                                            <td className="fw-medium">{channel.channelName || "Unknown"}</td>
+                                                            <td className="fw-bold">
+                                                                ${Number(channel.totalRevenue || 0).toLocaleString(undefined, {
+                                                                    minimumFractionDigits: 2,
+                                                                    maximumFractionDigits: 2,
+                                                                })}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     ) : (
                                         <div className="text-center py-5 text-muted">
                                             <div className="mb-3 fs-1 opacity-50">📺</div>

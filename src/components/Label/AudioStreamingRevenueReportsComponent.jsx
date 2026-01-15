@@ -55,7 +55,6 @@ function AudioStreamingRevenueReportsComponent() {
 
     columns = columns.filter(col => reports.some(r => r[col.key] !== undefined && r[col.key] !== null));
 
-
     const generateYears = () => {
         const currentYear = new Date().getFullYear();
         const years = [];
@@ -64,8 +63,6 @@ function AudioStreamingRevenueReportsComponent() {
         }
         return years;
     };
-
-    const years = generateYears();
 
     const loadOptions = async (inputValue) => {
         try {
@@ -83,7 +80,6 @@ function AudioStreamingRevenueReportsComponent() {
             return [];
         }
     };
-
 
     const buildQueryString = (includeCheckboxFilters = false) => {
         const params = new URLSearchParams();
@@ -116,15 +112,17 @@ function AudioStreamingRevenueReportsComponent() {
                     },
                     revenueByMonth: result.data.data.netRevenueByMonth || {},
                     revenueByChannel: result.data.data.revenueByChannel || {},
-                    revenueByCountry: result.data.data.revenueByCountry || {}
+                    revenueByCountry: result.data.data.revenueByCountry || {},
+                    topTracks: result.data.data.topTracks,
+                    topPlatforms: result.data.data.topPlatforms,
                 };
                 setInitialData(transformedData);
-                setData(transformedData); // Show it immediately
+                setData(transformedData);
             }
         } catch (error) {
             console.error("Error fetching initial summary:", error);
         }
-    }
+    };
 
     const fetchSummarys = async (includeCheckboxFilters = false) => {
         try {
@@ -181,13 +179,12 @@ function AudioStreamingRevenueReportsComponent() {
         }
     };
 
-    // Fetch data on initial render and when regular filters change
     useEffect(() => {
         const fetchInitialData = async () => {
             if (initialRender.current) {
                 initialRender.current = false;
-                await fetchInitialSummary();   // ← New: Load unfiltered summary
-                await fetchReports(false);     // ← Then load first page of reports
+                await fetchInitialSummary();
+                await fetchReports(false);
                 setReportsLoading(false);
             }
         };
@@ -219,7 +216,6 @@ function AudioStreamingRevenueReportsComponent() {
         }));
     };
 
-
     const handleCheckboxChange = (e) => {
         const { name, checked } = e.target;
 
@@ -230,6 +226,23 @@ function AudioStreamingRevenueReportsComponent() {
         }
 
         setFilters(prev => ({ ...prev, page: 1 }));
+    };
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+
+        setFilters(prev => ({
+            ...prev,
+            [name]: value,
+            page: 1
+        }));
+    };
+
+    const handleApplyFilters = (e) => {
+        e.preventDefault();
+        setFilters(prev => ({ ...prev, page: 1 }));
+        setFiltersApplied(true);
+        fetchSummarys(true);
     };
 
     const handleClearFilters = async () => {
@@ -266,23 +279,6 @@ function AudioStreamingRevenueReportsComponent() {
         setReportsLoading(false);
     };
 
-    const handleFilterChange = (e) => {
-        const { name, value } = e.target;
-
-        setFilters(prev => ({
-            ...prev,
-            [name]: value,
-            page: 1
-        }));
-    };
-
-    const handleApplyFilters = (e) => {
-        e.preventDefault();
-        setFilters(prev => ({ ...prev, page: 1 }));
-        setFiltersApplied(true);
-        fetchSummarys(true);
-    };
-
     const handleExcelDownload = async (useCheckboxFilters = false) => {
         try {
             setReportsLoading(true);
@@ -315,15 +311,21 @@ function AudioStreamingRevenueReportsComponent() {
     };
 
     const getLast12MonthsRange = () => {
-        const revenueByMonth = data?.revenueByMonth;
+        const revenueByMonth = data?.revenueByMonth || {};
 
         if (!revenueByMonth || Object.keys(revenueByMonth).length === 0) return "";
 
         const dates = Object.keys(revenueByMonth)
             .map(key => {
-                const [month, year] = key.split(" ");
-                const date = new Date(`${month} 1, ${year}`);
-                return isNaN(date) ? null : date;
+                if (key.includes('-')) {
+                    const [year, month] = key.split('-');
+                    const date = new Date(year, month - 1);
+                    return isNaN(date.getTime()) ? null : date;
+                } else {
+                    const [month, year] = key.split(" ");
+                    const date = new Date(`${month} 1, ${year}`);
+                    return isNaN(date.getTime()) ? null : date;
+                }
             })
             .filter(Boolean)
             .sort((a, b) => a - b);
@@ -355,7 +357,6 @@ function AudioStreamingRevenueReportsComponent() {
     };
 
     useEffect(() => {
-
         fetchHistory();
     }, []);
 
@@ -420,11 +421,77 @@ function AudioStreamingRevenueReportsComponent() {
         };
     }, [showReportsTable, downloadHistory]);
 
+
+    const downloadCSV = (type) => {
+        let filename = "";
+        let headers = [];
+        let rows = [];
+
+        if (type === "tracks") {
+            if (!data?.topTracks?.length) {
+                alert("No track data available to download");
+                return;
+            }
+
+            filename = `Top_10_Tracks_${getLast12MonthsRange() || "data"}.csv`;
+            headers = ["Track Name", "Total Plays", "Platform Name", "Revenue"];
+
+            rows = data.topTracks.slice(0, 10).map(track => [
+                `"${(track.track || track.release || "N/A").replace(/"/g, '""')}"`,
+                Number(track.totalPlays || 0),
+                `"${(track.platform || "N/A").replace(/"/g, '""')}"`,
+                Number(track.revenue || 0).toFixed(2)
+            ]);
+        }
+
+        else if (type === "platforms") {
+            if (!data?.topPlatforms || Object.keys(data.topPlatforms).length === 0) {
+                alert("No platform data available to download");
+                return;
+            }
+
+            const platforms = Object.keys(data.topPlatforms).slice(0, 5);
+            if (platforms.length === 0) return;
+
+            filename = `Top_10_in_Top_5_Platforms_${getLast12MonthsRange() || "data"}.csv`;
+            headers = ["Rank", ...platforms.flatMap(p => [`${p} Revenue`, `${p} Track`])];
+
+            rows = Array.from({ length: 10 }, (_, i) => {
+                const row = [i + 1];
+                platforms.forEach(p => {
+                    const item = data.topPlatforms[p]?.[i];
+                    if (item) {
+                        row.push(Number(item.revenue || 0).toFixed(2));
+                        row.push(`"${(item.track || "—").replace(/"/g, '""')}"`);
+                    } else {
+                        row.push("0.00", `"—"`);
+                    }
+                });
+                return row;
+            });
+        } else {
+            console.error("Unknown download type:", type);
+            return;
+        }
+
+        const csvContent = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <>
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
-                    <div className="mian-sec-heading">
+                    <div className="mian-sec-heading mian-sec-heading1">
                         <h6>Audio Streaming Revenue Reports</h6>
                         <div className="btn-right-sec">
                             {downloadHistory.length >= 1 && (
@@ -446,7 +513,6 @@ function AudioStreamingRevenueReportsComponent() {
                             </button>
                         </div>
                     </div>
-
 
                     <div className="mt-4">
                         {showReportsTable && downloadHistory && downloadHistory.length > 0 && (
@@ -488,6 +554,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                             Pending...
                                                         </span>
                                                     )}
+
                                                     {item.status === "ready" && (
                                                         <span className="badge bg-success">
                                                             <i className="fa-solid fa-check me-1"></i>
@@ -526,7 +593,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                                 )}
                                                             </button>
                                                         </>
-                                                    ) : item.status === "pending" ? (
+                                                    ) : (item.status === "pending" || item.status === "generating") ? (
                                                         <>
                                                             <button
                                                                 className="border-less border-red dark-red table-button me-2 stop-button"
@@ -543,7 +610,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                     ) : (
                                                         <>
                                                             <button
-                                                                className="border-less border-red dark-red table-button me-2"
+                                                                className="border-less border-red dark-red table-button me-2 stop-button"
                                                                 onClick={() => handleDeleteClick(item)}
                                                                 disabled={deletingId === item._id}
                                                             >
@@ -564,7 +631,7 @@ function AudioStreamingRevenueReportsComponent() {
                         )}
                     </div>
 
-                    {/* === YOUR ORIGINAL FILTERS === */}
+                    {/* === FILTERS === */}
                     <div className="revnue-filters mt-3">
                         <form className="revenue-filter-fx" onSubmit={handleApplyFilters}>
                             <div className="row g-3 mb-4">
@@ -596,7 +663,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                 <option value="Apple Music">Apple Music</option>
                                                 <option value="Spotify">Spotify</option>
                                                 <option value="Gaana">Gaana</option>
-                                                <option value="jio_savan">Jio Saavn</option>
+                                                <option value="Jio Saavn">Jio Saavn</option>
                                                 <option value="Facebook">Facebook</option>
                                                 <option value="Amazon">Amazon</option>
                                                 <option value="TikTok">Tik Tok</option>
@@ -615,7 +682,6 @@ function AudioStreamingRevenueReportsComponent() {
                                                     if (e.target.value === "custom") {
                                                         setShowDates(true);
                                                     } else {
-                                                        // When selecting "Date Range" (default)
                                                         setShowDates(false);
                                                         setFilters(prev => ({
                                                             ...prev,
@@ -665,7 +731,7 @@ function AudioStreamingRevenueReportsComponent() {
                                             className="form-check-input"
                                             type="checkbox"
                                             name={key}
-                                            checked={selectedFilter === key} // Use single value comparison
+                                            checked={selectedFilter === key}
                                             onChange={handleCheckboxChange}
                                             id={key}
                                         />
@@ -675,7 +741,7 @@ function AudioStreamingRevenueReportsComponent() {
                                     </div>
                                 ))}
 
-                                <div className="form-check">
+                                <div className="form-check d-flex gap-2">
                                     <button
                                         type="submit"
                                         className="theme-btn green-cl white-cl"
@@ -685,14 +751,12 @@ function AudioStreamingRevenueReportsComponent() {
                                         Filter
                                     </button>
 
-                                    {/* Optional: Add clear filter button */}
                                     <button
                                         type="button"
                                         className="theme-btn bg-red white-cl"
                                         onClick={handleClearFilters}
                                         disabled={reportsLoading}
                                     >
-                                        {/* <i className="fa-solid fa-times me-2" /> */}
                                         Clear
                                     </button>
                                 </div>
@@ -700,7 +764,7 @@ function AudioStreamingRevenueReportsComponent() {
                         </form>
                     </div>
 
-                    {/* === YOUR ORIGINAL SUMMARY CARDS === */}
+                    {/* === SUMMARY CARDS === */}
                     {data && (
                         <div className="revenue-cards">
                             <div className="row g-4">
@@ -736,7 +800,7 @@ function AudioStreamingRevenueReportsComponent() {
                         </div>
                     )}
 
-                    {/* === YOUR ORIGINAL CHARTS === */}
+                    {/* === CHARTS === */}
                     {data && (
                         <div className="revenue-charts">
                             <div className="row g-4">
@@ -778,6 +842,7 @@ function AudioStreamingRevenueReportsComponent() {
                                         </div>
                                         <div className="main-chartbox" style={{ position: "relative" }}>
                                             <AudioStreamingRevenueBarChart revenueByChannel={data?.revenueByChannel || {}} />
+
                                             {summaryLoading && (
                                                 <div style={{
                                                     position: "absolute",
@@ -807,6 +872,7 @@ function AudioStreamingRevenueReportsComponent() {
                                         </div>
                                         <div className="main-chartbox" style={{ position: "relative" }}>
                                             <AudioStreamingCountryRevenueChart revenueByCountry={data?.revenueByCountry || {}} />
+
                                             {summaryLoading && (
                                                 <div style={{
                                                     position: "absolute",
@@ -831,8 +897,191 @@ function AudioStreamingRevenueReportsComponent() {
                         </div>
                     )}
 
-                    {/* === YOUR ORIGINAL TABLE === */}
-                    <div className="table-sec">
+                    {/* Top 10 Tracks + Top Platforms */}
+                    {data && (
+                        <div className="row g-4">
+                            {/* Top 10 Performing Tracks */}
+                            <div className="col-md-12 stem-child">
+                                <div className="dash-charts ">
+                                    <div className="chart-content-head">
+                                        <h5>
+                                            Top 10 Performing Tracks
+                                            <span >
+                                                | {getLast12MonthsRange()}
+                                            </span>
+                                        </h5>
+                                        <div>
+                                            <button
+                                                className="rdc-transpairent"
+                                                type="button"
+                                                id="plateformShare"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <i className="fa-solid fa-ellipsis color-blk" />
+                                            </button>
+                                            <ul
+                                                className="dropdown-menu rdcDropdown rdc-plateformShare"
+                                                aria-labelledby="plateformShare"
+                                            >
+                                                <li>
+                                                    <a
+                                                        className="dropdown-item"
+                                                        href="#"
+                                                        onClick={(e) => { e.preventDefault(); downloadCSV('tracks'); }}
+                                                    >
+                                                        Download
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    {summaryLoading ? (
+                                        <div className="text-center py-5">
+                                            <Loader small={true} />
+                                        </div>
+                                    ) : data.topTracks?.length > 0 ? (
+                                        <div className="table-responsive mt-3">
+                                            <table className="rdc-table mt-3">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Track Name</th>
+                                                        <th>Total Plays</th>
+                                                        <th>Platform Name</th>
+                                                        <th>Revenue</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {data.topTracks.slice(0, 10).map((track, index) => (
+                                                        <tr key={track.isrc || index}>
+                                                            <td className="fw-medium">{track.track || track.release || "N/A"}</td>
+                                                            <td>{Number(track.totalPlays || 0).toLocaleString()}</td>
+                                                            <td> {track.platform || "N/A"}</td>
+                                                            <td className="fw-bold">
+                                                                ${Number(track.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-5 text-muted">
+                                            <div className="mb-3 fs-1 opacity-50">📊</div>
+                                            <h6>No Data Available</h6>
+                                            <small>*Plays include Free/Subscription/Promotional/Trials</small>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Top Platforms */}
+                            <div className="col-md-12 stem-child">
+                                <div className="dash-charts">
+                                    <div className="chart-content-head d-flex justify-content-between align-items-center">
+                                        <h5>
+                                            Top 10 in Top 5
+                                            <span>| {getLast12MonthsRange()}</span>
+                                        </h5>
+                                        <div>
+                                            <button
+                                                className="rdc-transpairent"
+                                                type="button"
+                                                id="plateformShare"
+                                                data-bs-toggle="dropdown"
+                                                aria-expanded="false"
+                                            >
+                                                <i className="fa-solid fa-ellipsis color-blk" />
+                                            </button>
+                                            <ul
+                                                className="dropdown-menu rdcDropdown rdc-plateformShare"
+                                                aria-labelledby="plateformShare"
+                                            >
+                                                <li>
+                                                    <a
+                                                        className="dropdown-item"
+                                                        href="#"
+                                                        onClick={(e) => { e.preventDefault(); downloadCSV('platforms'); }}
+                                                    >
+                                                        Download
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    {summaryLoading ? (
+                                        <div className="text-center py-5">
+                                            <Loader small={true} />
+                                        </div>
+                                    ) : Object.keys(data?.topPlatforms || {}).length > 0 ? (
+                                        <div className="table-responsive mt-3">
+                                            <table className="rdc-table">
+                                                <thead>
+                                                    <tr>
+                                                        {Object.keys(data.topPlatforms)
+                                                            .slice(0, 5)
+                                                            .map((platformName) => (
+                                                                <th key={platformName}>
+                                                                    {platformName}
+                                                                </th>
+                                                            ))}
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {Array.from({ length: 10 }).map((_, rowIndex) => (
+                                                        <tr key={rowIndex}>
+                                                            {Object.keys(data.topPlatforms)
+                                                                .slice(0, 5)
+                                                                .map((platformName) => {
+                                                                    const item = data.topPlatforms[platformName]?.[rowIndex];
+
+                                                                    return (
+                                                                        <td key={`${platformName}-${rowIndex}`}>
+                                                                            {item ? (
+                                                                                <div >
+                                                                                    <div className="revenue-fx">
+                                                                                        ${Number(item.revenue || 0).toLocaleString(undefined, {
+                                                                                            minimumFractionDigits: 2,
+                                                                                            maximumFractionDigits: 2,
+                                                                                        })}
+                                                                                    </div>
+                                                                                    <span
+                                                                                        className="track-name"
+                                                                                        data-bs-toggle="tooltip"
+                                                                                        data-bs-placement="top"
+                                                                                        title={item.track || "—"}
+                                                                                    >
+                                                                                        {(item.track || "—").length > 20
+                                                                                            ? (item.track || "—").substring(0, 20) + "..."
+                                                                                            : (item.track || "—")}
+                                                                                    </span>
+                                                                                </div>
+                                                                            ) : (
+                                                                                <span className="text-muted">—</span>
+                                                                            )}
+                                                                        </td>
+                                                                    );
+                                                                })}
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-5 text-muted">
+                                            <div className="mb-3 fs-1 opacity-50">📈</div>
+                                            <h6>No Platform Data Available</h6>
+                                            <small>Data for top platforms will appear here</small>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* === TABLE === */}
+                    <div className="table-sec mt-4">
                         {reportsLoading ? (
                             <div className="text-center py-5"><Loader small={true} /></div>
                         ) : reports.length > 0 ? (
@@ -867,7 +1116,8 @@ function AudioStreamingRevenueReportsComponent() {
                             <div className="text-center py-5 text-muted">No data found</div>
                         )}
                     </div>
-                    {/* Pagination - Added here */}
+
+                    {/* Pagination */}
                     <div style={{ marginTop: "25px", display: "flex", justifyContent: "flex-end" }}>
                         <CustomPagination
                             pageCount={pageCount}
@@ -892,6 +1142,7 @@ function AudioStreamingRevenueReportsComponent() {
                                         <i className={`fa-solid ${itemToDelete?.status === 'ready' ? 'fa-trash-can' : 'fa-circle-stop'} me-2`}></i>
                                         {itemToDelete?.status === 'ready' ? 'Confirm Delete' : 'Confirm Stop'}
                                     </h5>
+
                                     <button
                                         type="button"
                                         className="btn-close"

@@ -9,7 +9,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
   const [settingOpen, setSettingOpen] = useState(false);
   const [revenueReportOpen, setRevenueReportOpen] = useState(false);
 
-  // ✅ FUNCTION TO CLOSE SIDEBAR ON MOBILE
+  // FUNCTION TO CLOSE SIDEBAR ON MOBILE
   const handleMobileClose = () => {
     if (window.innerWidth <= 576) {
       setSidebarOpen(false);
@@ -45,7 +45,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
               className={({ isActive }) =>
                 isActive ? "sidebar-links active" : "sidebar-links"
               }
-              // ✅ AUTO CLOSE ON MOBILE
+              // AUTO CLOSE ON MOBILE
               onClick={handleMobileClose}
             >
               <svg
@@ -88,7 +88,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                 className={({ isActive }) =>
                   `sidebar-links ${isActive ? "active" : ""}`
                 }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
               >
                 <svg
@@ -129,7 +129,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                           ? "/sub-label/user-management"
                           : "/user/user-management"
               }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
               >
                 <svg
@@ -167,7 +167,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                           ? "/sub-label/releases"
                           : "/user/releases"
               }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
               >
                 <svg
@@ -246,7 +246,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                 <span className="arrow">{revenueReportOpen ? "▲" : "▼"}</span>
               </a>
 
-              {/* ✅ Dropdown submenu */}
+              {/* Dropdown submenu */}
               {revenueReportOpen && (
                 <ul className="submenu">
                   <li>
@@ -263,7 +263,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                                 ? "/sub-label/youtube-revenue-reports"
                                 : "/user/youtube-revenue-reports"
                     }
-                      // ✅ AUTO CLOSE ON MOBILE
+                      // AUTO CLOSE ON MOBILE
                       onClick={handleMobileClose}
                     >
                       Youtube
@@ -283,7 +283,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                                 ? "/sub-label/audio-streaming-revenue-reports"
                                 : "/user/audio-streaming-revenue-reports"
                     }
-                      // ✅ AUTO CLOSE ON MOBILE
+                      // AUTO CLOSE ON MOBILE
                       onClick={handleMobileClose}
                     >
                       Audio Streaming
@@ -299,7 +299,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
             </li>
           )}
 
-          {(role === "Super Admin" || role === "Label" || role === "Sub Label" || role === "Manager") && (
+          {/* {(role === "Super Admin" || role === "Label" || role === "Sub Label" || role === "Manager") && (
             <li className="sidebar-item">
               <NavLink className="sidebar-links" to={
                 role === "Super Admin"
@@ -314,7 +314,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                           ? "/sub-label/salesAndTrends"
                           : "/user/salesAndTrends"
               }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
               >
                 <svg
@@ -342,7 +342,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                 Sales &amp; Trends
               </NavLink>
             </li>
-          )}
+          )} */}
 
           {(role === "Super Admin" || role === "Label" || role === "Sub Label" || role === "Manager") && (
             <li className="sidebar-item">
@@ -359,7 +359,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                           ? "/sub-label/payouts"
                           : "/user/payouts"
               }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
               >
                 <svg
@@ -404,7 +404,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                           ? "/sub-label/statements"
                           : "/user/statements"
               }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
               >
                 <svg
@@ -448,7 +448,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                           ? "/sub-label/revenue-upload"
                           : "/user/revenue-upload"
               }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
               >
                 <svg
@@ -510,7 +510,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
 
           {(role === "Super Admin" || role === "Label" || role === "Sub Label" || role === "Manager") && (
             <li className="sidebar-item">
-              {/* ✅ Replace NavLink with clickable div but same CSS */}
+              {/* Replace NavLink with clickable div but same CSS */}
               <a
                 className="sidebar-links"
                 onClick={() => setSettingOpen(!settingOpen)}
@@ -545,7 +545,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                 <span className="arrow">{settingOpen ? "▲" : "▼"}</span>
               </a>
 
-              {/* ✅ Dropdown submenu */}
+              {/* Dropdown submenu */}
               {settingOpen && (
                 <ul className="submenu">
                   <li>
@@ -562,7 +562,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                                 ? "/sub-label/setting"
                                 : "/user/setting"
                     }
-                      // ✅ AUTO CLOSE ON MOBILE
+                      // AUTO CLOSE ON MOBILE
                       onClick={handleMobileClose}
                     >
                       General Settings
@@ -582,7 +582,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                                 ? "/sub-label/bank-details"
                                 : "/user/bank-details"
                     }
-                      // ✅ AUTO CLOSE ON MOBILE
+                      // AUTO CLOSE ON MOBILE
                       onClick={handleMobileClose}
                     >
                       Bank Details
@@ -613,7 +613,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                           ? "/sub-label/label-summary"
                           : "/user/label-summary"
               }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
               >
                 <svg
@@ -693,7 +693,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                           ? "/sub-label/label-upload"
                           : "/user/label-upload"
               }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
               >
                 <svg
@@ -745,7 +745,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                           ? "/sub-label/conversion"
                           : "/user/conversion"
               }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
                 id="conversion">
                 <svg
@@ -781,7 +781,7 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
                           ? "/sub-label/logs"
                           : "/user/logs"
               }
-                // ✅ AUTO CLOSE ON MOBILE
+                // AUTO CLOSE ON MOBILE
                 onClick={handleMobileClose}
                 id="logs-fx">
                 <svg

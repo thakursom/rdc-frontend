@@ -77,10 +77,10 @@ function SubLabelComponent() {
                             </div>
                         </div>
                     </form>
+                    <div className="table-head">
+                        <h6>Manage Label</h6>
+                    </div>
                     <div className="table-sec">
-                        <div className="table-head">
-                            <h6>Manage Label</h6>
-                        </div>
                         <table className="rdc-table">
                             <thead>
                                 <tr>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Chart } from "chart.js/auto";
 
-function MusicStreamComparisonChart() {
+function MusicStreamComparisonChart({ comparisonData = {} }) {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -10,16 +10,22 @@ function MusicStreamComparisonChart() {
       chartInstance.current.destroy();
     }
 
+    const { labels = [], previousYear = {}, currentYear = {} } = comparisonData;
+
+    if (!labels.length) {
+      return;
+    }
+
     const ctx = chartRef.current.getContext("2d");
 
     chartInstance.current = new Chart(ctx, {
       type: "line",
       data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+        labels,
         datasets: [
           {
-            label: "2024",
-            data: [1000, 3000, 5000, 2000, 11000],
+            label: previousYear.year || "Previous Year",
+            data: previousYear.streams || [],
             borderColor: "#656FF7",
             backgroundColor: "#656FF7",
             pointBackgroundColor: "#656FF7",
@@ -30,8 +36,8 @@ function MusicStreamComparisonChart() {
             pointHoverRadius: 7
           },
           {
-            label: "2025",
-            data: [2000, 6500, 9000, 4000, 20000],
+            label: currentYear.year || "Current Year",
+            data: currentYear.streams || [],
             borderColor: "#14CDBB",
             backgroundColor: "#14CDBB",
             pointBackgroundColor: "#14CDBB",
@@ -73,7 +79,7 @@ function MusicStreamComparisonChart() {
     });
 
     return () => chartInstance.current?.destroy();
-  }, []);
+  }, [comparisonData]);
 
   return (
     <div style={{ width: "100%", height: "350px" }}>

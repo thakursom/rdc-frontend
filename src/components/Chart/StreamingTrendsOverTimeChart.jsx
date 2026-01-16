@@ -1,39 +1,54 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Chart } from "chart.js/auto";
 
-function StreamingTrendsOverTimeChart() {
+function StreamingTrendsOverTimeChart({ trendsData = {} }) {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
   const [selectedType, setSelectedType] = useState("all");
 
-  const datasets = {
-    all: { color: "#656FF7", data: [1.5, 2, 2.5, 5.2, 3.8, 3.2, 3.9, 4.3] },
-    rdc: { color: "#14CDBB", data: [1.2, 1.8, 2.3, 4.8, 3.9, 3.4, 3.6, 4.0] },
-    tunec: { color: "#9550DF", data: [0.8, 1.3, 1.9, 4.5, 3.5, 3.1, 3.8, 4.1] },
-    ditto: { color: "#F88C65", data: [1.0, 1.5, 2.0, 3.7, 3.1, 2.8, 3.3, 3.9] },
-    amus: { color: "#FFB748", data: [0.9, 1.6, 2.4, 4.0, 3.6, 3.2, 3.7, 4.2] }
-  };
+  const { months = [], monthlyData = [], distributors = [] } = trendsData;
 
   useEffect(() => {
     if (chartInstance.current) chartInstance.current.destroy();
 
     const ctx = chartRef.current.getContext("2d");
-    const selected = datasets[selectedType];
+
+    const selectedKey = selectedType.toLowerCase();
+
+    const selectedData = monthlyData.map(item => {
+      if (selectedKey === "all") return item.all || 0;
+      const matchingKey = Object.keys(item).find(
+        key => key.toLowerCase() === selectedKey
+      );
+      return matchingKey ? item[matchingKey] : 0;
+    });
+
+    const colorMap = {
+      all: "#656FF7",
+      amazon: "#FF8A65",
+      "apple music": "#9550DF",
+      facebook: "#FFB748",
+      "jio saavn": "#4E7DFF",
+      spotify: "#1DB954",
+      tiktok: "#14CDBB"
+    };
+
+    const selectedColor = colorMap[selectedType.toLowerCase()] || "#656FF7";
 
     chartInstance.current = new Chart(ctx, {
       type: "line",
       data: {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug"],
+        labels: months,
         datasets: [
           {
             label: "Streams (Millions)",
-            data: selected.data,
-            borderColor: selected.color,
-            backgroundColor: `${selected.color}50`,
+            data: selectedData,
+            borderColor: selectedColor,
+            backgroundColor: `${selectedColor}50`,
             fill: true,
             tension: 0.4,
             borderWidth: 3,
-            pointBackgroundColor: selected.color,
+            pointBackgroundColor: selectedColor,
             pointBorderColor: "#fff",
             pointRadius: 5,
             pointHoverRadius: 7
@@ -60,18 +75,22 @@ function StreamingTrendsOverTimeChart() {
     });
 
     return () => chartInstance.current?.destroy();
-  }, [selectedType]);
+  }, [monthlyData, selectedType]);
 
   return (
     <div>
-      {/* BUTTON GROUP */}
-
-
-      {/* CHART */}
       <div style={{ width: "100%", height: "450px" }}>
         <canvas id="musicChart" ref={chartRef}></canvas>
-        <div style={{ display: "flex", justifyContent: "center", padding: "20px 0 0px 0", gap: "10px", marginBottom: "15px" }}>
-          {["all", "rdc", "tunec", "ditto", "amus"].map((type) => (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "20px 0 0px 0",
+            gap: "10px",
+            marginBottom: "15px"
+          }}
+        >
+          {distributors.map((type) => (
             <button
               key={type}
               onClick={() => setSelectedType(type)}

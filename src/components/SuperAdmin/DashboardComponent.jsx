@@ -91,7 +91,7 @@ function DashboardComponent() {
                                     aria-controls="audio-streams"
                                     aria-selected="false"
                                 >
-                                    Audio Streams
+                                    Streams
                                 </a>
                             </li>
                         </ul>
@@ -189,9 +189,7 @@ function DashboardComponent() {
                                                             </div>
                                                             <div className="dash-content">
                                                                 <p>Total Revenue</p>
-                                                                <h6>
-                                                                    <h6>${Number(data?.overview?.totalRevenue || 0).toLocaleString()}</h6>
-                                                                </h6>
+                                                                <h6>${Number(data?.overview?.totalRevenue || 0).toLocaleString()}</h6>
                                                             </div>
                                                         </div>
                                                     </div>

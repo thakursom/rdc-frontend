@@ -128,7 +128,7 @@ function ArtistComponent() {
                                                     {art.countries?.[0] || "N/A"}
                                                 </td>
                                                 <td>{art.totalStream || 0}</td>
-                                                <td>${(art.totalRevenue ?? 0).toFixed(2) || 0}</td>
+                                                <td>{(art.totalRevenue ?? 0).toFixed(2) || 0}</td>
                                                 <td>
                                                     <button
                                                         className="border-less border-green color-green table-button"
@@ -185,21 +185,21 @@ function ArtistComponent() {
                                     <td>Bruno Mars</td>
                                     <td>Die With a Smile</td>
                                     <td>185,000</td>
-                                    <td>$2,850.45</td>
+                                    <td>2,850.45</td>
                                 </tr>
                                 <tr>
                                     <td className="main-td">🥈 2</td>
                                     <td>Halsey&nbsp;</td>
                                     <td>Without Me</td>
                                     <td>170,000</td>
-                                    <td>$1,250.45</td>
+                                    <td>1,250.45</td>
                                 </tr>
                                 <tr>
                                     <td className="main-td">🥉 3</td>
                                     <td>Weeknd</td>
                                     <td>Blinding Lights</td>
                                     <td>168,000</td>
-                                    <td>$1,250.45</td>
+                                    <td>1,250.45</td>
                                 </tr>
                             </tbody>
                         </table>

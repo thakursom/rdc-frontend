@@ -32,7 +32,6 @@ const COLORS = [
 ];
 
 const RevenueStackedArea = ({ revenueData = [] }) => {
-  console.log("revenueData", revenueData);
 
   const labels = revenueData
     .map(item => item._id)
@@ -45,13 +44,6 @@ const RevenueStackedArea = ({ revenueData = [] }) => {
   });
   const platformNames = Array.from(allPlatforms);
 
-  const platformToIndex = {
-    "RDC Channel": 0,
-    "Premium Revenue": 1,
-    "Art Track": 2,
-    "UGC": 3,
-    "Partner Channel": 4,
-  };
 
   const datasets = platformNames.map((platformName, index) => {
     const colorIndex = index % COLORS.length;

@@ -288,7 +288,7 @@ function ArtistDetailComponent() {
                                                 <td>{item.release}</td>
                                                 <td>{item.date}</td>
                                                 <td>{item.track_count}</td>
-                                                <td>${Number(item.net_total || 0).toFixed(2)}</td>
+                                                <td>{Number(item.net_total || 0).toFixed(2)}</td>
                                             </tr>
                                         ))
                                     ) : (

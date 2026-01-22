@@ -40,7 +40,7 @@ const PlateFormShare = ({ data = [] }) => {
           backdropColor: "transparent",
           color: "#aaa",
           stepSize: 1000000,
-          callback: (value) => `$${(value / 1000000).toFixed(1)}M`
+          callback: (value) => `${(value / 1000000).toFixed(1)}M`
         },
         grid: {
           color: "#e6e6e6"
@@ -67,7 +67,7 @@ const PlateFormShare = ({ data = [] }) => {
         callbacks: {
           label: (context) => {
             const value = context.raw;
-            return `${context.label}: $${value.toLocaleString()}`;
+            return `${context.label}: ${value.toLocaleString()}`;
           }
         }
       }

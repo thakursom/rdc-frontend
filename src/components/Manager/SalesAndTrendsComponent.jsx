@@ -108,8 +108,8 @@ function SalesAndTrendsComponent() {
                                     </div>
                                     <div className="dash-content">
                                         <p>Last Day Revenue</p>
-                                        <h6>$294.73</h6>
-                                        <span>+$234.93 vs prev day</span>
+                                        <h6>294.73</h6>
+                                        <span>+234.93 vs prev day</span>
                                     </div>
                                 </div>
                             </div>
@@ -137,8 +137,8 @@ function SalesAndTrendsComponent() {
                                     </div>
                                     <div className="dash-content">
                                         <p>7d Total</p>
-                                        <h6>$513.33</h6>
-                                        <span>+$513.33 vs prior 7d</span>
+                                        <h6>513.33</h6>
+                                        <span>+513.33 vs prior 7d</span>
                                     </div>
                                 </div>
                             </div>
@@ -261,7 +261,7 @@ function SalesAndTrendsComponent() {
                                     <td className="main-td">2025-07-29</td>
                                     <td>Song A</td>
                                     <td>12,345</td>
-                                    <td>$56.78</td>
+                                    <td>56.78</td>
                                     <td>Spotify</td>
                                     <td>US</td>
                                 </tr>
@@ -269,7 +269,7 @@ function SalesAndTrendsComponent() {
                                     <td className="main-td">2025-07-29</td>
                                     <td>Song A</td>
                                     <td>12,345</td>
-                                    <td>$56.78</td>
+                                    <td>56.78</td>
                                     <td>Spotify</td>
                                     <td>US</td>
                                 </tr>
@@ -277,7 +277,7 @@ function SalesAndTrendsComponent() {
                                     <td className="main-td">2025-07-29</td>
                                     <td>Song A</td>
                                     <td>12,345</td>
-                                    <td>$56.78</td>
+                                    <td>56.78</td>
                                     <td>Spotify</td>
                                     <td>US</td>
                                 </tr>
@@ -285,7 +285,7 @@ function SalesAndTrendsComponent() {
                                     <td className="main-td">2025-07-29</td>
                                     <td>Song A</td>
                                     <td>12,345</td>
-                                    <td>$56.78</td>
+                                    <td>56.78</td>
                                     <td>Spotify</td>
                                     <td>US</td>
                                 </tr>
@@ -293,7 +293,7 @@ function SalesAndTrendsComponent() {
                                     <td className="main-td">2025-07-29</td>
                                     <td>Song A</td>
                                     <td>12,345</td>
-                                    <td>$56.78</td>
+                                    <td>56.78</td>
                                     <td>Spotify</td>
                                     <td>US</td>
                                 </tr>
@@ -301,7 +301,7 @@ function SalesAndTrendsComponent() {
                                     <td className="main-td">2025-07-29</td>
                                     <td>Song A</td>
                                     <td>12,345</td>
-                                    <td>$56.78</td>
+                                    <td>56.78</td>
                                     <td>Spotify</td>
                                     <td>US</td>
                                 </tr>

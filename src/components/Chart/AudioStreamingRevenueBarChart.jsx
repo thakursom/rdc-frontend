@@ -1,82 +1,115 @@
-import React, { useEffect } from "react";
-import Highcharts from "highcharts";
+import React, { useEffect, useRef } from "react";
+import {
+  Chart,
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend
+} from "chart.js";
 
+// Register components
+Chart.register(
+  BarController,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend
+);
+
+const BAR_COLORS = [
+  { border: "#20D4B0", background: "rgba(32, 212, 176, 0.25)" },
+  { border: "#A284F5", background: "rgba(162, 132, 245, 0.25)" },
+  { border: "#FF9B78", background: "rgba(255, 155, 120, 0.25)" },
+  { border: "#FFD670", background: "rgba(255, 214, 112, 0.25)" },
+  { border: "#64B5F6", background: "rgba(100, 181, 246, 0.25)" }
+];
 
 function RevenueBarChart2({ revenueByChannel = {} }) {
+  const chartRef = useRef(null);
+  const chartInstanceRef = useRef(null);
+
   useEffect(() => {
-    const containerId = "channel-revenue-pie";
+    if (!chartRef.current) return;
 
-    // Convert revenueByChannel to pie data format
-    const pieData = Object.entries(revenueByChannel).map(([name, value]) => ({
-      name,
-      y: value,
-      drilldown: null // you can map a drilldown here later if needed
-    }));
+    if (chartInstanceRef.current) {
+      chartInstanceRef.current.destroy();
+    }
 
-    Highcharts.chart(containerId, {
-      chart: {
-        type: "pie"
+    const labels = Object.keys(revenueByChannel);
+    const data = Object.values(revenueByChannel);
+
+    chartInstanceRef.current = new Chart(chartRef.current, {
+      type: "bar",
+      data: {
+        labels,
+        datasets: [
+          {
+            data,
+            backgroundColor: labels.map(
+              (_, i) => BAR_COLORS[i % BAR_COLORS.length].background
+            ),
+            borderColor: labels.map(
+              (_, i) => BAR_COLORS[i % BAR_COLORS.length].border
+            ),
+            borderWidth: 2,
+            borderRadius: 10
+          }
+        ]
       },
-
-      title: false,
-      subtitle: false,
-
-      accessibility: {
-        announceNewData: { enabled: true },
-        point: { valueSuffix: "%" }
-      },
-
-      tooltip: {
-        pointFormat:
-          "<b>${point.y:.2f}</b> ({point.percentage:.1f}%) of total<br/>"
-      },
-
-      plotOptions: {
-        pie: {
-          allowPointSelect: true,
-          cursor: "pointer",
-          borderWidth: 1,
-          borderColor: "#fff",
-          borderRadius: 5,
-          dataLabels: [
-            {
-              enabled: true,
-              distance: 10,
-              format: "{point.name}"
+      options: {
+        indexAxis: "y",
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          },
+          tooltip: {
+            backgroundColor: "rgba(15,23,42,.9)",
+            borderRadius: 10,
+            style: { color: "#fff" },
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              color: "#E5E7EB"
             },
-            {
-              enabled: true,
-              distance: "-40%",
-              filter: {
-                property: "percentage",
-                operator: ">",
-                value: 5
-              },
-              format: "{point.percentage:.1f}%",
-              style: { fontSize: "0.8em", textOutline: "none" }
+            ticks: {
+              color: "#64748B"
             }
-          ]
+          },
+          y: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              color: "#1E293B"
+            }
+          }
         }
-      },
-
-      series: [
-        {
-          name: "Channels",
-          colorByPoint: true,
-          data: pieData
-        }
-      ],
-
-      drilldown: {
-        series: [] // you can add drilldown here later
-      },
-
-      credits: { enabled: false }
+      }
     });
+
+    return () => chartInstanceRef.current?.destroy();
   }, [revenueByChannel]);
 
   return (
-    <div id="channel-revenue-pie" style={{ width: "100%", height: "330px" }} />
+    <div
+      style={{
+        width: "100%",
+        height: "330px",
+        background: "#FFFFFF",
+        padding: "20px",
+        borderRadius: "14px",
+        boxShadow: "0 8px 20px rgba(0,0,0,0.08)"
+      }}
+    >
+      <canvas ref={chartRef} />
+    </div>
   );
 }
 

@@ -67,7 +67,7 @@ function RevenueByMonthChart() {
             max: 12,
             title: {
               display: true,
-              text: "Revenue (Millions $)",
+              text: "Revenue (Millions)",
             },
             grid: { display: false },
           },

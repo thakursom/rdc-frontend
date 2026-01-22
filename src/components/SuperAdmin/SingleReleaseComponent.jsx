@@ -98,7 +98,7 @@ function SingleReleaseComponent() {
                                         </div>
                                         <div className="dash-content">
                                             <p>Total Revenue</p>
-                                            <h6>$12,450</h6>
+                                            <h6>12,450</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -192,7 +192,7 @@ function SingleReleaseComponent() {
                                         <td>XYZ Records</td>
                                         <td>Spotify</td>
                                         <td>2025-05-22</td>
-                                        <td>$56.78</td>
+                                        <td>56.78</td>
                                     </tr>
                                 ))}
                             </tbody>

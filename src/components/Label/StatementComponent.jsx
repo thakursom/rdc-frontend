@@ -26,7 +26,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -50,7 +50,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -74,7 +74,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -98,7 +98,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -122,7 +122,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -146,7 +146,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -170,7 +170,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -194,7 +194,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -218,7 +218,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -242,7 +242,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -266,7 +266,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -290,7 +290,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -314,7 +314,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -338,7 +338,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -362,7 +362,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -386,7 +386,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -410,7 +410,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -434,7 +434,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -458,7 +458,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />
@@ -482,7 +482,7 @@ function StatementComponent() {
                                     <td className="main-td">STMT-2025-08-01-AYO</td>
                                     <td>AYO</td>
                                     <td>Jul 1–31, 2025</td>
-                                    <td>$845.22</td>
+                                    <td>845.22</td>
                                     <td>
                                         <button className="border-less border-green color-green table-button me-1">
                                             <i className="fa-solid fa-download me-1" />

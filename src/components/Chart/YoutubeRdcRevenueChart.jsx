@@ -1,83 +1,146 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import Highcharts from "highcharts";
 
+const COLORS = {
+  border: "#20D4B0",
+  background: "rgba(32, 212, 176, 0.25)"
+};
+
+
 function YoutubeRdcRevenueChart({ revenueByMonth = {} }) {
-
-  useEffect(() => {
-    const container = document.getElementById("yt-rdc-revenue-container");
-    if (container) container.innerHTML = "";
-
+  const { labels, values } = useMemo(() => {
     if (!revenueByMonth || Object.keys(revenueByMonth).length === 0) {
-      return;
+      return { labels: [], values: [] };
     }
 
-    const transformedData = {};
+    const transformed = {};
 
-    Object.keys(revenueByMonth).forEach(key => {
-      if (key.includes('-')) {
-        const [year, month] = key.split('-');
-        const monthNumber = parseInt(month, 10) - 1;
-        const date = new Date(year, monthNumber, 1);
+    Object.entries(revenueByMonth).forEach(([key, value]) => {
+      if (key.includes("-")) {
+        const [year, month] = key.split("-");
+        const date = new Date(year, Number(month) - 1, 1);
 
-        let monthLabel = date.toLocaleString("default", {
+        const label = date.toLocaleString("default", {
           month: "short",
           year: "numeric"
         });
 
-        if (monthLabel.startsWith("Sep")) {
-          monthLabel = monthLabel.replace("Sept", "Sep");
-        }
-
-        transformedData[monthLabel] = revenueByMonth[key];
+        transformed[label] = Number(value);
       } else {
-        transformedData[key] = revenueByMonth[key];
+        transformed[key] = Number(value);
       }
     });
 
-    const allMonthsFromData = Object.keys(transformedData);
+    const sortedLabels = Object.keys(transformed).sort(
+      (a, b) => new Date(a) - new Date(b)
+    );
 
-    allMonthsFromData.sort((a, b) => {
-      const dateA = new Date(a);
-      const dateB = new Date(b);
-      return dateA - dateB;
+    return {
+      labels: sortedLabels,
+      values: sortedLabels.map(l => transformed[l] || 0)
+    };
+  }, [revenueByMonth]);
+
+  useEffect(() => {
+    if (labels.length === 0) return;
+
+    Highcharts.setOptions({
+      chart: {
+        style: { fontFamily: "Segoe UI, system-ui, sans-serif" }
+      },
+      credits: { enabled: false },
+      tooltip: {
+        backgroundColor: "rgba(15,23,42,.8)",
+        borderRadius: 10,
+        style: { color: "#fff" }
+      }
     });
 
-    const barData = allMonthsFromData.map(m => transformedData[m] || 0);
+    Highcharts.chart("monthlyArea", {
+      chart: {
+        type: "area",
+        backgroundColor: "transparent",
+        height: 420
+      },
 
-    Highcharts.chart("yt-rdc-revenue-container", {
-      chart: { zooming: { type: "xy" } },
-      title: false,
-      credits: { enabled: false },
+      title: { text: null },
 
       xAxis: {
-        categories: allMonthsFromData,
-        crosshair: true
+        categories: labels,
+        lineColor: "#E2E8F0",
+        tickColor: "#E2E8F0",
+        labels: { style: { color: "#6A7282" } }
       },
 
       yAxis: {
-        title: { text: "Net Revenue" }
+        title: {
+          text: "Revenue",
+          style: { color: "#6A7282" }
+        },
+        gridLineColor: "#E5E7EB",
+        labels: { style: { color: "#6A7282" } }
+      },
+
+      plotOptions: {
+        area: {
+          lineWidth: 2,
+          marker: {
+            radius: 4,
+            fillColor: COLORS.border
+          },
+          fillColor: {
+            linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+            stops: [
+              [0, COLORS.background],
+              [1, "rgba(32, 212, 176, 0.05)"]
+            ]
+          }
+        }
       },
 
       series: [
         {
-          name: "Net Revenue",
-          type: "column",
-          data: barData
-        },
-        {
-          name: "Trend",
-          type: "spline",
-          data: barData
+          name: "Revenue",
+          color: COLORS.border,
+          data: values
         }
       ]
+
     });
-  }, [revenueByMonth]);
+  }, [labels, values]);
+
+  if (labels.length === 0) {
+    return (
+      <div
+        style={{
+          height: "420px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "#94A3B8"
+        }}
+      >
+        No revenue data available
+      </div>
+    );
+  }
 
   return (
     <div
-      id="yt-rdc-revenue-container"
-      style={{ width: "100%", height: "380px" }}
-    ></div>
+      style={{
+        background: "rgba(255,255,255,.7)",
+        backdropFilter: "blur(14px)",
+        borderRadius: "20px",
+        padding: "25px",
+        boxShadow: "0 25px 60px rgba(15,23,42,.12)"
+      }}
+    >
+      <div style={{ fontWeight: 600, marginBottom: 12 }}>
+        Revenue Trend (Month-wise)
+      </div>
+
+      <div id="monthlyArea" style={{ height: "420px" }} />
+    </div>
   );
 }
 

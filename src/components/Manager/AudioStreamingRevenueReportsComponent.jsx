@@ -785,14 +785,26 @@ function AudioStreamingRevenueReportsComponent() {
                                 <div className="col-md-6">
                                     <div className="dash-card parot-cl">
                                         <div className="dash-icon">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="#3ED08E" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-                                                <line x1={12} x2={12} y1={2} y2={22} />
-                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width={24}
+                                                height={24}
+                                                viewBox="0 0 30 30"
+                                            >
+                                                <text
+                                                    x="2"
+                                                    y="20"
+                                                    fontSize="16"
+                                                    fontFamily="Arial, Helvetica, sans-serif"
+                                                    fill="#3ED08E"
+                                                >
+                                                    INR
+                                                </text>
                                             </svg>
                                         </div>
                                         <div className="dash-content">
                                             <p>Total Revenue</p>
-                                            <h6>${data.summary.totalRevenue.toFixed(2)}</h6>
+                                            <h6>{data.summary.totalRevenue.toFixed(2)}</h6>
                                         </div>
                                     </div>
                                 </div>
@@ -958,7 +970,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                             <td>{Number(track.totalPlays || 0).toLocaleString()}</td>
                                                             <td> {track.platform || "N/A"}</td>
                                                             <td className="fw-bold">
-                                                                ${Number(track.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                                                {Number(track.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -1041,7 +1053,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                                             {item ? (
                                                                                 <div >
                                                                                     <div className="revenue-fx">
-                                                                                        ${Number(item.revenue || 0).toLocaleString(undefined, {
+                                                                                        {Number(item.revenue || 0).toLocaleString(undefined, {
                                                                                             minimumFractionDigits: 2,
                                                                                             maximumFractionDigits: 2,
                                                                                         })}
@@ -1103,7 +1115,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                 {columns.map(col => (
                                                     <td key={col.key}>
                                                         {col.isNumber
-                                                            ? `$${Number(row[col.key] || 0).toFixed(2)}`
+                                                            ? `${Number(row[col.key] || 0).toFixed(2)}`
                                                             : row[col.key] || "-"}
                                                     </td>
                                                 ))}

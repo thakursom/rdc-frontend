@@ -77,7 +77,7 @@ const GrowthChart = ({ revenueByMonthData = [] }) => {
             callbacks: {
               label: (context) => {
                 const value = context.parsed.y;
-                return `$${value.toLocaleString(undefined, {
+                return `${value.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 2,
                 })}`;
@@ -92,12 +92,12 @@ const GrowthChart = ({ revenueByMonthData = [] }) => {
               color: "#888",
               callback: (value) => {
                 if (value >= 1000000) {
-                  return `$${(value / 1000000).toFixed(1)}M`;
+                  return `${(value / 1000000).toFixed(1)}M`;
                 }
                 if (value >= 1000) {
-                  return `$${(value / 1000).toFixed(0)}K`;
+                  return `${(value / 1000).toFixed(0)}K`;
                 }
-                return `$${value}`;
+                return `${value}`;
               },
             },
             grid: { color: "#eee" },

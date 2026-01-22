@@ -13,12 +13,16 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 const TerritoryRevenue = ({ territoryData = [] }) => {
   const validData = territoryData
+    .map(item => ({
+      ...item,
+      location: item?.territory || item?.country
+    }))
     .filter(item =>
-      item.territory &&
-      item.territory !== "-" &&
-      item.territory !== "null" &&
-      item.territory !== "Worldwide" &&
-      item.territory !== "World" &&
+      item.location &&
+      item.location !== "-" &&
+      item.location !== "null" &&
+      item.location !== "Worldwide" &&
+      item.location !== "World" &&
       item.value > 0
     )
     .sort((a, b) => b.value - a.value)
@@ -26,7 +30,7 @@ const TerritoryRevenue = ({ territoryData = [] }) => {
 
   const chartData = {
     labels: validData.map(item => {
-      return item.territory;
+      return item.location;
 
     }),
     datasets: [
@@ -50,7 +54,7 @@ const TerritoryRevenue = ({ territoryData = [] }) => {
         beginAtZero: true,
         ticks: {
           color: "#888",
-          callback: (value) => `$${value.toLocaleString()}`
+          callback: (value) => `${value.toLocaleString()}`
         },
         grid: { color: "#eee" }
       },
@@ -73,7 +77,7 @@ const TerritoryRevenue = ({ territoryData = [] }) => {
         intersect: false,
         callbacks: {
           label: (context) => {
-            return `$${context.parsed.x.toLocaleString()}`;
+            return `${context.parsed.x.toLocaleString()}`;
           }
         }
       }

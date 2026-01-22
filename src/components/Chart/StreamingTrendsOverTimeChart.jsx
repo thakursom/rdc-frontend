@@ -1,59 +1,69 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Chart } from "chart.js/auto";
 
+const colorMap = {
+  Amazon: "#FF8A65",
+  "Apple Music": "#9550DF",
+  Facebook: "#FFB748",
+  "Jio Saavn": "#4E7DFF",
+  Spotify: "#1DB954",
+  TikTok: "#14CDBB"
+};
+
+
 function StreamingTrendsOverTimeChart({ trendsData = {} }) {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
-  const [selectedType, setSelectedType] = useState("all");
-
+  const [selectedType, setSelectedType] = useState("");
   const { months = [], monthlyData = [], distributors = [] } = trendsData;
 
   useEffect(() => {
-    if (chartInstance.current) chartInstance.current.destroy();
+    if (distributors?.length && !selectedType) {
+      const allTab = distributors.find(
+        d => d.toLowerCase() === "all"
+      );
+      if (allTab) setSelectedType(allTab);
+    }
+  }, [distributors, selectedType]);
 
+
+  useEffect(() => {
+    if (chartInstance.current) chartInstance.current.destroy();
     const ctx = chartRef.current.getContext("2d");
 
-    const selectedKey = selectedType.toLowerCase();
+    let datasets = [];
 
-    const selectedData = monthlyData.map(item => {
-      if (selectedKey === "all") return item.all || 0;
-      const matchingKey = Object.keys(item).find(
-        key => key.toLowerCase() === selectedKey
-      );
-      return matchingKey ? item[matchingKey] : 0;
+    const platformsToShow = selectedType.toLowerCase() === "all"
+      ? distributors.filter(d => d.toLowerCase() !== "all")
+      : [selectedType];
+
+    datasets = platformsToShow.map(platform => {
+      const key = platform;
+      const color = colorMap[key] || "#656FF7";
+
+      const data = monthlyData.map(item => {
+        const matchedKey = Object.keys(item).find(k => k.toLowerCase() === key.toLowerCase());
+        return matchedKey ? Number(item[matchedKey] || 0) : 0;
+      });
+
+      return {
+        label: platform,
+        data,
+        borderColor: color,
+        backgroundColor: `${color}40`,
+        fill: true,
+        tension: 0.4,
+        borderWidth: 2,
+        pointRadius: 0,
+        pointHoverRadius: 5,
+      };
     });
-
-    const colorMap = {
-      all: "#656FF7",
-      amazon: "#FF8A65",
-      "apple music": "#9550DF",
-      facebook: "#FFB748",
-      "jio saavn": "#4E7DFF",
-      spotify: "#1DB954",
-      tiktok: "#14CDBB"
-    };
-
-    const selectedColor = colorMap[selectedType.toLowerCase()] || "#656FF7";
 
     chartInstance.current = new Chart(ctx, {
       type: "line",
       data: {
         labels: months,
-        datasets: [
-          {
-            label: "Streams (Millions)",
-            data: selectedData,
-            borderColor: selectedColor,
-            backgroundColor: `${selectedColor}50`,
-            fill: true,
-            tension: 0.4,
-            borderWidth: 3,
-            pointBackgroundColor: selectedColor,
-            pointBorderColor: "#fff",
-            pointRadius: 5,
-            pointHoverRadius: 7
-          }
-        ]
+        datasets,
       },
       options: {
         responsive: true,
@@ -70,12 +80,23 @@ function StreamingTrendsOverTimeChart({ trendsData = {} }) {
           },
           x: { grid: { display: false } }
         },
-        plugins: { legend: { display: false } }
+        plugins: {
+          legend: {
+            display: true,
+            // position: "bottom"
+          }
+        },
+        interaction: {
+          mode: "index",
+          intersect: false
+        }
       }
     });
 
     return () => chartInstance.current?.destroy();
-  }, [monthlyData, selectedType]);
+  }, [monthlyData, selectedType, distributors]);
+
+
 
   return (
     <div>

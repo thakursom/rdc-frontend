@@ -100,15 +100,15 @@ function UserManagementComponent() {
                     <th>Action</th>
                   </tr>
                 </thead>
-                {loading ? (
-                  <tr>
-                    <td colSpan={6} className="text-center">
-                      <Loader small={true} />
-                    </td>
-                  </tr>
-                ) : (
-                  <tbody>
-                    {users.length > 0 ? (
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={6} className="text-center">
+                        <Loader small={true} />
+                      </td>
+                    </tr>
+                  ) :
+                    users.length > 0 ? (
                       users.map((u, i) => (
                         <tr key={i}>
                           <td>{u.name || "N/A"}</td>
@@ -127,8 +127,7 @@ function UserManagementComponent() {
                     ) : (
                       <tr><td colSpan="5" style={{ textAlign: "center" }}>No Users Found</td></tr>
                     )}
-                  </tbody>
-                )}
+                </tbody>
               </table>
             </div>
 

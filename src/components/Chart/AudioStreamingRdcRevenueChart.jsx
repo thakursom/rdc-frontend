@@ -135,10 +135,6 @@ function YoutubeRdcRevenueChart({ revenueByMonth = {} }) {
         boxShadow: "0 25px 60px rgba(15,23,42,.12)"
       }}
     >
-      <div style={{ fontWeight: 600, marginBottom: 12 }}>
-        Revenue Trend (Month-wise)
-      </div>
-
       <div id="monthlyArea" style={{ height: "420px" }} />
     </div>
   );

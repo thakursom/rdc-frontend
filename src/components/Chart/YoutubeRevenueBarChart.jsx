@@ -24,7 +24,9 @@ const BAR_COLORS = [
   { border: "#A284F5", background: "rgba(162, 132, 245, 0.25)" },
   { border: "#FF9B78", background: "rgba(255, 155, 120, 0.25)" },
   { border: "#FFD670", background: "rgba(255, 214, 112, 0.25)" },
-  { border: "#64B5F6", background: "rgba(100, 181, 246, 0.25)" }
+  { border: "#64B5F6", background: "rgba(100, 181, 246, 0.25)" },
+  { border: "#F06292", background: "rgba(240, 98, 146, 0.25)" },
+  { border: "#7ED321", background: "rgba(126, 211, 33, 0.25)" },
 ];
 
 function RevenueBarChart2({ revenueByChannel = {} }) {

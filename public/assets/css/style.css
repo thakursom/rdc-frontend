@@ -559,7 +559,7 @@ form.rdc-form button {
 
 form.rdc-form {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 100px;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     gap: 0 20px;
 }
 

@@ -145,44 +145,49 @@ function UserManagementComponent() {
                     <th>Action</th>
                   </tr>
                 </thead>
-                {loading ? (
-                  <tr>
-                    <td colSpan={6} className="text-center">
-                      <Loader small={true} />
-                    </td>
-                  </tr>
-                ) : (
-                  <tbody>
-                    {users.length > 0 ? (
-                      users.map((u, i) => (
-                        <tr key={i}>
-                          <td>{u.name || "N/A"}</td>
-                          <td>{u.email || "N/A"}</td>
-                          <td>{u.role || "N/A"}</td>
-                          <td>
-                            <button className="border-less border-purple color-purple table-button me-1">
-                              <a className="color-purple" href="#">
-                                View
-                              </a>{" "}
-                              <i className="fa-solid fa-chevron-right" />
-                            </button>
 
-                            {filterRole !== "sub label" && (
-                              <button
-                                className="border-less border-green color-green table-button"
-                                onClick={() => navigate(`/superadmin/sub-label/${u.id}`)}
-                              >
-                                Sub Label <i className="fa-solid fa-chevron-right" />
-                              </button>
-                            )}
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr><td colSpan="5" style={{ textAlign: "center" }}>No Users Found</td></tr>
-                    )}
-                  </tbody>
-                )}
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={4} className="text-center">
+                        <Loader small />
+                      </td>
+                    </tr>
+                  ) : users.length > 0 ? (
+                    users.map((u) => (
+                      <tr key={u.id}>
+                        <td>{u.name || "N/A"}</td>
+                        <td>{u.email || "N/A"}</td>
+                        <td>{u.role || "N/A"}</td>
+                        <td>
+                          <button
+                            className="border-less border-purple color-purple table-button me-1"
+                            onClick={() => navigate(`/users/${u.id}`)}
+                          >
+                            View <i className="fa-solid fa-chevron-right" />
+                          </button>
+
+                          {filterRole !== "sub label" && (
+                            <button
+                              className="border-less border-green color-green table-button"
+                              onClick={() =>
+                                navigate(`/superadmin/sub-label/${u.id}`)
+                              }
+                            >
+                              Sub Label <i className="fa-solid fa-chevron-right" />
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={4} className="text-center">
+                        No Users Found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
               </table>
             </div>
 

@@ -45,7 +45,7 @@ function AddUserComponent() {
                 <div className="main-content-dashboard">
 
                     {/* Page heading */}
-                    <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
+                    <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading">
                         <h6>Add User</h6>
                         <button
                             className="theme-btn green-cl white-cl"

@@ -72,7 +72,7 @@ function AddBulkPayoutComponent() {
         <>
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
-                    <div className="mian-sec-heading  d-flex justify-content-between align-items-center mian-sec-heading1">
+                    <div className="mian-sec-heading  d-flex justify-content-between align-items-center mian-sec-heading">
                         <h6>Add Bulk Payouts</h6>
                         <button className="theme-btn green-cl white-cl" onClick={() => window.history.back()}>
                             <i className="fa-solid fa-arrow-left me-1" /> Back

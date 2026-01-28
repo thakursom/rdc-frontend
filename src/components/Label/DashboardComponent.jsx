@@ -283,7 +283,7 @@ function DashboardComponent() {
                                                 cacheOptions
                                                 loadOptions={loadOptions}
                                                 defaultOptions
-                                                placeholder="Search Label"
+                                                placeholder="Search Sub Label"
                                                 isClearable
                                                 value={
                                                     audioLabelFilter
@@ -1043,7 +1043,7 @@ function DashboardComponent() {
                                                 cacheOptions
                                                 loadOptions={loadOptions}
                                                 defaultOptions
-                                                placeholder="Search Label"
+                                                placeholder="Search Sub Label"
                                                 isClearable
                                                 value={
                                                     youtubeLabelFilter

@@ -548,26 +548,28 @@ function Navbar({ sidebarOpen, setSidebarOpen }) {
               {/* Dropdown submenu */}
               {settingOpen && (
                 <ul className="submenu">
-                  <li>
-                    <NavLink className="sidebar-links" to={
-                      role === "Super Admin"
-                        ? "/superadmin/setting"
-                        : role === "Admin"
-                          ? "/admin/setting"
-                          : role === "Manager"
-                            ? "/manager/setting"
-                            : role === "Label"
-                              ? "/label/setting"
-                              : role === "Sub Label"
-                                ? "/sub-label/setting"
-                                : "/user/setting"
-                    }
-                      // AUTO CLOSE ON MOBILE
-                      onClick={handleMobileClose}
-                    >
-                      General Settings
-                    </NavLink>
-                  </li>
+                  {role !== "Sub Label" && (
+                    <li>
+                      <NavLink
+                        className="sidebar-links"
+                        to={
+                          role === "Super Admin"
+                            ? "/superadmin/setting"
+                            : role === "Admin"
+                              ? "/admin/setting"
+                              : role === "Manager"
+                                ? "/manager/setting"
+                                : role === "Label"
+                                  ? "/label/setting"
+                                  : "/user/setting"
+                        }
+                        onClick={handleMobileClose}
+                      >
+                        General Settings
+                      </NavLink>
+                    </li>
+                  )}
+
                   <li>
                     <NavLink className="sidebar-links" to={
                       role === "Super Admin"

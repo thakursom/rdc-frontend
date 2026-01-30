@@ -162,7 +162,6 @@ function UserManagementComponent() {
                         <td>
                           <button
                             className="border-less border-purple color-purple table-button me-1"
-                            onClick={() => navigate(`/users/${u.id}`)}
                           >
                             View <i className="fa-solid fa-chevron-right" />
                           </button>

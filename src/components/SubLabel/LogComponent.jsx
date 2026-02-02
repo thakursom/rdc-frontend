@@ -67,7 +67,7 @@ function LogComponent() {
 
                                 <tbody>
                                     {logs.length > 0 ? (
-                                        logs.map((log, i) => (
+                                        logs.map((log, i) => (  
                                             <tr key={i}>
                                                 <td data-label="Email" className="main-td">{log.email || "N/A"}</td>
                                                 <td data-label="Action" >{log.action || "N/A"}</td>

@@ -145,6 +145,7 @@ function RevenueUploadComponent() {
         }
     };
 
+
     const handleDeleteClick = (item) => {
         setItemToDelete(item);
         setShowDeleteModal(true);
@@ -250,8 +251,12 @@ function RevenueUploadComponent() {
                                     <div className="chart-content-head">
                                         <h5>Upload Royalty/Usage Report</h5>
                                     </div>
+
+                                    {/* FORM START */}
                                     <form className="revenue-upload">
                                         <div className="row g-3">
+
+                                            {/* Platform */}
                                             <div className="col-md-4">
                                                 <div className="form-group">
                                                     <label className="form-label">Platform</label>
@@ -288,6 +293,7 @@ function RevenueUploadComponent() {
                                         </div>
                                     </form>
 
+                                    {/* FILE UPLOAD */}
                                     <div className="row">
                                         <div className="col-md-12 mb-3">
                                             <div
@@ -383,11 +389,11 @@ function RevenueUploadComponent() {
                             </div>
                         </div>
                         {loading && <Loader />}
-                        <div className="table-sec mt-5">
-                            <table className="rdc-table">
+                        <div className="table-sec mt-5" id="revenueUpload-fx">
+                            <table className="rdc-table rdc-table2">
                                 <thead>
                                     <tr>
-                                        <th>Label Name</th>
+                                        <th>Super Admin/Manager</th>
                                         <th>Platform</th>
                                         <th>FileName</th>
                                         <th>Date of upload</th>
@@ -399,11 +405,11 @@ function RevenueUploadComponent() {
                                     {revenueList.length > 0 ? (
                                         revenueList.map((item, i) => (
                                             <tr key={i}>
-                                                <td>{item.username}</td>
-                                                <td>{item.platform}</td>
-                                                <td>{item.fileName}</td>
-                                                <td>{item.createdAt ? new Date(item.createdAt).toISOString().split("T")[0] : "N/A"}</td>
-                                                <td>
+                                                <td data-label="Super Admin/Manager">{item.username}</td>
+                                                <td data-label="Platform">{item.platform}</td>
+                                                <td data-label="FileName">{item.fileName}</td>
+                                                <td data-label="Date of upload">{item.createdAt ? new Date(item.createdAt).toISOString().split("T")[0] : "N/A"}</td>
+                                                <td data-label="Action">
                                                     {!item.isAccepted && (
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"

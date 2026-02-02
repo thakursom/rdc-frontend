@@ -111,10 +111,10 @@ function UserManagementComponent() {
                     users.length > 0 ? (
                       users.map((u, i) => (
                         <tr key={i}>
-                          <td>{u.name || "N/A"}</td>
-                          <td>{u.email || "N/A"}</td>
-                          <td>{u.role || "N/A"}</td>
-                          <td>
+                          <td data-label="Username">{u.name || "N/A"}</td>
+                          <td data-label="Email">{u.email || "N/A"}</td>
+                          <td data-label="Roles">{u.role || "N/A"}</td>
+                          <td data-label="Action">
                             <button className="border-less border-purple color-purple table-button me-1">
                               <a className="color-purple" href="#">
                                 View

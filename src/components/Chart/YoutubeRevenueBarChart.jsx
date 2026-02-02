@@ -110,7 +110,7 @@ function RevenueBarChart2({ revenueByChannel = {} }) {
         boxShadow: "0 8px 20px rgba(0,0,0,0.08)"
       }}
     >
-      <canvas ref={chartRef} />
+      <canvas id="revenue-by-channel" ref={chartRef} />
     </div>
   );
 }

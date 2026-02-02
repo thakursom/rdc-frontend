@@ -77,10 +77,10 @@ function SubLabelComponent() {
                             </div>
                         </div>
                     </form>
+                    <div className="table-head">
+                        <h6>Manage Label</h6>
+                    </div>
                     <div className="table-sec">
-                        <div className="table-head">
-                            <h6>Manage Label</h6>
-                        </div>
                         <table className="rdc-table">
                             <thead>
                                 <tr>
@@ -96,7 +96,7 @@ function SubLabelComponent() {
                                 {labels.length > 0 ? (
                                     labels.map((l, i) => (
                                         <tr key={i}>
-                                            <td className="main-td">
+                                            <td data-label="Label" className="main-td">
                                                 {/* <img
                                                     className="me-2"
                                                     src="./assets/Img/userImg.jpg"
@@ -104,11 +104,11 @@ function SubLabelComponent() {
                                                 />{" "} */}
                                                 {l.role || "N/A"}
                                             </td>
-                                            <td>{l.name || "N/A"}</td>
-                                            <td> {l.email || "N/A"}</td>
-                                            <td className="dark-green">Active</td>
-                                            <td className="user-status">50,000</td>
-                                            <td>
+                                            <td data-label="Username">{l.name || "N/A"}</td>
+                                            <td data-label="Email"> {l.email || "N/A"}</td>
+                                            <td data-label="Contract Status" className="dark-green">Active</td>
+                                            <td data-label="Revenuse" className="user-status">50,000</td>
+                                            <td data-label="Action">
                                                 <button className="border-less border-purple color-purple me-1 table-button ">
                                                     <i className="fa-regular fa-file-lines me-1" /> Pdf
                                                 </button>
@@ -122,7 +122,7 @@ function SubLabelComponent() {
                                         </tr>
                                     ))
                                 ) : (
-                                    <tr><td colSpan="5" style={{ textAlign: "center" }}>No Users Found</td></tr>
+                                    <tr><td colSpan="6" style={{ textAlign: "center" }}>No Users Found</td></tr>
                                 )}
                             </tbody>
                         </table>

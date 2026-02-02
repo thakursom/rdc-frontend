@@ -1907,6 +1907,13 @@ canvas#territoryRevenue {
     height: 400px !important;
 }
 
+.form-check-download {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start !important;
+}
+
 
 /* ############## Media Query ############## */
 
@@ -2247,7 +2254,7 @@ canvas#territoryRevenue {
 
     .chart-container canvas#musicChart {
         width: 100% !important;
-        height: 200px !important;
+        height: 280px !important;
     }
 
 
@@ -2430,6 +2437,100 @@ canvas#territoryRevenue {
     section#right-sidebar {
         padding: 30px 15px;
     }
+
+
+    table,
+    thead,
+    tbody,
+    th,
+    td,
+    tr {
+        display: block;
+    }
+
+    thead tr {
+        display: none;
+        /* hide table headers */
+    }
+
+    tr {
+        margin-bottom: 20px;
+        border-radius: 5px;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    td {
+        border: none;
+        padding: 12px 0 !important;
+        position: relative;
+        padding-left: 47% !important;
+        text-align: left;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        top: 12px;
+        font-weight: bold;
+    }
+
+    table.rdc-table td {
+        white-space: break-spaces;
+        line-height: 110%;
+    }
+
+    .rdc-table2 td {
+        padding-left: 65% !important;
+    }
+
+    table.rdc-table td {
+        width: 150% !important;
+    }
+
+    .youtube-table tr {
+        border: 1px solid #ddd;
+    }
+
+    .youtube-table td {
+        padding-left: 50% !important;
+    }
+
+    #revenueUpload-fx tr {
+        width: 120%;
+    }
+
+    .form-check-rd {
+        justify-content: flex-start !important;
+    }
+
+    .streaming-trend-fx {
+        flex-wrap: wrap;
+    }
+
+    table#youTube-td-fx td {
+        width: 200% !important;
+    }
+
+    canvas#revenue-by-channel {
+        width: 100% !important;
+    }
+
+    td.label-summary-btn {
+        height: 110px !important;
+    }
+
+    .lable-sum-main {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+    canvas{
+        width: 100% !important ;
+    }
 }
 
 @media(max-width:576px) {
@@ -2494,7 +2595,7 @@ canvas#territoryRevenue {
 
     .chart-container canvas#musicChart {
         width: 100% !important;
-        height: 200px !important;
+        height: 240px !important;
     }
 
     .top-button {

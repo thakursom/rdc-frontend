@@ -137,7 +137,7 @@ function ContractFormComponent() {
         <>
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
-                    <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
+                    <div className="mian-sec-heading d-flex justify-content-between align-items-center">
                         <h6>{id ? "Edit" : "Upload"} Contract</h6>
                         <button
                             className="theme-btn green-cl white-cl"
@@ -161,13 +161,13 @@ function ContractFormComponent() {
                                             {/* Label Selection */}
                                             <div className="col-md-6">
                                                 <label className="form-label fw-semibold">
-                                                    Select Label <span className="text-danger">*</span>
+                                                    Select Sub Label <span className="text-danger">*</span>
                                                 </label>
                                                 <AsyncSelect
                                                     cacheOptions
                                                     defaultOptions
                                                     loadOptions={loadOptions}
-                                                    placeholder="Search and select label"
+                                                    placeholder="Search and select sub label"
                                                     isClearable
                                                     value={
                                                         selectedLabel

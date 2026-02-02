@@ -145,15 +145,15 @@ function BankDetailComponent() {
                                             bankDetails.map((b, i) => (
                                                 <tr key={i}>
                                                     {/* FIXED: Using userName instead of user_id.name */}
-                                                    <td>{b.userName || "N/A"}</td>
-                                                    <td>{b.paymentMethod}</td>
-                                                    <td>
+                                                    <td data-label="Client">{b.userName || "N/A"}</td>
+                                                    <td data-label="Payment Method" >{b.paymentMethod}</td>
+                                                    <td data-label="Details" >
                                                         {b.paymentMethod === "bank" && `Bank: ${b.bankName}, Account: ${b.accountNumber}`}
                                                         {b.paymentMethod === "paypal" && `Email: ${b.paypalEmail}`}
                                                         {b.paymentMethod === "upi" && `UPI ID: ${b.upiId}`}
                                                     </td>
 
-                                                    <td>
+                                                    <td data-label="Action" >
                                                         <button
                                                             className="border-less border-green color-green table-button me-1"
                                                             onClick={() => navigate(`/sub-label/bank-details-form/${b._id}`)}

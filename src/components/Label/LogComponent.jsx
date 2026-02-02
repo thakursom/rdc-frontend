@@ -69,11 +69,11 @@ function LogComponent() {
                                     {logs.length > 0 ? (
                                         logs.map((log, i) => (
                                             <tr key={i}>
-                                                <td className="main-td">{log.email || "N/A"}</td>
-                                                <td>{log.action || "N/A"}</td>
-                                                <td>{log.description || "N/A"}</td>
-                                                <td>{log.ip || "N/A"}</td>
-                                                <td>{log.createdAt ? new Date(log.createdAt).toISOString().split("T")[0] : "N/A"}</td>
+                                                <td data-label="Email" className="main-td">{log.email || "N/A"}</td>
+                                                <td data-label="Action" >{log.action || "N/A"}</td>
+                                                <td data-label="Description" >{log.description || "N/A"}</td>
+                                                <td data-label="IP" >{log.ip || "N/A"}</td>
+                                                <td data-label="Date" >{log.createdAt ? new Date(log.createdAt).toISOString().split("T")[0] : "N/A"}</td>
                                             </tr>
                                         ))
                                     ) : (

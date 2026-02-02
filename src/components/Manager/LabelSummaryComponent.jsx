@@ -98,15 +98,16 @@ function LabelSummaryComponent() {
         }
     };
 
-
     const handleReminderClick = (contract) => {
         setContractToRemind(contract);
         setShowReminderModal(true);
     };
 
     const handleCloseReminderModal = () => {
+        // close modal and reset selected contract
         setShowReminderModal(false);
         setContractToRemind(null);
+        // optionally also reset loading flags (safe guard)
         setEmailLoading(false);
         setWhatsappLoading(false);
     };
@@ -165,7 +166,10 @@ function LabelSummaryComponent() {
 
 
     const handleSendWhatsappReminder = () => {
+        // Just open WhatsApp Web in a new tab
         window.open("https://web.whatsapp.com/", "_blank");
+
+        // Close modal
         handleCloseReminderModal();
     };
 
@@ -177,7 +181,7 @@ function LabelSummaryComponent() {
             const res = await apiRequest(
                 `/contracts/${contract._id}/auto-renew`,
                 "PUT",
-                { autoRenew: newValue }, 
+                { autoRenew: newValue },
                 true
             );
 
@@ -240,6 +244,7 @@ function LabelSummaryComponent() {
                             </button>
                         </div>
 
+                        {/* TABLE */}
                         <div className="table-sec">
                             {loading ? (
                                 <Loader />
@@ -261,12 +266,12 @@ function LabelSummaryComponent() {
                                         {contracts.length > 0 ? (
                                             contracts.map((contract, i) => (
                                                 <tr key={i}>
-                                                    <td>{contract.userName}</td>
-                                                    <td>{contract.labelPercentage}</td>
-                                                    <td>{new Date(contract.startDate).toISOString().split("T")[0]}</td>
-                                                    <td>{new Date(contract.endDate).toISOString().split("T")[0]}</td>
-                                                    <td>{contract.description || 'N/A'}</td>
-                                                    <td>
+                                                    <td data-label="Label Name" >{contract.userName}</td>
+                                                    <td data-label="Percentage" >{contract.labelPercentage}</td>
+                                                    <td data-label="Start Date" >{new Date(contract.startDate).toISOString().split("T")[0]}</td>
+                                                    <td data-label="End Date" >{new Date(contract.endDate).toISOString().split("T")[0]}</td>
+                                                    <td data-label="Description" >{contract.description || 'N/A'}</td>
+                                                    <td data-label="Status" >
                                                         <span
                                                             className={`badge ${contract.status === "active"
                                                                 ? "bg-success"
@@ -278,8 +283,8 @@ function LabelSummaryComponent() {
                                                             {contract.status}
                                                         </span>
                                                     </td>
-                                                    <td>
-                                                        <div className="form-check form-switch d-flex justify-content-center">
+                                                    <td data-label="Auto Renew" >
+                                                        <div className="form-check form-switch d-flex justify-content-center form-check-rd">
                                                             <input
                                                                 className="form-check-input"
                                                                 type="checkbox"
@@ -299,32 +304,40 @@ function LabelSummaryComponent() {
                                                             />
                                                         </div>
                                                     </td>
+                                                    <td data-label="Action" className="label-summary-btn" >
+                                                        <div className="lable-sum-main">
+                                                            <button className="border-less border-green color-green table-button me-1"
+                                                                onClick={() =>
+                                                                    navigate(`/manager/all-contracts/${contract.user_id}`)
+                                                                }
+                                                            >
+                                                                All Contracts
+                                                            </button>
+                                                            <button className="border-less border-purple color-purple table-button me-1"
+                                                                onClick={() =>
+                                                                    navigate(`/manager/sub-label-summary/${contract.user_id}`)
+                                                                }
+                                                            >
+                                                                Sub Label
+                                                            </button>
+                                                            {/* <button className="border-less border-purple color-purple table-button me-1">
+                                                            NOC
+                                                        </button> */}
+                                                            <button
+                                                                className="border-less border-green color-green table-button me-1"
+                                                                onClick={() =>
+                                                                    navigate(`/manager/contract-from/${contract._id}`)
+                                                                }
+                                                            >
+                                                                Edit <i className="fa-solid fa-chevron-right" />
+                                                            </button>
 
-
-
-                                                    <td>
-                                                        <button className="border-less border-green color-green table-button me-1"
-                                                            onClick={() =>
-                                                                navigate(`/manager/all-contracts/${contract.user_id}`)
-                                                            }
+                                                            {/* <button
+                                                            className="border-less border-red dark-red table-button me-1"
+                                                            onClick={() => handleDeleteClick(contract)}
                                                         >
-                                                            All Contracts
-                                                        </button>
-                                                        <button className="border-less border-purple color-purple table-button me-1"
-                                                            onClick={() =>
-                                                                navigate(`/manager/sub-label-summary/${contract.user_id}`)
-                                                            }
-                                                        >
-                                                            Sub Label
-                                                        </button>
-                                                        <button
-                                                            className="border-less border-green color-green table-button me-1"
-                                                            onClick={() =>
-                                                                navigate(`/manager/contract-from/${contract._id}`)
-                                                            }
-                                                        >
-                                                            Edit <i className="fa-solid fa-chevron-right" />
-                                                        </button>
+                                                            Delete <i className="fa-solid fa-trash" />
+                                                        </button> */}
 
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"
@@ -335,12 +348,13 @@ function LabelSummaryComponent() {
                                                             View Logs <i className="fa-solid fa-right-to-bracket"></i>
                                                         </button>
 
-                                                        <button
-                                                            className="border-less border-yellow color-yellow table-button"
-                                                            onClick={() => handleReminderClick(contract)}
-                                                        >
-                                                            Send Reminder <i className="fa-solid fa-envelope"></i>
-                                                        </button>
+                                                            <button
+                                                                className="border-less border-yellow color-yellow table-button"
+                                                                onClick={() => handleReminderClick(contract)}
+                                                            >
+                                                                Send Reminder <i className="fa-solid fa-envelope"></i>
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))

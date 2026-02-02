@@ -389,8 +389,8 @@ function RevenueUploadComponent() {
                             </div>
                         </div>
                         {loading && <Loader />}
-                        <div className="table-sec mt-5">
-                            <table className="rdc-table">
+                        <div className="table-sec mt-5" id="revenueUpload-fx">
+                            <table className="rdc-table rdc-table2">
                                 <thead>
                                     <tr>
                                         <th>Super Admin/Manager</th>
@@ -405,11 +405,11 @@ function RevenueUploadComponent() {
                                     {revenueList.length > 0 ? (
                                         revenueList.map((item, i) => (
                                             <tr key={i}>
-                                                <td>{item.username}</td>
-                                                <td>{item.platform}</td>
-                                                <td>{item.fileName}</td>
-                                                <td>{item.createdAt ? new Date(item.createdAt).toISOString().split("T")[0] : "N/A"}</td>
-                                                <td>
+                                                <td data-label="Super Admin/Manager">{item.username}</td>
+                                                <td data-label="Platform">{item.platform}</td>
+                                                <td data-label="FileName">{item.fileName}</td>
+                                                <td data-label="Date of upload">{item.createdAt ? new Date(item.createdAt).toISOString().split("T")[0] : "N/A"}</td>
+                                                <td data-label="Action">
                                                     {!item.isAccepted && (
                                                         <button
                                                             className="border-less border-purple color-purple table-button me-1"

@@ -509,7 +509,7 @@ function YoutubeRevenueReportsComponent() {
                     <div className="mt-4">
                         {showReportsTable && downloadHistory && downloadHistory.length > 0 && (
                             <div className="table-sec generate-report mt-3">
-                                <table className="rdc-table rdc-shadow">
+                                <table className="rdc-table rdc-shadow" id="youTube-td-fx">
                                     <thead>
                                         <tr>
                                             <th>File Name</th>
@@ -521,7 +521,7 @@ function YoutubeRevenueReportsComponent() {
                                     <tbody>
                                         {downloadHistory.map((item) => (
                                             <tr key={item._id} className={item.status === 'pending' ? 'table-warning' : item === downloadHistory[0] ? 'table-primary' : ''}>
-                                                <td>
+                                                <td data-label="File Name">
                                                     <i className="fa-solid fa-file-excel text-success me-2"></i>
                                                     <strong>
                                                         {item.status === 'pending' ? 'Generating...' : item.filename}
@@ -530,7 +530,7 @@ function YoutubeRevenueReportsComponent() {
                                                         <span className="badge bg-primary ms-2 small">Latest</span>
                                                     }
                                                 </td>
-                                                <td>
+                                                <td data-label="Generated On">
                                                     {new Date(item.generatedAt).toLocaleDateString('en-US', {
                                                         day: '2-digit',
                                                         month: 'short',
@@ -539,7 +539,7 @@ function YoutubeRevenueReportsComponent() {
                                                         minute: '2-digit'
                                                     })}
                                                 </td>
-                                                <td>
+                                                <td data-label="Status">
                                                     {["pending", "generating"].includes(item.status) && (
                                                         <span className="badge bg-warning text-dark">
                                                             <i className="fa-solid fa-spinner fa-spin me-1"></i>
@@ -560,30 +560,32 @@ function YoutubeRevenueReportsComponent() {
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="text-center report-delete">
+                                                <td data-label="Action" className="text-center report-delete">
                                                     {item.status === "ready" && item.fileURL ? (
                                                         <>
-                                                            <a
-                                                                href={item.fileURL}
-                                                                download={item.filename}
-                                                                className="theme-btn green-cl white-cl small px-3 py-2"
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                            >
-                                                                <i className="fa-solid fa-download me-2"></i>
-                                                                Download
-                                                            </a>
-                                                            <button
-                                                                className="border-less border-red dark-red table-button me-2"
-                                                                onClick={() => handleDeleteClick(item)}
-                                                                disabled={deletingId === item._id}
-                                                            >
-                                                                {deletingId === item._id ? (
-                                                                    <span><i className="fa-solid fa-spinner fa-spin"></i> Deleting...</span>
-                                                                ) : (
-                                                                    <>Delete <i className="fa-solid fa-trash" /></>
-                                                                )}
-                                                            </button>
+                                                            <div className="form-check-download">
+                                                                <a
+                                                                    href={item.fileURL}
+                                                                    download={item.filename}
+                                                                    className="theme-btn green-cl white-cl small px-3 py-2"
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                >
+                                                                    <i className="fa-solid fa-download me-2"></i>
+                                                                    Download
+                                                                </a>
+                                                                <button
+                                                                    className="border-less border-red dark-red table-button me-2"
+                                                                    onClick={() => handleDeleteClick(item)}
+                                                                    disabled={deletingId === item._id}
+                                                                >
+                                                                    {deletingId === item._id ? (
+                                                                        <span><i className="fa-solid fa-spinner fa-spin"></i> Deleting...</span>
+                                                                    ) : (
+                                                                        <>Delete <i className="fa-solid fa-trash" /></>
+                                                                    )}
+                                                                </button>
+                                                            </div>
                                                         </>
                                                     ) : (item.status === "pending" || item.status === "generating") ? (
                                                         <>
@@ -951,9 +953,9 @@ function YoutubeRevenueReportsComponent() {
                                                 <tbody>
                                                     {data.topVideos.slice(0, 10).map((video, index) => (
                                                         <tr key={video.videoId || index}>
-                                                            <td className="fw-medium">{video.title || "N/A"}</td>
-                                                            <td>{video.channel || "Unknown"}</td>
-                                                            <td className="fw-bold">
+                                                            <td data-label="Video Name" className="fw-medium">{video.title || "N/A"}</td>
+                                                            <td data-label="Platform Name" >{video.channel || "Unknown"}</td>
+                                                            <td data-label="Revenue" className="fw-bold">
                                                                 {Number(video.revenue || 0).toLocaleString(undefined, {
                                                                     minimumFractionDigits: 2,
                                                                     maximumFractionDigits: 2,
@@ -1024,9 +1026,9 @@ function YoutubeRevenueReportsComponent() {
                                                 <tbody>
                                                     {data.topAssets.slice(0, 10).map((asset, index) => (
                                                         <tr key={asset.assetId || index}>
-                                                            <td className="fw-medium">{asset.assetTitle || "N/A"}</td>
-                                                            <td>{asset.channel || "Unknown"} </td>
-                                                            <td className="fw-bold">
+                                                            <td data-label="Asset Name" className="fw-medium">{asset.assetTitle || "N/A"}</td>
+                                                            <td data-label="Platform Name" >{asset.channel || "Unknown"} </td>
+                                                            <td data-label="Revenue" className="fw-bold">
                                                                 {Number(asset.totalRevenue || 0).toLocaleString(undefined, {
                                                                     minimumFractionDigits: 2,
                                                                     maximumFractionDigits: 2,
@@ -1097,8 +1099,8 @@ function YoutubeRevenueReportsComponent() {
                                                 <tbody>
                                                     {data.topChannels.slice(0, 10).map((channel, index) => (
                                                         <tr key={channel.channelName || index}>
-                                                            <td className="fw-medium">{channel.channelName || "Unknown"}</td>
-                                                            <td className="fw-bold">
+                                                            <td data-label="Platform Name" className="fw-medium">{channel.channelName || "Unknown"}</td>
+                                                            <td data-label="Revenue" className="fw-bold">
                                                                 {Number(channel.totalRevenue || 0).toLocaleString(undefined, {
                                                                     minimumFractionDigits: 2,
                                                                     maximumFractionDigits: 2,
@@ -1142,7 +1144,7 @@ function YoutubeRevenueReportsComponent() {
                                         {reports.map((row, i) => (
                                             <tr key={i}>
                                                 {columns.map(col => (
-                                                    <td key={col.key}>
+                                                    <td key={col.key} data-label={col.label}>
                                                         {col.isNumber
                                                             ? `${Number(row[col.key] || 0).toFixed(2)}`
                                                             : row[col.key] || "-"}

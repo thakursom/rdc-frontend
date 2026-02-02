@@ -98,10 +98,10 @@ function PayoutComponent() {
                                 ) : (
                                     payouts.map((p) => (
                                         <tr key={p._id}>
-                                            <td className="main-td">{p.userName || "N/A"}</td>
-                                            <td>{p.paymentMethod || "N/A"}</td>
-                                            <td>{p.amount || "N/A"}</td>
-                                            <td>
+                                            <td data-label="Payee" className="main-td">{p.userName || "N/A"}</td>
+                                            <td data-label="Method">{p.paymentMethod || "N/A"}</td>
+                                            <td data-label="Amount Paid">{p.amount || "N/A"}</td>
+                                            <td data-label="Comment">
                                                 <span title={p.description}>
                                                     {p.description
                                                         ? p.description.length > 30
@@ -110,7 +110,7 @@ function PayoutComponent() {
                                                         : "N/A"}
                                                 </span>
                                             </td>
-                                            <td>{p.createdAt ? new Date(p.createdAt).toISOString().split("T")[0] : "N/A"}</td>
+                                            <td data-label="Date of Payment">{p.createdAt ? new Date(p.createdAt).toISOString().split("T")[0] : "N/A"}</td>
                                         </tr>
                                     ))
                                 )}

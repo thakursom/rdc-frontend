@@ -208,7 +208,7 @@ function LabelSummaryComponent() {
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
                     <div className="mian-sec-heading">
-                        <h6>Label Summary</h6>
+                        <h6>Sub Label Summary</h6>
                     </div>
 
                     <div className="dashTabs mainDashboarTabs">
@@ -258,12 +258,12 @@ function LabelSummaryComponent() {
                                         {contracts.length > 0 ? (
                                             contracts.map((contract, i) => (
                                                 <tr key={i}>
-                                                    <td>{contract.userName}</td>
-                                                    <td>{contract.labelPercentage}</td>
-                                                    <td>{new Date(contract.startDate).toISOString().split("T")[0]}</td>
-                                                    <td>{new Date(contract.endDate).toISOString().split("T")[0]}</td>
-                                                    <td>{contract.description || 'N/A'}</td>
-                                                    <td>
+                                                    <td data-label="Label Name" >{contract.userName}</td>
+                                                    <td data-label="Percentage" >{contract.labelPercentage}</td>
+                                                    <td data-label="Start Date" >{new Date(contract.startDate).toISOString().split("T")[0]}</td>
+                                                    <td data-label="End Date" >{new Date(contract.endDate).toISOString().split("T")[0]}</td>
+                                                    <td data-label="Description" >{contract.description || 'N/A'}</td>
+                                                    <td data-label="Status" >
                                                         <span
                                                             className={`badge ${contract.status === "active"
                                                                 ? "bg-success"
@@ -275,8 +275,8 @@ function LabelSummaryComponent() {
                                                             {contract.status}
                                                         </span>
                                                     </td>
-                                                    <td>
-                                                        <div className="form-check form-switch d-flex justify-content-center">
+                                                    <td data-label="Auto Renew" >
+                                                        <div className="form-check form-switch d-flex justify-content-center form-check-rd">
                                                             <input
                                                                 className="form-check-input"
                                                                 type="checkbox"
@@ -296,49 +296,57 @@ function LabelSummaryComponent() {
                                                             />
                                                         </div>
                                                     </td>
+                                                    <td data-label="Action" className="label-summary-btn" >
+                                                        <div className="lable-sum-main">
+                                                            <button className="border-less border-green color-green table-button me-1"
+                                                                onClick={() =>
+                                                                    navigate(`/label/all-contracts/${contract.user_id}`)
+                                                                }
+                                                            >
+                                                                All Contracts
+                                                            </button>
+                                                            <button className="border-less border-purple color-purple table-button me-1"
+                                                                onClick={() =>
+                                                                    navigate(`/label/sub-label-summary/${contract.user_id}`)
+                                                                }
+                                                            >
+                                                                Sub Label
+                                                            </button>
+                                                            {/* <button className="border-less border-purple color-purple table-button me-1">
+                                                            NOC
+                                                        </button> */}
+                                                            <button
+                                                                className="border-less border-green color-green table-button me-1"
+                                                                onClick={() =>
+                                                                    navigate(`/label/contract-from/${contract._id}`)
+                                                                }
+                                                            >
+                                                                Edit <i className="fa-solid fa-chevron-right" />
+                                                            </button>
 
-
-
-                                                    <td>
-                                                        <button className="border-less border-green color-green table-button me-1"
-                                                            onClick={() =>
-                                                                navigate(`/label/all-contracts/${contract.user_id}`)
-                                                            }
+                                                            {/* <button
+                                                            className="border-less border-red dark-red table-button me-1"
+                                                            onClick={() => handleDeleteClick(contract)}
                                                         >
-                                                            All Contracts
-                                                        </button>
-                                                        <button className="border-less border-purple color-purple table-button me-1"
-                                                            onClick={() =>
-                                                                navigate(`/label/sub-label-summary/${contract.user_id}`)
-                                                            }
-                                                        >
-                                                            Sub Label
-                                                        </button>
+                                                            Delete <i className="fa-solid fa-trash" />
+                                                        </button> */}
 
-                                                        <button
-                                                            className="border-less border-green color-green table-button me-1"
-                                                            onClick={() =>
-                                                                navigate(`/label/contract-from/${contract._id}`)
-                                                            }
-                                                        >
-                                                            Edit <i className="fa-solid fa-chevron-right" />
-                                                        </button>
+                                                            <button
+                                                                className="border-less border-purple color-purple table-button me-1"
+                                                                onClick={() =>
+                                                                    navigate(`/label/contract-logs/${contract._id}`)
+                                                                }
+                                                            >
+                                                                View Logs <i className="fa-solid fa-right-to-bracket"></i>
+                                                            </button>
 
-                                                        <button
-                                                            className="border-less border-purple color-purple table-button me-1"
-                                                            onClick={() =>
-                                                                navigate(`/label/contract-logs/${contract._id}`)
-                                                            }
-                                                        >
-                                                            View Logs <i className="fa-solid fa-right-to-bracket"></i>
-                                                        </button>
-
-                                                        <button
-                                                            className="border-less border-yellow color-yellow table-button"
-                                                            onClick={() => handleReminderClick(contract)}
-                                                        >
-                                                            Send Reminder <i className="fa-solid fa-envelope"></i>
-                                                        </button>
+                                                            <button
+                                                                className="border-less border-yellow color-yellow table-button"
+                                                                onClick={() => handleReminderClick(contract)}
+                                                            >
+                                                                Send Reminder <i className="fa-solid fa-envelope"></i>
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))

@@ -517,7 +517,7 @@ function AudioStreamingRevenueReportsComponent() {
                     <div className="mt-4">
                         {showReportsTable && downloadHistory && downloadHistory.length > 0 && (
                             <div className="table-sec generate-report mt-3">
-                                <table className="rdc-table rdc-shadow">
+                                <table className="rdc-table rdc-shadow" id="youTube-td-fx">
                                     <thead>
                                         <tr>
                                             <th>File Name</th>
@@ -529,7 +529,7 @@ function AudioStreamingRevenueReportsComponent() {
                                     <tbody>
                                         {downloadHistory.map((item) => (
                                             <tr key={item._id} className={item.status === 'pending' ? 'table-warning' : item === downloadHistory[0] ? 'table-primary' : ''}>
-                                                <td>
+                                                <td data-label="File Name">
                                                     <i className="fa-solid fa-file-excel text-success me-2"></i>
                                                     <strong>
                                                         {item.status === 'pending' ? 'Generating...' : item.filename}
@@ -538,7 +538,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                         <span className="badge bg-primary ms-2 small">Latest</span>
                                                     }
                                                 </td>
-                                                <td>
+                                                <td data-label="Generated On">
                                                     {new Date(item.generatedAt).toLocaleDateString('en-US', {
                                                         day: '2-digit',
                                                         month: 'short',
@@ -547,7 +547,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                         minute: '2-digit'
                                                     })}
                                                 </td>
-                                                <td>
+                                                <td data-label="Status">
                                                     {["pending", "generating"].includes(item.status) && (
                                                         <span className="badge bg-warning text-dark">
                                                             <i className="fa-solid fa-spinner fa-spin me-1"></i>
@@ -568,30 +568,32 @@ function AudioStreamingRevenueReportsComponent() {
                                                         </span>
                                                     )}
                                                 </td>
-                                                <td className="text-center report-delete">
+                                                <td data-label="Action" className="text-center report-delete">
                                                     {item.status === "ready" && item.fileURL ? (
                                                         <>
-                                                            <a
-                                                                href={item.fileURL}
-                                                                download={item.filename}
-                                                                className="theme-btn green-cl white-cl small px-3 py-2"
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                            >
-                                                                <i className="fa-solid fa-download me-2"></i>
-                                                                Download
-                                                            </a>
-                                                            <button
-                                                                className="border-less border-red dark-red table-button me-2"
-                                                                onClick={() => handleDeleteClick(item)}
-                                                                disabled={deletingId === item._id}
-                                                            >
-                                                                {deletingId === item._id ? (
-                                                                    <span><i className="fa-solid fa-spinner fa-spin"></i> Deleting...</span>
-                                                                ) : (
-                                                                    <>Delete <i className="fa-solid fa-trash" /></>
-                                                                )}
-                                                            </button>
+                                                            <div className="form-check-download">
+                                                                <a
+                                                                    href={item.fileURL}
+                                                                    download={item.filename}
+                                                                    className="theme-btn green-cl white-cl small px-3 py-2"
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                >
+                                                                    <i className="fa-solid fa-download me-2"></i>
+                                                                    Download
+                                                                </a>
+                                                                <button
+                                                                    className="border-less border-red dark-red table-button me-2"
+                                                                    onClick={() => handleDeleteClick(item)}
+                                                                    disabled={deletingId === item._id}
+                                                                >
+                                                                    {deletingId === item._id ? (
+                                                                        <span><i className="fa-solid fa-spinner fa-spin"></i> Deleting...</span>
+                                                                    ) : (
+                                                                        <>Delete <i className="fa-solid fa-trash" /></>
+                                                                    )}
+                                                                </button>
+                                                            </div>
                                                         </>
                                                     ) : (item.status === "pending" || item.status === "generating") ? (
                                                         <>
@@ -966,10 +968,10 @@ function AudioStreamingRevenueReportsComponent() {
                                                 <tbody>
                                                     {data.topTracks.slice(0, 10).map((track, index) => (
                                                         <tr key={index}>
-                                                            <td className="fw-medium">{track.track || track.release || "N/A"}</td>
-                                                            <td>{Number(track.totalPlays || 0).toLocaleString()}</td>
-                                                            <td> {track.platform || "N/A"}</td>
-                                                            <td className="fw-bold">
+                                                            <td data-label="Track Name" className="fw-medium">{track.track || track.release || "N/A"}</td>
+                                                            <td data-label="Total Plays" >{Number(track.totalPlays || 0).toLocaleString()}</td>
+                                                            <td data-label="Platform Name" > {track.platform || "N/A"}</td>
+                                                            <td data-label="Revenue" className="fw-bold">
                                                                 {Number(track.revenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                             </td>
                                                         </tr>
@@ -1049,9 +1051,9 @@ function AudioStreamingRevenueReportsComponent() {
                                                                     const item = data.topPlatforms[platformName]?.[rowIndex];
 
                                                                     return (
-                                                                        <td key={`${platformName}-${rowIndex}`}>
+                                                                        <td key={`${platformName}-${rowIndex}`} data-label={platformName}>
                                                                             {item ? (
-                                                                                <div >
+                                                                                <div>
                                                                                     <div className="revenue-fx">
                                                                                         {Number(item.revenue || 0).toLocaleString(undefined, {
                                                                                             minimumFractionDigits: 2,
@@ -1078,6 +1080,7 @@ function AudioStreamingRevenueReportsComponent() {
                                                         </tr>
                                                     ))}
                                                 </tbody>
+
                                             </table>
                                         </div>
                                     ) : (
@@ -1113,7 +1116,7 @@ function AudioStreamingRevenueReportsComponent() {
                                         {reports.map((row, i) => (
                                             <tr key={i}>
                                                 {columns.map(col => (
-                                                    <td key={col.key}>
+                                                    <td key={col.key} data-label={col.label}>
                                                         {col.isNumber
                                                             ? `${Number(row[col.key] || 0).toFixed(2)}`
                                                             : row[col.key] || "-"}

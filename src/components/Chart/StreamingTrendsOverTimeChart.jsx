@@ -102,7 +102,8 @@ function StreamingTrendsOverTimeChart({ trendsData = {} }) {
     <div>
       <div style={{ width: "100%", height: "450px" }}>
         <canvas id="musicChart" ref={chartRef}></canvas>
-        <div
+        <div 
+          className="streaming-trend-fx"
           style={{
             display: "flex",
             justifyContent: "center",
@@ -122,8 +123,9 @@ function StreamingTrendsOverTimeChart({ trendsData = {} }) {
                 border: "1px solid #ccc",
                 cursor: "pointer",
                 background: selectedType === type ? "#14CDBB" : "#FFF",
-                color: selectedType === type ? "#FFF" : "#333",
-                fontWeight: 600
+                color: selectedType === type ? "#FFF" : "#6A7282",
+                fontSize :"14px",
+                fontWeight: 500
               }}
             >
               {type.toUpperCase()}

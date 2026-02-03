@@ -103,11 +103,7 @@ function RevenueBarChart2({ revenueByChannel = {} }) {
     <div
       style={{
         width: "100%",
-        height: "330px",
-        background: "#FFFFFF",
-        padding: "20px",
-        borderRadius: "14px",
-        boxShadow: "0 8px 20px rgba(0,0,0,0.08)"
+        height: "330px"
       }}
     >
       <canvas id="revenue-by-channel" ref={chartRef} />

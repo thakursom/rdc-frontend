@@ -201,7 +201,7 @@ function BankDetailComponent() {
                                             className="btn-close"
                                             onClick={handleCloseModal}
                                             disabled={deleteLoading}
-                                        ><i class="fa-solid fa-xmark"></i></button>
+                                        ><i className="fa-solid fa-xmark"></i></button>
                                     </div>
                                     <div className="modal-body">
                                         <p>

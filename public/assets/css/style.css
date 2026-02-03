@@ -446,8 +446,8 @@ section#right-sidebar {
 }
 
 .dash-icon {
-    width: 45px;
-    height: 45px;
+    min-width: 45px;
+    min-height: 45px;
     border-radius: 5px;
     background: #fff;
     display: flex;
@@ -1914,6 +1914,10 @@ canvas#territoryRevenue {
     justify-content: flex-start !important;
 }
 
+.modal-dialog-centered {
+    justify-content: center !important;
+}
+
 
 /* ############## Media Query ############## */
 
@@ -2528,8 +2532,9 @@ canvas#territoryRevenue {
         gap: 5px;
         flex-wrap: wrap;
     }
-    canvas{
-        width: 100% !important ;
+
+    canvas {
+        width: 100% !important;
     }
 }
 
@@ -2739,6 +2744,10 @@ canvas#territoryRevenue {
         padding: 30px 20px;
         border-radius: 8px;
         box-shadow: 0 0 15px #E8E8E8;
+    }
+
+    .dash-content h6 {
+        font-size: 20px;
     }
 }
 

@@ -9,9 +9,7 @@ function AllContractComponent() {
     const { userId } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
-
     const [contracts, setContracts] = useState([]);
-
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
@@ -70,7 +68,7 @@ function AllContractComponent() {
     return (
         <section className="rdc-rightbar" id="right-sidebar">
             <div className="main-content-dashboard">
-                <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
+                <div className="mian-sec-heading d-flex justify-content-between align-items-center">
                     <h6>All Contracts for {labelName}</h6>
                     <button className="theme-btn green-cl white-cl" onClick={() => window.history.back()}>
                         <i className="fa-solid fa-arrow-left me-1" /> Back
@@ -78,7 +76,6 @@ function AllContractComponent() {
                 </div>
 
                 <div className="dashTabs mainDashboarTabs">
-                    {/* CONTRACTS TABLE */}
                     <div className="table-sec mt-3">
                         {loading ? (
                             <Loader />
@@ -99,12 +96,12 @@ function AllContractComponent() {
                                     {contracts.length > 0 ? (
                                         contracts.map((contract, i) => (
                                             <tr key={contract._id}>
-                                                <td>{contract.userName}</td>
-                                                <td>{contract.labelPercentage}</td>
-                                                <td>{new Date(contract.startDate).toISOString().split("T")[0]}</td>
-                                                <td>{new Date(contract.endDate).toISOString().split("T")[0]}</td>
-                                                <td>{contract.description || 'N/A'}</td>
-                                                <td>
+                                                <td data-label="Label Name">{contract.userName}</td>
+                                                <td data-label="Percentage">{contract.labelPercentage}</td>
+                                                <td data-label="Start Date">{new Date(contract.startDate).toISOString().split("T")[0]}</td>
+                                                <td data-label="End Date">{new Date(contract.endDate).toISOString().split("T")[0]}</td>
+                                                <td data-label="Description">{contract.description || 'N/A'}</td>
+                                                <td data-label="Status">
                                                     <span
                                                         className={`badge ${contract.status === "active"
                                                             ? "bg-success"
@@ -116,7 +113,7 @@ function AllContractComponent() {
                                                         {contract.status}
                                                     </span>
                                                 </td>
-                                                <td>
+                                                <td data-label="Action">
                                                     <div className="d-flex gap-1">
                                                         <button className="border-less border-purple color-purple table-button me-1">
                                                             NOC

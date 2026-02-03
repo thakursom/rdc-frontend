@@ -78,7 +78,7 @@ function ContractLogComponent() {
         <>
             <section className="rdc-rightbar" id="right-sidebar">
                 <div className="main-content-dashboard">
-                    <div className="mian-sec-heading d-flex justify-content-between align-items-center mian-sec-heading1">
+                    <div className="mian-sec-heading d-flex justify-content-between align-items-center">
                         <h6>Contract Logs</h6>
                         <button
                             className="theme-btn green-cl white-cl"
@@ -118,12 +118,12 @@ function ContractLogComponent() {
                                             {logs.length > 0 ? (
                                                 logs.map((log) => (
                                                     <tr key={log._id}>
-                                                        <td>{log.user?.name || "N/A"}</td>
-                                                        <td>{log.action}</td>
-                                                        <td>{log.updated_by || "N/A"}</td>
-                                                        <td>{log.ipAddress?.replace(/^::ffff:/, "") || "-"}</td>
-                                                        <td>{new Date(log.createdAt).toLocaleString()}</td>
-                                                        <td>
+                                                        <td data-label="Client">{log.action}</td>
+                                                        <td data-label="Action">{log.updated_by || "N/A"}</td>
+                                                        <td data-label={isUpdateLog ? `Updated By` : `Added By`}>{log.ipAddress?.replace(/^::ffff:/, "") || "-"}</td>
+                                                        <td data-label="IP Address">{log.user?.name || "N/A"}</td>
+                                                        <td data-label="Date">{new Date(log.createdAt).toLocaleString()}</td>
+                                                        <td data-label="View">
                                                             <button
                                                                 className="purple-cl white-cl icon-btn"
                                                                 onClick={() => handleViewLog(log)}

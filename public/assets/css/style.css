@@ -147,7 +147,7 @@ body {
     display: inline-block;
     outline: none;
     border: none;
-    padding: 5px 15px;
+    padding: 4px 15px;
     border-radius: 5px;
     background: transparent;
 }
@@ -1918,6 +1918,14 @@ canvas#territoryRevenue {
     justify-content: center !important;
 }
 
+canvas {
+    width: 100% !important;
+}
+
+.css-19bb58m {
+    position: absolute;
+}
+
 
 /* ############## Media Query ############## */
 
@@ -2535,6 +2543,19 @@ canvas#territoryRevenue {
 
     canvas {
         width: 100% !important;
+    }
+
+    .dash-charts tr {
+        border: 1px solid #ddd;
+    }
+
+    .rdc-table2 td {
+        height: 80px !important;
+    }
+
+    .log-view .table-responsive {
+        height: 100vh;
+        overflow: scroll;
     }
 }
 

@@ -109,7 +109,7 @@ function SettingComponent() {
                                             </div>
                                         </div>
                                         <div className="text-end">
-                                            <button className="border-less border-green color-green table-button">
+                                            <button className="border-less border-green color-green table-button me-2">
                                                 Add Rule
                                             </button>
                                             <button className="theme-btn green-cl white-cl">Save</button>

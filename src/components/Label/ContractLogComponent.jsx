@@ -164,7 +164,7 @@ function ContractLogComponent() {
 
                     {/* Modal */}
                     {showModal && selectedLog && (
-                        <div className="modal-overlay">
+                        <div className="modal-overlay log-view">
                             <div className="modal-content" style={{ maxWidth: "800px", width: "90%" }}>
                                 <div className="modal-header">
                                     <h5>Log Details</h5>

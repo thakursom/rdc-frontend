@@ -95,7 +95,7 @@ function LabelUploadComponent() {
                                 {/* Upload Button */}
                                 <button
                                     type="submit"
-                                    className="theme-btn green-cl white-cl mt-2"
+                                    className="theme-btn green-cl white-cl"
                                     disabled={formik.isSubmitting}
                                 >
                                     {formik.isSubmitting ? "Uploading..." : "Upload"}

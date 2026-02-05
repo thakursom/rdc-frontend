@@ -95,7 +95,7 @@ function AllRevenueComponent() {
                                     {revenues?.length > 0 ? (
                                         revenues.map((item, index) => (
                                             <tr key={index}>
-                                                <td>
+                                                <td data-label="Title">
                                                     {(() => {
                                                         const title = item.track_title || item.asset_title || "N/A";
                                                         return (
@@ -105,14 +105,14 @@ function AllRevenueComponent() {
                                                         );
                                                     })()}
                                                 </td>
-                                                <td>{item.track_artist || "N/A"}</td>
-                                                <td>{item.track_count || "N/A"}</td>
-                                                <td>{item.label || item.label_name || "N/A"}</td>
-                                                <td>{item.isrc_code || "N/A"}</td>
-                                                <td>{item.retailer || "N/A"}</td>
-                                                <td>{item.territory || item.country || "N/A"}</td>
-                                                <td>{item.net_total || item.total_revenue || "N/A"}</td>
-                                                <td>{item.uploading_date || "N/A"}</td>
+                                                <td data-label="Artist">{item.track_artist || "N/A"}</td>
+                                                <td data-label="Tracks">{item.track_count || "N/A"}</td>
+                                                <td data-label="Label">{item.label || item.label_name || "N/A"}</td>
+                                                <td data-label="ISRC">{item.isrc_code || "N/A"}</td>
+                                                <td data-label="Retailer">{item.retailer || "N/A"}</td>
+                                                <td data-label="Territory">{item.territory || item.country || "N/A"}</td>
+                                                <td data-label="Net Total">{item.net_total || item.total_revenue || "N/A"}</td>
+                                                <td data-label="Upload Date">{item.uploading_date || "N/A"}</td>
                                             </tr>
                                         ))
                                     ) : (
